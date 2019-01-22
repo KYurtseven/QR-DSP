@@ -1,0 +1,27 @@
+{
+  "name": "rest-shop",
+  "version": "1.0.0",
+  "description": "A Node.js RESTful API Tutorial Project (Build a simple shop API)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "Maximilian Schwarzmüller",
+  "license": "ISC",
+  "dependencies": {
+    "circular-json": "^0.5.9",
+    "crypto": "^1.0.1",
+    "express": "^4.16.2",
+    "mongoose": "^5.4.0",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "uuid": "^3.3.2",
+    "jsonwebtoken": "^8.3.0"
+  }
+}
