@@ -11,7 +11,7 @@ router.post('/create', (req,res,next) => {
 
     const user = new User({
         _id         : new mongoose.Types.ObjectId(),
-        uid         : uuidv4(),
+        id         : uuidv4(),
         fullname    : req.body.fullname,
         username    : req.body.username,
         email       : req.body.email,

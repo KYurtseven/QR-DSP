@@ -127,12 +127,12 @@ function findComment(comment, body, usr)
     comment.forEach(element => {
         if(element.children.length != 0)
         {
-            if(element.cid === body.parent)
+            if(element.id === body.parent)
             {
                 // found, insert
                 var qrcomment = new QRcomment();
                 
-                qrcomment.cid = uuidv4();
+                qrcomment.id = uuidv4();
                 qrcomment.sender = usr;
                 qrcomment.body = body.comment;
                 qrcomment.parent = body.parent;
@@ -147,12 +147,12 @@ function findComment(comment, body, usr)
         else
         {
             // this is the last depth
-            if(element.cid === body.parent)
+            if(element.id === body.parent)
             {
                 // found, insert
                 var qrcomment = new QRcomment();
                 
-                qrcomment.cid = uuidv4();
+                qrcomment.id = uuidv4();
                 qrcomment.sender = usr;
                 qrcomment.body = body.comment;
                 qrcomment.parent = body.parent;
@@ -206,7 +206,7 @@ router.post('/addcomment/:url', (req, res, next)=>{
                 {
                     //Add comment to the root level
                     var qrcomment = new QRcomment();
-                    qrcomment.cid = uuidv4();
+                    qrcomment.id = uuidv4();
                     qrcomment.sender = usr;
                     qrcomment.body = req.body.comment;
                     qrcomment.parent = "";

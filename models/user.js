@@ -5,8 +5,8 @@ var crypto = require('crypto');
 const userSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     // TO DO
-    // create uid from uuid everytime a user created
-    uid: {
+    // create id from uuid everytime a user created
+    id: {
         type: String, 
         required: [true, "can't be blank"]
     },
