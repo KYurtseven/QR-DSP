@@ -1,8 +1,22 @@
-const http = require('http');
+var https = require('https');
+var fs = require('fs');
+var options = {
+    key: fs.readFileSync('./localhost.key'),
+    cert: fs.readFileSync('./localhost.cert')
+};
 const app = require('./app');
 
-const port = process.env.PORT || 3000;
+var port = process.env.PORT || 443;
+var server = https.createServer( options, app );
 
-const server = http.createServer(app);
+server.listen( port, function () {
+    console.log( 'Express server listening on port ' + server.address().port );
+} );
 
-server.listen(port);
+//const http = require('http');
+
+//const port = process.env.PORT || 3000;
+
+//const server = http.createServer(app);
+
+//server.listen(port);
