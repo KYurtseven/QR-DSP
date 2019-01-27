@@ -6,30 +6,27 @@ const mongoose = require('mongoose');
 const qrdocinfo = mongoose.Schema({
     id: String,
     email : String
-})
+},{_id: false});
 
 const qrdocdata = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    type : String, //spreadsheet, pdf or form
+    type : String,              // spreadsheet, pdf or form
     title : String,
-    body: String, // data resides here
-})
+    body: String,               // data resides here
+},{_id: false});
 
 const qrcomment = mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
     id: String,
     sender: qrdocinfo,
     body: String,
     parent: String,
     children: []
-})
+},{_id: false});
 
 const qrlog = mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
-    logger: qrdocinfo || String, // TODO, try this
+    logger: qrdocinfo || String,        // TODO, try this
     date: Date,
-    type: String // view or edit
-})
+    type: String                        // view or edit
+},{_id: false});
 
 const qrdocSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
