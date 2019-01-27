@@ -4,14 +4,6 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
-const userRoute = require("./routes/userroute");
-const qrdocRoute = require("./routes/qrdocroute");
-const userqrRoute = require("./routes/userqrroute");
-const mobileRoute = require("./routes/qrdocmobile");
-
-//const denemesubRoute = require("./routes/denemesub");
-//const denemeRoutes = require("./routes/deneme");
-
 mongoose.connect(
     "mongodb://korayyurtseven:123123abc@ds127704.mlab.com:27704/qrdsp"
 )
@@ -33,19 +25,25 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/user', userRoute);
-app.use('/qrdoc', qrdocRoute);
-app.use('/userqr', userqrRoute);
-app.use('/mobile',mobileRoute);
+// Mobile paths
 
-//app.use('/deneme', denemeRoutes);
-//app.use('/denemesub', denemesubRoute);
-/*
-app.use((req, res, next) => {
-    res.status(200).json({
-        message: 'It works!'
-    });
-});
 
-*/
+// Web paths
+const w_qr_createQR = require("./routes/web/qr/createQR");
+app.use('/web/createQR', w_qr_createQR);
+
+// Shared paths
+const s_qr_view = require("./routes/shared/qr/view");
+app.use('/qr/view', s_qr_view);
+
+const s_qr_addcomment = require("./routes/shared/qr/addcomment");
+app.use('/qr/addcomment', s_qr_addcomment);
+
+const s_u_create = require("./routes/shared/user/createuser");
+app.use('/user/signup', s_u_create);
+
+const s_u_login = require("./routes/shared/user/login");
+app.use('/user/login', s_u_login);
+
+
 module.exports = app;

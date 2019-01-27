@@ -1,37 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-const middleware = require('../middleware');
-const User = require('../models/user');
 const uuidv4 = require('uuid/v4');
+const jwt = require('jsonwebtoken');
+const config = require('../../../config');
 
-router.post('/create', (req,res,next) => {
+const User = require('../../../models/user');
 
-    const user = new User({
-        _id         : new mongoose.Types.ObjectId(),
-        id         : uuidv4(),
-        fullname    : req.body.fullname,
-        username    : req.body.username,
-        email       : req.body.email,
-        company     : req.body.company
-    })
-    user.setPassword(req.body.password);
-    console.log(JSON.stringify(user));
-    user
-    .save()
-    .then(doc =>{
-        console.log(doc);
-        res.status(200).json(doc);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({error: err});
-    })
-});
+router.post('/', (req,res,next) => {
+    
+    // correct way to reach this function
+    // RESTurl: https://localhost/login
+    // request method: POST
+    // body: 
+    // {
+    //     "username" : "edyth1",
+    //     "password" : "123123abc"
+    // }
 
-router.post('/login', (req,res,next) => {
+    // returns:
+    // {
+    //     "success": true,
+    //     "message": "Authentication successful!",
+    //     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVkeXRoMSIsImVtYWlsIjoiZWR5dGgxQGZvcmQuY29tIiwiaWF0IjoxNTQ4NTg3MDk4LCJleHAiOjE1NDg2NzM0OTh9.bAqrKcW7NSOP5a6LFJfyS9Oj83ged-AA35kbPBNUAyE"
+    // }
+
+    console.log("inside login");
     let username = req.body.username;
     let password = req.body.password;
 
@@ -71,12 +65,6 @@ router.post('/login', (req,res,next) => {
             message: 'Authentication failed! Please check the request'
         });
     })
-})
-
-router.get('/tokentest', middleware.checkToken, (req,res,next) =>{
-    myresponse = {};
-    myresponse['body'] = "token test works"
-    res.status(400).json(myresponse);
 })
 
 module.exports = router;
