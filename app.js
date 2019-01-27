@@ -32,12 +32,15 @@ app.use((req, res, next) => {
 const w_qr_createQR = require("./routes/web/qr/createQR");
 app.use('/web/createQR', w_qr_createQR);
 
+const w_c_createCompany = require("./routes/web/company/createCompany");
+app.use('/createCompany', w_c_createCompany);
+
 // Shared paths
 const s_qr_view = require("./routes/shared/qr/view");
 app.use('/qr/view', s_qr_view);
 
-const s_qr_addcomment = require("./routes/shared/qr/addcomment");
-app.use('/qr/addcomment', s_qr_addcomment);
+const s_qr_addComment = require("./routes/shared/qr/addComment");
+app.use('/qr/addComment', s_qr_addComment);
 
 const s_u_create = require("./routes/shared/user/createuser");
 app.use('/user/signup', s_u_create);
