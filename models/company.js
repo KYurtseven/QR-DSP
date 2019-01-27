@@ -10,7 +10,7 @@ const companySchema = new mongoose.Schema({
         index: true
     },                          // company names stored in uppercase
     templates: [String]         // list of template id's
-},{collection : 'T_COMPANY', timestamps : true} );
+},{collection : 'T_COMPANY'} );
 
 companySchema.plugin(uniqueValidator, {message: 'is already exist'});
 module.exports = mongoose.model('Company', companySchema);
