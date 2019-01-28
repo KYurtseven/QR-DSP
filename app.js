@@ -33,7 +33,10 @@ const w_qr_createQR = require("./routes/web/qr/createQR");
 app.use('/web/createQR', w_qr_createQR);
 
 const w_c_createCompany = require("./routes/web/company/createCompany");
-app.use('/createCompany', w_c_createCompany);
+app.use('/web/createCompany', w_c_createCompany);
+
+const w_t_createTemplate = require("./routes/web/template/createTemplate");
+app.use('/web/createTemplate', w_t_createTemplate);
 
 // Shared paths
 const s_qr_view = require("./routes/shared/qr/view");
