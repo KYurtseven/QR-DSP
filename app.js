@@ -26,7 +26,10 @@ app.use((req, res, next) => {
 });
 
 // Mobile paths
-
+// simplified view for mobile
+// we will use this mostly
+const m_qr_view = require("./routes/mobile/qr/view");
+app.use('/qr/view', m_qr_view);
 
 // Web paths
 const w_qr_createQR = require("./routes/web/qr/createQR");
@@ -39,8 +42,7 @@ const w_t_createTemplate = require("./routes/web/template/createTemplate");
 app.use('/web/createTemplate', w_t_createTemplate);
 
 // Shared paths
-const s_qr_view = require("./routes/shared/qr/view");
-app.use('/qr/view', s_qr_view);
+
 
 const s_qr_addComment = require("./routes/shared/qr/addComment");
 app.use('/qr/addComment', s_qr_addComment);

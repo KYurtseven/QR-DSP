@@ -6,6 +6,7 @@ const config = require('../../../config');
 const middleware = require('../../../middleware');
 
 const {QRdoc} = require('../../../models/qr_doc');
+const addLog = require('./addLog');
 
 function checkPermission(obj, email)
 {
@@ -19,8 +20,26 @@ function checkPermission(obj, email)
 
 router.get('/:url', (req, res, next) =>{
 
-    console.log("inside viewqr");
-    
+    console.log("WEB viewqr");
+    // TODO
+
+    // TODO
+
+    // TODO
+    // WRITE THIS FUNCTION FOR HANDLING WEB REQUESTS
+
+
+
+
+
+
+
+
+
+
+
+
+
     // TODO
     // add logging
     // TODO
@@ -51,20 +70,17 @@ router.get('/:url', (req, res, next) =>{
     if(middleware.checkTokenFunction(req))
     {
         // we have token
-
-        let username = req.decoded.username;
         let email = req.decoded.email;
-        console.log("inside token access");
-        console.log("req.decoded:" + JSON.stringify(req.decoded));
-
+        let id = req.decoded.id;
+        
         QRdoc.findOne({'url' : url})
         .exec()
         .then(doc =>{
             var qr = {};
             let canSee = true;
-            console.log("doc: " + JSON.stringify(doc));
-            console.log("email: " + email);
-            console.log("docmail: "+ doc.o_info.email);
+            
+            console.log("LOG:" + addLog(doc, "AUTHVIEW", email, id));
+
             if(doc.o_info.email === email)
                 qr.type = "owner";
             else
