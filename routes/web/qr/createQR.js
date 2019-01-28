@@ -44,9 +44,12 @@ function companyCheck(rhs)
 }
 
 router.post('/', middleware.checkToken, (req,res,next) => {
-	console.log("inside createQR");
 	// Example input
-
+	
+	// correct way to reach this function
+    // RESTurl: https://localhost/web/createQR
+	// request method: POST
+	// body:
 	// {
 	// 	"isPublic": false,
 	// 	"e_info": [
@@ -64,49 +67,48 @@ router.post('/', middleware.checkToken, (req,res,next) => {
 	// 	}
 	// }
 
-	const owneremail = req.decoded.email;
-	User.findOne({'email': owneremail}).exec()
-	.then(usr =>{
-		const owner = new QRdocinfo({
-			id: usr.id,
-			email: usr.email
-		});
-		// TODO
-		// We can execute e_info and v_info paralel
-		checkInfo(req.body.e_info).then(e_info =>{
-			checkInfo(req.body.v_info).then(v_info =>{
-				
-				let e_company = companyCheck(req.body.e_company);
-				let v_company = companyCheck(req.body.v_company);
+	const owner = new QRdocinfo({
+		id: req.decoded.id,
+		email: req.decoded.email
+	});
+	
+	// TODO
+	// We can execute e_info and v_info paralel
+	checkInfo(req.body.e_info).then(e_info =>{
+		checkInfo(req.body.v_info).then(v_info =>{
+			
+			// TODO
+			// check companies in the database
+			let e_company = companyCheck(req.body.e_company);
+			let v_company = companyCheck(req.body.v_company);
 
-				const qrdoc = new QRdoc({
-					_id : new mongoose.Types.ObjectId(),
-					url : uuidv4(),
-					isPublic: req.body.isPublic,
-					o_info : owner,
-					e_info : e_info,
-					v_info : v_info,
-					e_company: e_company,
-					v_company: v_company,
-					formdata : req.body.formdata
-				});
-				
-				qrdoc
-				.save()
-				.then(doc =>{
-						res.status(200).json({result: "QR is created"});
-				})
-				.catch(err => {
-						console.log(err);
-						res.status(500).json({error: err});
-				})
-				
+			const qrdoc = new QRdoc({
+				_id : new mongoose.Types.ObjectId(),
+				url : uuidv4(),
+				isPublic: req.body.isPublic,
+				o_info : owner,
+				e_info : e_info,
+				v_info : v_info,
+				e_company: e_company,
+				v_company: v_company,
+				formdata : req.body.formdata
+			});
+			
+			qrdoc
+			.save()
+			.then(doc =>{
+					res.status(200).json({result: "QR is created"});
 			})
-			.catch(err=>{res.status(500).json({error: err})});
+			.catch(err => {
+					console.log(err);
+					res.status(500).json({error: err});
+			})
+			
 		})
 		.catch(err=>{res.status(500).json({error: err})});
 	})
 	.catch(err=>{res.status(500).json({error: err})});
+
 });
 
 module.exports = router;

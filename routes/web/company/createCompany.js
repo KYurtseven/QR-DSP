@@ -5,17 +5,16 @@ const jwt = require('jsonwebtoken');
 const config = require('../../../config');
 const middleware = require('../../../middleware');
 
+const globalDefinitions = require('../../globalDefinitions');
 const Company = require('../../../models/company');
-const Template = require('../../../models/template');
 
 router.post('/', middleware.checkToken, (req, res, next) =>
 {
     // TODO
     // only admin can add company right now
     // this code will be commented out after initial companies are added
-    const prod = false;
-
-    if(prod)
+    
+    if(globalDefinitions.getRoot() === "PROD")
     {
         res.status(403).json();
     }
@@ -24,7 +23,7 @@ router.post('/', middleware.checkToken, (req, res, next) =>
         // check if company exists   
         
         // correct way to reach this function
-        // RESTurl: https://localhost/createcompany
+        // RESTurl: https://localhost/web/createcompany
         // request method: POST
         // body: 
         // {
