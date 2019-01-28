@@ -1,6 +1,4 @@
 // This model will store the QR data in the database
-
-
 const mongoose = require('mongoose');
 
 const qrdocinfo = mongoose.Schema({
@@ -23,9 +21,9 @@ const qrcomment = mongoose.Schema({
 },{_id: false});
 
 const qrlog = mongoose.Schema({
-    logger: qrdocinfo || String,        // TODO, try this
+    type: String,
+    logger: qrdocinfo,
     date: Date,
-    type: String                        // view or edit
 },{_id: false});
 
 const qrdocSchema = mongoose.Schema({
