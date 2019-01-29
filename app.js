@@ -41,9 +41,12 @@ app.use('/web/createCompany', w_c_createCompany);
 const w_t_createTemplate = require("./routes/web/template/createTemplate");
 app.use('/web/createTemplate', w_t_createTemplate);
 
+// TODO
+// meaningful name and functionality
+const TEST_DOWNLOAD = require("./routes/web/qr/downloadFileTest");
+app.use('/TEST_DOWNLOAD', TEST_DOWNLOAD);
+
 // Shared paths
-
-
 const s_qr_addComment = require("./routes/shared/qr/addComment");
 app.use('/qr/addComment', s_qr_addComment);
 
