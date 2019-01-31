@@ -18,7 +18,7 @@ router.post('/', (req,res,next) => {
     // validate user's email before passing token
 
     // correct way to reach this function
-    // RESTurl: https://localhost/user/signup
+    // RESTurl: https://localhost/api/user/signup
     // request method: POST
     // body: 
     // {
