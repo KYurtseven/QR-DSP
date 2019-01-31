@@ -23,7 +23,7 @@ router.post('/', middleware.checkToken, (req, res, next) =>
         // check if company exists   
         
         // correct way to reach this function
-        // RESTurl: https://localhost/web/createcompany
+        // RESTurl: https://localhost/api/web/createcompany
         // request method: POST
         // body: 
         // {

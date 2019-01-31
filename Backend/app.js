@@ -29,32 +29,32 @@ app.use((req, res, next) => {
 // simplified view for mobile
 // we will use this mostly
 const m_qr_view = require("./routes/mobile/qr/view");
-app.use('/qr/view', m_qr_view);
+app.use('/api/qr/view', m_qr_view);
 
 // Web paths
 const w_qr_createQR = require("./routes/web/qr/createQR");
-app.use('/web/createQR', w_qr_createQR);
+app.use('/api/web/createQR', w_qr_createQR);
 
 const w_c_createCompany = require("./routes/web/company/createCompany");
-app.use('/web/createCompany', w_c_createCompany);
+app.use('/api/web/createCompany', w_c_createCompany);
 
 const w_t_createTemplate = require("./routes/web/template/createTemplate");
-app.use('/web/createTemplate', w_t_createTemplate);
+app.use('/api/web/createTemplate', w_t_createTemplate);
 
 // TODO
 // meaningful name and functionality
 const TEST_DOWNLOAD = require("./routes/web/qr/downloadFileTest");
-app.use('/TEST_DOWNLOAD', TEST_DOWNLOAD);
+app.use('/api/TEST_DOWNLOAD', TEST_DOWNLOAD);
 
 // Shared paths
 const s_qr_addComment = require("./routes/shared/qr/addComment");
-app.use('/qr/addComment', s_qr_addComment);
+app.use('/api/qr/addComment', s_qr_addComment);
 
 const s_u_create = require("./routes/shared/user/createuser");
-app.use('/user/signup', s_u_create);
+app.use('/api/user/signup', s_u_create);
 
 const s_u_login = require("./routes/shared/user/login");
-app.use('/user/login', s_u_login);
+app.use('/api/user/login', s_u_login);
 
 
 module.exports = app;

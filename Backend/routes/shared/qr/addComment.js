@@ -58,7 +58,7 @@ router.post('/:url', middleware.checkToken, (req, res, next)=>
 {
 
     // correct way to reach this function
-    // RESTurl: https://localhost/qr/addComment/d2509e92-d56f-4607-a99d-f8a2c628bea9
+    // RESTurl: https://localhost/api/qr/addComment/d2509e92-d56f-4607-a99d-f8a2c628bea9
     // request method: POST
     // body: 
     // {

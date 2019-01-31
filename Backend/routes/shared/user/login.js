@@ -9,7 +9,7 @@ const User = require('../../../models/user');
 router.post('/', (req,res,next) => {
     
     // correct way to reach this function
-    // RESTurl: https://localhost/user/login
+    // RESTurl: https://localhost/api/user/login
     // request method: POST
     // body: 
     // {
@@ -23,7 +23,8 @@ router.post('/', (req,res,next) => {
     //     "message": "Authentication successful!",
     //     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVkeXRoMSIsImVtYWlsIjoiZWR5dGgxQGZvcmQuY29tIiwiaWF0IjoxNTQ4NTg3MDk4LCJleHAiOjE1NDg2NzM0OTh9.bAqrKcW7NSOP5a6LFJfyS9Oj83ged-AA35kbPBNUAyE"
     // }
-
+    console.log('INSIDE LOGIN');
+    console.log('JSON:  '+  JSON.stringify(req.body));
     let username = req.body.username;
     let password = req.body.password;
 
