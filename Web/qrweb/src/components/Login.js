@@ -1,13 +1,14 @@
-import * as fakeAuth from './fakeauth';
+import * as fakeAuth from '../GlobalPages/fakeauth';
 import React from 'react'
 import {
   BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom'
+
 import Cookies from "universal-cookie";
 
-import * as Constants from './Constants';
-import * as BasePage from './BasePage';
+import * as Constants from '../GlobalPages/Constants';
+//import * as BasePage from './BasePage';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -32,22 +33,16 @@ class Login extends React.Component {
             isValid : false,
             userInfo : {},
         }
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleUsernameChange(event)
+    handleOnChange(event)
     {
-        this.setState({username: event.target.value});
-        this.verifyInput();
-    }   
-
-    handlePasswordChange(event)
-    {
-        this.setState({password: event.target.value});
-        this.verifyInput();
+        this.setState({[event.target.name]: event.target.value});
+        //this.verifyInput();
     }
+
     verifyInput()
     {
         console.log('verify');
@@ -63,7 +58,8 @@ class Login extends React.Component {
     setCookies(token)
     {
         const cookies = new Cookies();
-        cookies.set('token', token, {path : '/'})
+        console.log('set cookies');
+        //cookies.set('token', token, {path : '/'})
     }
 
 
@@ -96,20 +92,19 @@ class Login extends React.Component {
                     },
                     body: JSON.stringify(userinputbody)
                 })
-                .then((res) => {
-                    let p = res.json().then(res2 =>{
-                        if(res2.success)
-                        {
-                            console.log('Successful');
-                            const token = res2.token;
-                            this.setCookies(token);
-                            this.setState({isLoading:false});
-                        }
-                        else{
-                            console.log('Unsuccessful');
-                            this.setState({isLoading: false});
-                        }
-                    });
+                .then(res => res.json())
+                .then(data =>{
+                    if(data.success)
+                    {
+                        console.log('Successful');
+                        const token = data.token;
+                        this.setCookies(token);
+                        this.setState({isLoading:false});
+                    }
+                    else{
+                        console.log('Unsuccessful');
+                        this.setState({isLoading: false});
+                    }
                 })
                 .catch((err) => {
                     console.log('err: ' + err);
@@ -171,26 +166,26 @@ class Login extends React.Component {
                 <CardContent>
                     <form style={{display: 'flex',flexWrap: 'wrap',}} noValidate>
                         <TextField
-                            id="username"
+                            name = "username"
                             label="Username"
                             type="text"
-                            onChange={this.handleUsernameChange}
+                            onChange={this.handleOnChange}
                             style={{flex:1}}
                             InputLabelProps={{
-                            shrink: true,
+                                shrink: true,
                             }}
                         />
                     </form>
                     <div style={{marginTop:20}}/>
                     <form style={{display: 'flex',flexWrap: 'wrap',}} noValidate>
                         <TextField
-                            id="password"
+                            name = "password"
                             label="Password"
                             type="password"
-                            onChange={this.handlePasswordChange}
+                            onChange={this.handleOnChange}
                             style={{flex: 1}}
                             InputLabelProps={{
-                            shrink: true,
+                                shrink: true,
                             }}
                         />
                     </form>

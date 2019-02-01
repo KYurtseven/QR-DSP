@@ -5,9 +5,17 @@ import {
   Link,
   Redirect,
   withRouter
-} from 'react-router-dom'
+} from 'react-router-dom';
+
+import {Provider} from 'react-redux';
+import store from './store';
+
 import * as fakeAuth from './GlobalPages/fakeauth';
-import Login from './GlobalPages/Login';
+import Login from './components/Login';
+// TODO
+// delete this, only for practice
+import Posts from './components/Posts';
+
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -67,13 +75,16 @@ class App extends React.Component {
   }
 }
 */
+
 class App extends React.Component { 
   render()
   {
     return(
       <div>
         <MuiThemeProvider theme={theme}>
-          <Main />
+          <Provider store={store}>
+            <Main />
+          </Provider>
         </MuiThemeProvider>
       </div>
   );
@@ -81,16 +92,21 @@ class App extends React.Component {
 }
 
 
+// TODO
+// delete /posts, only for practice
+
 const Main = () => (
   <Router>
     <div>
       <AuthButton/>
       <ul>
         <li><Link to="/public">Public Page</Link></li>
+        <li><Link to="/posts">Posts</Link></li>
         <li><Link to="/protected">Protected Page</Link></li>
       </ul>
       <Route path="/public" component={Public}/>
       <Route path="/login" component={Login}/>
+      <Route path='/posts' component ={Posts}/>
       <PrivateRoute path='/protected' component={Protected} />
     </div>
   </Router>
