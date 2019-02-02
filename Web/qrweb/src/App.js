@@ -3,19 +3,13 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect,
   withRouter
 } from 'react-router-dom';
 
-import {Provider} from 'react-redux';
-import store from './store';
-
 import * as fakeAuth from './GlobalPages/fakeauth';
 import Login from './components/Login';
-// TODO
-// delete this, only for practice
-import Posts from './components/Posts';
-
+import { getCookie, deleteAllCookies } from './_helpers/cookieHelper';
+import {PrivateRoute} from './components/PrivateRoute';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -30,25 +24,14 @@ const theme = createMuiTheme({
   },
 });
 
-const Public = () => <h3>Public</h3>
+const Dashboard = () => <h3>Dashboard</h3>
 const Protected = () => <h3>Protected</h3>
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(props) => (
-    fakeAuth.fakeAuth.isAuthenticated === true
-      ? <Component {...props} />
-      : <Redirect to={{
-          pathname: '/login',
-          state: { from: props.location }
-        }} />
-  )} />
-)
-
 const AuthButton = withRouter(({ history }) => (
-  fakeAuth.fakeAuth.isAuthenticated ? (
+  getCookie('token')? (
     <p>
-      Welcome! <button onClick={() => {
-        fakeAuth.fakeAuth.signout(() => history.push('/'))
+      Welcome {getCookie('username')} <button onClick={() => {
+        deleteAllCookies(() => history.push('/'))
       }}>Sign out</button>
     </p>
   ) : (
@@ -82,31 +65,24 @@ class App extends React.Component {
     return(
       <div>
         <MuiThemeProvider theme={theme}>
-          <Provider store={store}>
             <Main />
-          </Provider>
         </MuiThemeProvider>
       </div>
   );
   }
 }
 
-
-// TODO
-// delete /posts, only for practice
-
 const Main = () => (
   <Router>
     <div>
       <AuthButton/>
       <ul>
-        <li><Link to="/public">Public Page</Link></li>
-        <li><Link to="/posts">Posts</Link></li>
+        <li><Link to="/dashboard">Dashboard, private</Link></li>
+        <li><Link to="/login">Login</Link></li>
         <li><Link to="/protected">Protected Page</Link></li>
       </ul>
-      <Route path="/public" component={Public}/>
       <Route path="/login" component={Login}/>
-      <Route path='/posts' component ={Posts}/>
+      <PrivateRoute path="/dashboard" component={Dashboard}/>
       <PrivateRoute path='/protected' component={Protected} />
     </div>
   </Router>
