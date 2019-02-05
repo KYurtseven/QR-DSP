@@ -1,7 +1,5 @@
-import * as fakeAuth from '../GlobalPages/fakeauth';
 import React from 'react'
 import {
-  BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom'
 // HELPERS
