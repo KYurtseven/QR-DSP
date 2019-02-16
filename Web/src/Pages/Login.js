@@ -7,7 +7,7 @@ import {handleResponse} from '../_helpers/handleResponse';
 import * as API from '../_helpers/apiHelpers';
 import {setCookie} from '../_helpers/cookieHelper';
 
-import * as Constants from '../GlobalPages/Constants';
+import * as Constants from '../_helpers/Constants';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';

@@ -26,4 +26,12 @@ export function getRoot(){
     }
 }
 
+export const drawerWidth = 240;
+
+export const drawerMargins ={
+    marginLeft: drawerWidth + 10,
+    marginTop: 75
+
+}
+
 export const login = 'api/user/login/';

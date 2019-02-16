@@ -2,11 +2,11 @@ import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
-  Link
 } from 'react-router-dom';
 
 import Login from './Pages/Login';
 import Dashboard from './Pages/Dashboard';
+import MyQR from './Pages/MyQR';
 
 import {PrivateRoute} from './components/PrivateRoute';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -25,6 +25,13 @@ const theme = createMuiTheme({
 
 const Protected = () => <h3>Protected</h3>
 
+/*
+  <ul style={{marginTop: 150}}>
+    <li><Link to="/dashboard">Dashboard, private</Link></li>
+    <li><Link to="/login">Login</Link></li>
+    <li><Link to="/protected">Protected Page</Link></li>
+  </ul>
+*/
 class App extends React.Component { 
 
   render()
@@ -34,14 +41,10 @@ class App extends React.Component {
         <MuiThemeProvider theme={theme}>
         <Router>
           <div>
-            <ul style={{marginTop: 150}}>
-              <li><Link to="/dashboard">Dashboard, private</Link></li>
-              <li><Link to="/login">Login</Link></li>
-              <li><Link to="/protected">Protected Page</Link></li>
-            </ul>
             <Route path="/login" component={Login}/>
             <PrivateRoute path="/dashboard" component={Dashboard}/>
             <PrivateRoute path='/protected' component={Protected}/>
+            <PrivateRoute path='/myqr' component={MyQR}/>
           </div>
         </Router>
         </MuiThemeProvider>
