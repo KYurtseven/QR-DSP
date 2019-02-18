@@ -29,6 +29,7 @@ const qrlog = mongoose.Schema({
 const qrdocSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     url: String,            // unique url for reaching the document
+    name: String,           // a visible name for end users
     isPublic: Boolean,      // whether the document is public or not
     o_info : qrdocinfo,     // info of person who owns the document
     e_info : [qrdocinfo],   // list of people who can edit

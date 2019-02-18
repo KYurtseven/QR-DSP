@@ -20,6 +20,9 @@ import ExitToApp from '@material-ui/icons/ExitToApp'
 
 import PropTypes from 'prop-types';
 import { getCookie, deleteAllCookies } from '../_helpers/cookieHelper';
+import {drawerWidth} from '../_helpers/Constants';
+import qrcode from '../img/qrcode.png';
+import dashboard from '../img/dashboard.svg';
 
 class Header extends React.Component
 {  
@@ -27,6 +30,8 @@ class Header extends React.Component
     {
         super(props);
         this.handleLogout = this.handleLogout.bind(this);
+        this.handleMyQR = this.handleMyQR.bind(this);
+        this.handleDashboard = this.handleDashboard.bind(this);
     }
 
     componentWillMount()
@@ -43,19 +48,16 @@ class Header extends React.Component
         deleteAllCookies(()=> this.props.history.push('/'));
     }
 
-
-    renderHeader(classes)
+    handleMyQR()
     {
-        return(
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <Typography variant="title" color="inherit"
-                        style={{flex : 1, }}>
-                        Project Synergy
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        )
+      if(this.props.history.location.pathname !== '/myqr')
+        this.props.history.push('/myqr');
+    }
+
+    handleDashboard()
+    {
+      if(this.props.history.location.pathname !== '/dashboard')
+        this.props.history.push('/dashboard');
     }
 
     render()
@@ -65,7 +67,14 @@ class Header extends React.Component
         return (
             <div className={classes.root}>
               <CssBaseline />
-                {this.renderHeader(classes)}
+                <AppBar position="fixed" className={classes.appBar}>
+                  <Toolbar>
+                      <Typography variant="title" color="inherit"
+                          style={{flex : 1, }}>
+                          Project Synergy
+                      </Typography>
+                  </Toolbar>
+              </AppBar>
               <Drawer
                 className={classes.drawer}
                 variant="permanent"
@@ -75,7 +84,7 @@ class Header extends React.Component
                 <div className={classes.toolbar}>
                   <div className={classes.logo}>  
                     
-                    <img src ={logo} style={{height: '50px'}} />
+                    <img src ={logo} style={{height: '50px'}} alt='logo'/>
 
                     <h5>Welcome</h5>
                     <Typography variant="title" color="inherit">
@@ -92,8 +101,28 @@ class Header extends React.Component
                     </ListItem>
                   ))}
                 </List>
-                <Divider />
                 
+                <ListItem button key="dashboard" onClick={this.handleDashboard}>
+                  <ListItemIcon>
+                    <div style={{height:24, width:24}}>
+                      <img src={dashboard} alt="dashboard icon" className={classes.customlogo}/>
+                    </div>  
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
+                </ListItem>
+
+                
+                <ListItem button key="myqr" onClick={this.handleMyQR}>
+                  <ListItemIcon>
+                    <div style={{height:24, width:24}}>
+                      <img src ={qrcode} className={classes.customlogo} alt ='qr icon'/>
+                    </div>  
+                  </ListItemIcon>
+                  <ListItemText primary="My QR Codes" />
+                </ListItem>
+
+                <Divider />
+
                 <ListItem button key="logout" onClick={this.handleLogout}>
                     <ListItemIcon>
                         <ExitToApp />
@@ -107,7 +136,6 @@ class Header extends React.Component
     }
   
 }
-const drawerWidth = 240;
 
 const styles = theme => ({
     root: {
@@ -133,6 +161,13 @@ const styles = theme => ({
       logo:{
         backgroundColor: 'red',  
       },
+      customlogo:{
+        height: '18px',
+        marginLeft:'3px',
+        marginRight:'3px',
+        marginBottom:'3px',
+        marginTop: '3px'
+      }
 });
 
 Header.propTypes = {

@@ -85,6 +85,7 @@ router.post('/', middleware.checkToken, (req,res,next) => {
 			const qrdoc = new QRdoc({
 				_id : new mongoose.Types.ObjectId(),
 				url : uuidv4(),
+				name: req.body.name,
 				isPublic: req.body.isPublic,
 				o_info : owner,
 				e_info : e_info,

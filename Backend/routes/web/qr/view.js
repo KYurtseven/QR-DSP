@@ -46,7 +46,7 @@ router.get('/:url', (req, res, next) =>{
     // return editing information(e_info, v_info...) too
 
     // correct way to reach this function
-    // RESTurl: https://localhost/qr/view/d2509e92-d56f-4607-a99d-f8a2c628bea9
+    // RESTurl: https://localhost/api/qr/view/d2509e92-d56f-4607-a99d-f8a2c628bea9
     // request method: GET
     // body: 
     // {
