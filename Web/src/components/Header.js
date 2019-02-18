@@ -50,13 +50,13 @@ class Header extends React.Component
 
     handleMyQR()
     {
-      if(this.props.history.location.pathname != '/myqr')
+      if(this.props.history.location.pathname !== '/myqr')
         this.props.history.push('/myqr');
     }
 
     handleDashboard()
     {
-      if(this.props.history.location.pathname != '/dashboard')
+      if(this.props.history.location.pathname !== '/dashboard')
         this.props.history.push('/dashboard');
     }
 
@@ -105,7 +105,7 @@ class Header extends React.Component
                 <ListItem button key="dashboard" onClick={this.handleDashboard}>
                   <ListItemIcon>
                     <div style={{height:24, width:24}}>
-                      <img src={dashboard} alt="dashboard icon" class={classes.customlogo}/>
+                      <img src={dashboard} alt="dashboard icon" className={classes.customlogo}/>
                     </div>  
                   </ListItemIcon>
                   <ListItemText primary="Dashboard" />
@@ -115,7 +115,7 @@ class Header extends React.Component
                 <ListItem button key="myqr" onClick={this.handleMyQR}>
                   <ListItemIcon>
                     <div style={{height:24, width:24}}>
-                      <img src ={qrcode} class={classes.customlogo} alt ='qr icon'/>
+                      <img src ={qrcode} className={classes.customlogo} alt ='qr icon'/>
                     </div>  
                   </ListItemIcon>
                   <ListItemText primary="My QR Codes" />
