@@ -15,7 +15,7 @@ router.post('/', middleware.checkToken, (req, res, next) =>
     // not every company user allow to add a new template
 
     // correct way to reach this function
-    // RESTurl: https://localhost/api/web/createTemplate
+    // RESTurl: https://localhost/api/web/template/create
     
     // request method: POST
     // body: 

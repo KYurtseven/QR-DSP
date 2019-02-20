@@ -35,3 +35,4 @@ export const drawerMargins ={
 }
 
 export const login = 'api/user/login/';
+export const viewqr = 'api/web/qr/view/';

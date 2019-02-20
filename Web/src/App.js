@@ -4,9 +4,12 @@ import {
   Route,
 } from 'react-router-dom';
 
+import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Dashboard from './Pages/Dashboard';
 import MyQR from './Pages/MyQR';
+import ViewQR from './Pages/ViewQR';
+import history from './_helpers/history';
 
 import {PrivateRoute} from './components/PrivateRoute';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -39,12 +42,14 @@ class App extends React.Component {
     return(
       <div>
         <MuiThemeProvider theme={theme}>
-        <Router>
+        <Router history = {history}>
           <div>
+            <Route exact path="/" component={Home} />
             <Route path="/login" component={Login}/>
             <PrivateRoute path="/dashboard" component={Dashboard}/>
             <PrivateRoute path='/protected' component={Protected}/>
             <PrivateRoute path='/myqr' component={MyQR}/>
+            <PrivateRoute path='/viewqr/:url' component={ViewQR} />
           </div>
         </Router>
         </MuiThemeProvider>
