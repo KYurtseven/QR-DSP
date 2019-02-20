@@ -32,14 +32,17 @@ const m_qr_view = require("./routes/mobile/qr/view");
 app.use('/api/qr/view', m_qr_view);
 
 // Web paths
-const w_qr_createQR = require("./routes/web/qr/createQR");
-app.use('/api/web/createQR', w_qr_createQR);
+const w_qr_create = require("./routes/web/qr/create");
+app.use('/api/web/qr/create', w_qr_create);
 
-const w_c_createCompany = require("./routes/web/company/createCompany");
-app.use('/api/web/createCompany', w_c_createCompany);
+const w_c_create = require("./routes/web/company/create");
+app.use('/api/web/company/create', w_c_create);
 
-const w_t_createTemplate = require("./routes/web/template/createTemplate");
-app.use('/api/web/createTemplate', w_t_createTemplate);
+const w_t_create = require("./routes/web/template/create");
+app.use('/api/web/template/create', w_t_create);
+
+const w_qr_view = require("./routes/web/qr/view");
+app.use('/api/web/qr/view', w_qr_view);
 
 // TODO
 // meaningful name and functionality

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom'
+
 // material ui
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,29 +25,41 @@ import { getCookie, deleteAllCookies } from '../_helpers/cookieHelper';
 import {drawerWidth} from '../_helpers/Constants';
 import qrcode from '../img/qrcode.png';
 import dashboard from '../img/dashboard.svg';
+import history from '../_helpers/history';
 
 class Header extends React.Component
 {  
     constructor(props)
     {
-        super(props);
-        this.handleLogout = this.handleLogout.bind(this);
-        this.handleMyQR = this.handleMyQR.bind(this);
-        this.handleDashboard = this.handleDashboard.bind(this);
+      super(props);
+      this.state={
+        logout: false,
+      }
+      this.handleLogout = this.handleLogout.bind(this);
+      this.handleMyQR = this.handleMyQR.bind(this);
+      this.handleDashboard = this.handleDashboard.bind(this);
     }
 
     componentWillMount()
     {
-        const username = getCookie('username');
-        this.setState({username : username});
-        console.log('username: ' + username);
+      const username = getCookie('username');
+      this.setState({username : username});
+      console.log('username: ' + username);
+    }
+
+    renderLogout()
+    {
+      if(this.state.logout)
+      {
+        deleteAllCookies();
+        history.replace('/');
+        return <Redirect to='/' />
+      }
     }
 
     handleLogout()
     {
-        // TODO
-        console.log('logout');
-        deleteAllCookies(()=> this.props.history.push('/'));
+      this.setState({logout: true});
     }
 
     handleMyQR()
@@ -123,6 +137,7 @@ class Header extends React.Component
 
                 <Divider />
 
+                {this.renderLogout()}
                 <ListItem button key="logout" onClick={this.handleLogout}>
                     <ListItemIcon>
                         <ExitToApp />

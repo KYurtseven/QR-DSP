@@ -47,7 +47,7 @@ router.post('/', middleware.checkToken, (req,res,next) => {
 	// Example input
 	
 	// correct way to reach this function
-    // RESTurl: https://localhost/api/web/createQR
+    // RESTurl: https://localhost/api/web/qr/create
 	// request method: POST
 	// body:
 	// {

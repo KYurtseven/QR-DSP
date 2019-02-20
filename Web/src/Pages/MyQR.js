@@ -33,14 +33,15 @@ class MyQR extends Component {
     this.setState({isLoading: false, userqr: userqr})
   }
 
-  renderDocs(type)
+  renderDocs(doctype, auth)
   {
     let row = []
-    this.state.userqr[type].forEach(function(element, i){
+    this.state.userqr[doctype].forEach(function(element, i){
       row.push(
         <UserQRItem
           key = {i}
-          data = {element} />
+          data = {element} 
+          type = {auth}/>
       );
     });
     return row;
@@ -59,9 +60,9 @@ class MyQR extends Component {
     if(this.state.isLoading){
       return (<p>Loading</p>);
     }
-    let own_row = this.renderDocs('o_docs');
-    let edit_row = this.renderDocs('e_docs');
-    let view_row = this.renderDocs('v_docs');
+    let own_row = this.renderDocs('o_docs', 'own');
+    let edit_row = this.renderDocs('e_docs', 'edit');
+    let view_row = this.renderDocs('v_docs', 'view');
     
 
     return (
