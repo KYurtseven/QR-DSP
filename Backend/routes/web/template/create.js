@@ -54,7 +54,7 @@ router.post('/', middleware.checkToken, (req, res, next) =>
             com.templates.push(tmp);
 
             com.save().then(doc2=>{
-                res.status(200).json();
+                res.status(200).json("ok");
             })
             .catch(err =>{res.status(500).json({error: err})})
             
