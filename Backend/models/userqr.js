@@ -16,4 +16,7 @@ const userqrSchema = mongoose.Schema({
     v_docs: [user_qr_doc]              // list of viewable documents
 },{collection: 'T_USER_QR'});
 
-module.exports = mongoose.model('user_qr', userqrSchema);
+module.exports = 
+{
+    UserQR: mongoose.model('user_qr', userqrSchema)
+}

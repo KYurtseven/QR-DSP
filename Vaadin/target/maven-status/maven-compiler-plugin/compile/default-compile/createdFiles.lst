@@ -3,16 +3,15 @@ com\qrsynergy\view\DashboardMenu.class
 com\qrsynergy\DashboardUI$MyUIServlet.class
 com\qrsynergy\view\DashboardMenu$2.class
 com\qrsynergy\view\LoginView$1.class
+com\qrsynergy\event\DashboardEvent$WrongLoginEvent.class
 com\qrsynergy\DashboardUI$1.class
 com\qrsynergy\view\dashboard\DashboardView$5.class
 com\qrsynergy\view\DashboardViewType.class
 com\qrsynergy\event\DashboardEvent$UserLoginRequestedEvent.class
 com\qrsynergy\view\dashboard\DashboardView$2.class
 com\qrsynergy\DashboardNavigator$2.class
-com\qrsynergy\event\DashboardEvent$NotificationsCountUpdatedEvent.class
 com\qrsynergy\domain\ConstURL.class
 com\qrsynergy\domain\LoginResponse.class
-com\qrsynergy\event\DashboardEvent$ProfileUpdatedEvent.class
 com\qrsynergy\event\DashboardEvent$BrowserResizeEvent.class
 com\qrsynergy\DashboardNavigator.class
 com\qrsynergy\event\DashboardEvent$CloseOpenWindowsEvent.class

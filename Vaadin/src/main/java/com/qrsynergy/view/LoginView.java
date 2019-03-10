@@ -1,6 +1,8 @@
 package com.qrsynergy.view;
 
+import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.event.DashboardEvent.UserLoginRequestedEvent;
+import com.qrsynergy.event.DashboardEvent.WrongLoginEvent;
 import com.qrsynergy.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
@@ -34,10 +36,7 @@ public class LoginView extends VerticalLayout {
         addComponent(loginForm);
         setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
 
-        Notification notification = new Notification(
-                "Welcome to Dashboard Demo");
-        notification
-                .setDescription("<span>This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.</span> <span>No username or password is required, just click the <b>Sign In</b> button to continue.</span>");
+        Notification notification = new Notification("Welcome to QR Synergy");
         notification.setHtmlContentAllowed(true);
         notification.setStyleName("tray dark small closable login-help");
         notification.setPosition(Position.BOTTOM_CENTER);
@@ -54,7 +53,6 @@ public class LoginView extends VerticalLayout {
 
         loginPanel.addComponent(buildLabels());
         loginPanel.addComponent(buildFields());
-        loginPanel.addComponent(new CheckBox("Remember me", true));
         return loginPanel;
     }
 
@@ -88,6 +86,17 @@ public class LoginView extends VerticalLayout {
         return fields;
     }
 
+    @Subscribe
+    public void wrongLogin(final WrongLoginEvent event){
+        System.out.println("Wrong login event!");
+        Notification notification = new Notification(event.getMessage());
+        notification.setHtmlContentAllowed(true);
+        notification.setStyleName("tray dark small closable login-help");
+        notification.setPosition(Position.BOTTOM_CENTER);
+        notification.setDelayMsec(2000);
+        notification.show(Page.getCurrent());
+    }
+
     private Component buildLabels() {
         CssLayout labels = new CssLayout();
         labels.addStyleName("labels");
@@ -98,7 +107,7 @@ public class LoginView extends VerticalLayout {
         welcome.addStyleName(ValoTheme.LABEL_COLORED);
         labels.addComponent(welcome);
 
-        Label title = new Label("QuickTickets Dashboard");
+        Label title = new Label("QR Synergy Dashboard");
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H3);
         title.addStyleName(ValoTheme.LABEL_LIGHT);

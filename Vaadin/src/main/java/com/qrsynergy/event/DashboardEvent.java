@@ -1,6 +1,5 @@
 package com.qrsynergy.event;
 
-import java.util.Collection;
 import com.qrsynergy.view.DashboardViewType;
 
 /*
@@ -11,8 +10,7 @@ public abstract class DashboardEvent {
     public static final class UserLoginRequestedEvent {
         private final String userName, password;
 
-        public UserLoginRequestedEvent(final String userName,
-                final String password) {
+        public UserLoginRequestedEvent(final String userName,final String password) {
             this.userName = userName;
             this.password = password;
         }
@@ -26,15 +24,24 @@ public abstract class DashboardEvent {
         }
     }
 
+    public static class WrongLoginEvent{
+
+        private final String message;
+
+        public WrongLoginEvent(final String message){
+            this.message = message;
+        }
+        public String getMessage(){
+            return message;
+        }
+    }
+
     public static class BrowserResizeEvent {
 
     }
 
     public static class UserLoggedOutEvent {
 
-    }
-
-    public static class NotificationsCountUpdatedEvent {
     }
 
     public static final class PostViewChangeEvent {
@@ -52,7 +59,5 @@ public abstract class DashboardEvent {
     public static class CloseOpenWindowsEvent {
     }
 
-    public static class ProfileUpdatedEvent {
-    }
 
 }

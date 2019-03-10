@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.domain.ConstURL;
 import com.qrsynergy.domain.LoginResponse;
+import com.qrsynergy.event.DashboardEvent;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -23,6 +24,7 @@ import com.qrsynergy.event.DashboardEvent.BrowserResizeEvent;
 import com.qrsynergy.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.event.DashboardEvent.UserLoginRequestedEvent;
+import com.qrsynergy.event.DashboardEvent.WrongLoginEvent;
 import com.qrsynergy.domain.User;
 import com.qrsynergy.view.LoginView;
 import com.qrsynergy.view.MainView;
@@ -70,6 +72,10 @@ public final class DashboardUI extends UI {
                 });
     }
 
+    /**
+     * After pressing submit button, re-render the scene
+     * If there is a user(successful login), let him to see Dashboard
+     */
     private void updateContent(){
         User user = (User) VaadinSession.getCurrent()
                 .getAttribute(User.class.getName());
@@ -83,12 +89,20 @@ public final class DashboardUI extends UI {
             addStyleName("loginview");
         }
     }
+
+    /**
+     * When the user presses submit button, event is fired
+     * @param event
+     */
     @Subscribe
     public void userLoginRequested(final UserLoginRequestedEvent event) {
+
+        // parse it to the JSON object
         JSONObject json = new JSONObject();
         json.put("username", event.getUserName());
         json.put("password", event.getPassword());
 
+        // prepare HTTP request
         HttpClient httpClient = HttpClientBuilder.create().build();
         try{
             HttpPost request = new HttpPost(ConstURL.loginURL);
@@ -99,28 +113,37 @@ public final class DashboardUI extends UI {
             request.setEntity(params);
             response = httpClient.execute(request);
 
-            if(response.getStatusLine().getStatusCode() == 200){
+            int code = response.getStatusLine().getStatusCode();
+            // successful request
+            if(code == 200){
                 ObjectMapper objectMapper = new ObjectMapper();
                 LoginResponse loginResponse = objectMapper.readValue(response.getEntity().getContent(), LoginResponse.class);
 
+                // store it in session
                 VaadinSession.getCurrent().setAttribute("token", loginResponse.getToken());
-
-
                 VaadinSession.getCurrent().setAttribute(User.class.getName(),loginResponse.getUser());
-                System.out.println("status is 200");
-                System.out.println(loginResponse.getUser());
+
+                // update view to redirect dashboard
+                updateContent();
+            }
+            else if(code == 401){
+                // TODO
+                // it is not fired
+                DashboardEventBus.post(new WrongLoginEvent("Incorrect username or password"));
             }
 
         }catch (Exception ex){
             // TODO
+            // it is not fired
             System.out.println("Exception: " + ex);
+            DashboardEventBus.post(new WrongLoginEvent("Internal server error"));
         }
-
-        //User user = getDataProvider().authenticate(event.getUserName(),event.getPassword());
-        //VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
-        updateContent();
     }
 
+    /**
+     * Close session when logout button is pressed
+     * @param event
+     */
     @Subscribe
     public void userLoggedOut(final UserLoggedOutEvent event) {
         // When the user logs out, current VaadinSession gets closed and the
@@ -137,6 +160,10 @@ public final class DashboardUI extends UI {
         }
     }
 
+    /**
+     * To reach DashboardEventBus object from other views
+     * @return
+     */
     public static DashboardEventBus getDashboardEventbus() {
         return ((DashboardUI) getCurrent()).dashboardEventbus;
     }

@@ -67,7 +67,7 @@ public final class DashboardMenu extends CustomComponent {
     }
 
     private Component buildTitle() {
-        Label logo = new Label("QuickTickets <strong>Dashboard</strong>",
+        Label logo = new Label("QR Synergy <strong>Dashboard</strong>",
                 ContentMode.HTML);
         logo.setSizeUndefined();
         HorizontalLayout logoWrapper = new HorizontalLayout(logo);
@@ -85,9 +85,9 @@ public final class DashboardMenu extends CustomComponent {
     private Component buildUserMenu() {
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
-        final User user = getCurrentUser();
         settingsItem = settings.addItem("",
                 new ThemeResource("img/profile-pic-300px.jpg"), null);
+        settingsItem.addItem(getCurrentUser().getFullname());
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", new Command() {
             @Override
