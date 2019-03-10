@@ -59,5 +59,7 @@ app.use('/api/user/signup', s_u_create);
 const s_u_login = require("./routes/shared/user/login");
 app.use('/api/user/login', s_u_login);
 
+const s_qr_listDocuments = require("./routes/shared/qr/listDocuments");
+app.use('/api/qr/listDocuments', s_qr_listDocuments);
 
 module.exports = app;
