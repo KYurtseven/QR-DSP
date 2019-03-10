@@ -14,7 +14,7 @@ const Invalid = {
 router.post('/', (req,res,next) => {
     
     // correct way to reach this function
-    // RESTurl: https://localhost/api/user/login
+    // RESTurl: http://localhost:3000/api/user/login
     // request method: POST
     // body: 
     // {
@@ -27,6 +27,12 @@ router.post('/', (req,res,next) => {
     //     "success": true,
     //     "message": "Authentication successful!",
     //     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVkeXRoMSIsImVtYWlsIjoiZWR5dGgxQGZvcmQuY29tIiwiaWF0IjoxNTQ4NTg3MDk4LCJleHAiOjE1NDg2NzM0OTh9.bAqrKcW7NSOP5a6LFJfyS9Oj83ged-AA35kbPBNUAyE"
+    //     "user":{
+    //         "username":"edyth1",
+    //         "fullname": "Some Full name",
+    //         "email" : "email@email.com",
+    //         "company": "Ford"
+    //      }
     // }
     let username = req.body.username;
     let password = req.body.password;
@@ -52,7 +58,13 @@ router.post('/', (req,res,next) => {
                 res.status(200).json({
                     success: true,
                     message: 'Authentication successful!',
-                    token: token
+                    token: token,
+                    user:{
+                        username: doc.username,
+                        fullname: doc.fullname,
+                        email : doc.email,
+                        company: doc.company
+                    }
                 });
             }
             else
