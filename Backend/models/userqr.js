@@ -18,5 +18,6 @@ const userqrSchema = mongoose.Schema({
 
 module.exports = 
 {
-    UserQR: mongoose.model('user_qr', userqrSchema)
+    UserQR: mongoose.model('user_qr', userqrSchema),
+    UserQRDoc : mongoose.model('user_qr_doc', user_qr_doc)
 }

@@ -17,6 +17,13 @@ router.post('/', (req,res,next) => {
     // TODO
     // validate user's email before passing token
 
+    // TODO
+    // create a table for holding all of the users
+    // when a user is created, add user to the this table
+
+    // TODO
+    // when a user is created, create its userqr document
+
     // correct way to reach this function
     // RESTurl: https://localhost/api/user/signup
     // request method: POST

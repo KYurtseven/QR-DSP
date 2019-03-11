@@ -28,6 +28,9 @@ let checkToken = (req, res, next) => {
   }
 };
 
+// TODO
+// this function is for viewing without token
+// rename it
 function checkTokenFunction(req)
 {   
     // We need token check for some public end points

@@ -8,7 +8,6 @@ const qrdocinfo = mongoose.Schema({
 
 const qrdocdata = mongoose.Schema({
     type : String,              // spreadsheet, pdf or form
-    title : String,
     body: String,               // data resides here
 },{_id: false});
 
