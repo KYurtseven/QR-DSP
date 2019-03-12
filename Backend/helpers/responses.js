@@ -30,9 +30,40 @@ function signupResponse(res, type, details){
         })
     }
 }
+/**
+ * 
+ * @param {*} res
+ * response object 
+ * @param {*} type
+ * SUCCESS or FAIL 
+ * @param {*} details
+ * in case of error, send the err 
+ */
+function uploadFileResponse(res,type,details){
+    if(type === SUCCESS){
+        res.status(200).json({
+            message: "File is uploaded"
+        })
+    }
+    else if(type === FAIL){
+        console.log("uploadFileResponse error: " + details);
+        res.status(500).json({
+            message: "Unknown error"
+        });
+    }
+    else{
+        // TODO
+        console.log("uploadFileResponse type error" + details);
+        res.status(500).json({
+            message: "Unknown error"
+        })
+    }
+}
+
 
 module.exports = {
     SUCCESS : SUCCESS,
     FAIL : FAIL,
-    signupResponse : signupResponse
+    signupResponse : signupResponse,
+    uploadFileResponse: uploadFileResponse
 }

@@ -61,7 +61,7 @@ function findDocumentInList(lhs, docUrl){
  * @param {*} doc 
  * qr document
  * @param {*} type 
- * edit or view
+ * "edit" or "view"
  * @returns
  * a dummy premises. We are not interested in return value of this function.
  */
