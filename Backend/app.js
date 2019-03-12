@@ -35,8 +35,8 @@ app.use('/api/qr/view', m_qr_view);
 const w_qr_create = require("./routes/web/qr/create");
 app.use('/api/web/qr/create', w_qr_create);
 
-const w_qr_create_uploadFile = require("./routes/web/qr/create");
-app.use('/api/web/qr/create/uploadFile', w_qr_create_uploadFile);
+const w_qr_uploadFile = require("./routes/web/qr/uploadFile");
+app.use('/api/web/qr/uploadFile', w_qr_uploadFile);
 
 const w_qr_addPeopleToDoc = require("./routes/web/qr/addPeopleToDoc");
 app.use('/api/web/qr/addPeopleToDoc', w_qr_addPeopleToDoc);
