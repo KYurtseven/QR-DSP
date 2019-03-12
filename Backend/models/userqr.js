@@ -9,8 +9,15 @@ const user_qr_doc = mongoose.Schema({
 
 const userqrSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    owner_id: String,
-    email: String,                      // email for tracking documents, email change
+    owner_id: {
+        type : String,
+        unique: true
+    },
+    email: {                           // email for tracking documents, email change
+        type: String,
+        unique : true,
+        index : true
+    },                      
     o_docs: [user_qr_doc],             // list of owned documents
     e_docs: [user_qr_doc],             // list of editable documents
     v_docs: [user_qr_doc]              // list of viewable documents

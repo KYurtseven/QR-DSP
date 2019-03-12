@@ -4,42 +4,8 @@ const middleware = require('../../../middleware');
 const User = require('../../../models/user');
 const {QRdoc, QRdocinfo} = require('../../../models/qr_doc');
 const {UserQR, UserQRDoc} = require('../../../models/userqr');
+const {checkUser} = require('../../../helpers/checkUserInDB');
 
-/**
- * Filters the list of people in the list
- * checks DB for each user to make sure it(user) exists
- * @param {*} rhs 
- * list of emails
- * @returns
- * list of correct people with {"id" : "user id", "email" : "user email"}
- */
-function checkInfo(rhs)
-{
-	const info = rhs.map(item =>{
-        // appends Users to info
-		return User.findOne({'email' : item.email})
-		.exec()
-		.then(usr =>{
-			if(usr)
-			{
-				let tmpuser = new QRdocinfo({
-					id : usr.id,
-					email : usr.email
-				});
-				return tmpuser;
-			}
-		})
-		.catch(err =>{});
-    })
-    // when the above function finishes
-    // checkInfo function returns promise
-    // Promise.all for waiting all of users to be checked
-	return Promise.all(info)
-		.then(docs =>{
-			// filter null values
-			return docs.filter(usr => usr);
-		})
-}
 
 /**
  * when a new person is added to the QR
@@ -205,7 +171,7 @@ function addQRToUsers(emailList, doc, type){
  * @Case1
  * User's email is not in the database.
  * @Solution1
- * checkInfo function will check each user in the database
+ * checkUser function will check each user in the database
  * filter users which are not present
  * @Case2
  * Trying to add a user which is already owner of the document
@@ -243,7 +209,7 @@ router.post('/', middleware.checkToken, (req,res,next)=>{
 	// }
 
 	// check emails
-	checkInfo(req.body.userList).then(emailList=>{
+	checkUser(req.body.userList).then(emailList=>{
         let addFlag = false;
 
 		// fetch QR
@@ -275,7 +241,6 @@ router.post('/', middleware.checkToken, (req,res,next)=>{
 			}
 			else if(req.body.type === "view")
 			{
-				let addFlag = false;
 				emailList.forEach(emailToBeAdded=>{
 					// email is owner's email
 					if(doc.o_info.email !== emailToBeAdded.email){
