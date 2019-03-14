@@ -46,39 +46,7 @@ function companyCheck(rhs)
 	return company;
 }
 
-// TODO
-router.post('/uploadDocument', middleware.checkToken, upload.single('file'), (req,res,next)=>{
 
-	// RESTurl: http://localhost:3000/api/web/qr/create/uploadDocument
-	// request method: POST
-	// Autheorization: Bearer Token
-	// Headers: No header
-	// Body: Type is form-data, not raw, not json
-	// key:
-	// file : "Insert File Here"
-	
-	const owner = new QRdocinfo({
-		id: req.decoded.id,
-		email: req.decoded.email
-	});
-	console.log("owner: " + owner);
-	console.log("req:");
-	console.log(req.file);
-	const str = req.file.originalname
-	var filename = str.substring(0,str.lastIndexOf('.'));
-	var extension = str.substring(str.lastIndexOf('.') + 1, str.length);
-	console.log("file name: " + filename);
-	console.log("extension: " + extension);
-
-	// Right now, only excel is accepted, with xlsx format
-
-	if(extension !== "xlsx"){
-		res.status(401).json({message : "This file is not allowed"})
-	}
-	else{
-		res.status(200).json();
-	}
-})
 
 // TODO
 // to be depricated

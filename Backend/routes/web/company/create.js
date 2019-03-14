@@ -20,8 +20,6 @@ router.post('/', middleware.checkToken, (req, res, next) =>
     }
     else
     {
-        // check if company exists   
-        
         // correct way to reach this function
         // RESTurl: https://localhost/api/web/company/create
         // request method: POST
@@ -29,11 +27,15 @@ router.post('/', middleware.checkToken, (req, res, next) =>
         // {
         // "name": "FOrD"
         // }
+
+        // unique name validation in the database will check
+        // for whether the input company exist or not
         var name = req.body.name.toUpperCase();
         const company = new Company({
             _id         : new mongoose.Types.ObjectId(),
             name        : name,
-            templates   : []
+            e_docs      : [],
+            v_docs      : []
         })
 
         company

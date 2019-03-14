@@ -4,6 +4,38 @@ const mongoose = require('mongoose');
 const uuidv4 = require('uuid/v4');
 
 const User = require('../../../models/user');
+const {UserQR} = require('../../../models/userqr');
+
+const {SUCCESS, FAIL, signupResponse} = require('../../../helpers/responses');
+
+/**
+ * When the user is created in the database,
+ * this function creates a UserQR object in db
+ * Later, this document can be used for retrieving all of documents
+ * of the user with one simply query
+ * @param {*} uid 
+ * id of user
+ * @param {*} email 
+ * email of the user
+ */
+function createUserQR(uid, email){
+    let userqr = new UserQR({
+        _id : new mongoose.Types.ObjectId(),
+        owner_id : uid,
+        email : email,
+        o_docs : [],
+        e_docs : [],
+        v_docs : []
+    });
+
+    return userqr.save()
+    .then(saveddoc=>{
+        console.log("userqr is created");
+    }).catch(err=>{
+        console.log("err: " + err);
+        console.log("cannot save");
+    })
+}
 
 
 router.post('/', (req,res,next) => {
@@ -20,9 +52,6 @@ router.post('/', (req,res,next) => {
     // TODO
     // create a table for holding all of the users
     // when a user is created, add user to the this table
-
-    // TODO
-    // when a user is created, create its userqr document
 
     // correct way to reach this function
     // RESTurl: https://localhost/api/user/signup
@@ -45,18 +74,20 @@ router.post('/', (req,res,next) => {
         company     : req.body.company.toUpperCase()
     })
     user.setPassword(req.body.password);
-    console.log(JSON.stringify(user));
+
     user
     .save()
     .then(doc =>{
-        console.log(doc);
-        // TODO
-        // return meaningfull data
-        res.status(200).json(doc);
+        createUserQR(user.id, user.email)
+        .then(savedDoc=>{
+            signupResponse(res, SUCCESS,"");
+        })
+        .catch(err=>{
+            signupResponse(res, FAIL, err);
+        })
     })
     .catch(err => {
-        console.log(err);
-        res.status(500).json({error: err});
+        signupResponse(res, FAIL, err);
     })
 });
 module.exports = router;
