@@ -1,12 +1,17 @@
 package com.qrsynergy.view;
 
 import com.qrsynergy.view.dashboard.DashboardView;
+import com.qrsynergy.view.generateqr.GenerateQRView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 
+import java.awt.*;
+
 public enum DashboardViewType {
-    DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, false);
+    DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, false),
+    GENERATEQR("Generate QR", GenerateQRView.class, FontAwesome.HOME, false)
+    ;
 
     private final String viewName;
     private final Class<? extends View> viewClass;

@@ -10,7 +10,7 @@ const multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
 		// the file is saved to here
-        cb(null, '/QRDSP/semester/github/Backend/FILES')
+        cb(null, '/QRDSP/github/Backend/FILES')
     },
     filename: function (req, file, cb) {
 		// the filename field is added or altered here once the file is uploaded
@@ -34,6 +34,9 @@ var upload = multer({ storage: storage })
  * 
  * TODO
  * in case of error, delete the file
+ * 
+ * TODO
+ * add document to the user's owner
  */
 router.post('/', middleware.checkToken, upload.single('file'), (req,res,next)=>{
 
