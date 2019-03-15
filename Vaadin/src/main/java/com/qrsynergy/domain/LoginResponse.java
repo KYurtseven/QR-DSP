@@ -1,4 +1,5 @@
 package com.qrsynergy.domain;
+import com.qrsynergy.domain.user.User;
 
 public class LoginResponse {
     private String success;

@@ -2,7 +2,7 @@ package com.vaadin.client.metadata;
 
 public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.ConnectorBundleLoader {
   public void init() {
-    addAsyncBlockLoader(new AsyncBundleLoader("__eager", new String[] {"com.vaadin.server.AbstractJavaScriptExtension","com.vaadin.ui.renderers.ButtonRenderer","com.vaadin.ui.renderers.ImageRenderer","com.vaadin.ui.renderers.AbstractJavaScriptRenderer","com.vaadin.data.provider.DataCommunicator","com.vaadin.data.provider.HierarchicalDataCommunicator","com.vaadin.ui.Grid.Column","com.vaadin.ui.renderers.ComponentRenderer","com.vaadin.ui.renderers.DateRenderer","com.vaadin.ui.Grid.DetailsManager","com.vaadin.ui.components.grid.EditorImpl","com.vaadin.ui.Grid","com.vaadin.ui.components.grid.GridDragSource","com.vaadin.ui.components.grid.GridDropTarget","com.vaadin.ui.renderers.LocalDateRenderer","com.vaadin.ui.renderers.LocalDateTimeRenderer","com.vaadin.ui.components.grid.MultiSelectionModelImpl","com.vaadin.ui.components.grid.NoSelectionModel","com.vaadin.ui.renderers.NumberRenderer","com.vaadin.ui.renderers.ProgressBarRenderer","com.vaadin.ui.components.grid.SingleSelectionModelImpl","com.vaadin.ui.renderers.TextRenderer","com.vaadin.ui.components.grid.TreeGridDragSource","com.vaadin.ui.components.grid.TreeGridDropTarget","com.vaadin.ui.Tree.TreeRenderer","com.vaadin.ui.renderers.HtmlRenderer","com.vaadin.ui.Tree.TreeMultiSelectionModel","com.vaadin.server.BrowserWindowOpener","com.vaadin.ui.dnd.DragSourceExtension","com.vaadin.ui.dnd.DropTargetExtension","com.vaadin.server.FileDownloader","com.vaadin.ui.dnd.FileDropTarget","com.vaadin.server.Responsive","com.vaadin.ui.JavaScript","com.vaadin.ui.AbstractJavaScriptComponent","com.vaadin.ui.AbsoluteLayout","com.vaadin.ui.Accordion","com.vaadin.ui.Audio","com.vaadin.ui.BrowserFrame","com.vaadin.ui.Button","com.vaadin.ui.CheckBox","com.vaadin.ui.ComboBox","com.vaadin.ui.Composite","com.vaadin.ui.CssLayout","com.vaadin.ui.CustomComponent","com.vaadin.ui.CustomField","com.vaadin.ui.CustomLayout","com.vaadin.ui.AbstractLocalDateField","com.vaadin.ui.AbstractLocalDateTimeField","com.vaadin.ui.InlineDateField","com.vaadin.ui.InlineDateTimeField","com.vaadin.ui.DateField","com.vaadin.ui.DateTimeField","com.vaadin.ui.DragAndDropWrapper","com.vaadin.ui.Embedded","com.vaadin.ui.Flash","com.vaadin.ui.FormLayout","com.vaadin.ui.GridLayout","com.vaadin.ui.Image","com.vaadin.ui.Label","com.vaadin.ui.Link","com.vaadin.ui.ListSelect","com.vaadin.ui.LoginForm","com.vaadin.ui.MenuBar","com.vaadin.ui.NativeButton","com.vaadin.ui.NativeSelect","com.vaadin.ui.Notification","com.vaadin.ui.CheckBoxGroup","com.vaadin.ui.RadioButtonGroup","com.vaadin.ui.HorizontalLayout","com.vaadin.ui.VerticalLayout","com.vaadin.ui.Panel","com.vaadin.ui.PasswordField","com.vaadin.ui.PopupView","com.vaadin.ui.ProgressBar","com.vaadin.ui.Slider","com.vaadin.ui.HorizontalSplitPanel","com.vaadin.ui.VerticalSplitPanel","com.vaadin.ui.TabSheet","com.vaadin.ui.TextArea","com.vaadin.ui.TextField","com.vaadin.ui.TreeGrid","com.vaadin.ui.TwinColSelect","com.vaadin.ui.UI","com.vaadin.ui.Upload","com.vaadin.ui.Video","com.vaadin.ui.Window",}) {
+    addAsyncBlockLoader(new AsyncBundleLoader("__eager", new String[] {"com.vaadin.server.AbstractJavaScriptExtension","com.vaadin.ui.renderers.ButtonRenderer","com.vaadin.ui.renderers.ImageRenderer","com.vaadin.ui.renderers.AbstractJavaScriptRenderer","com.vaadin.data.provider.DataCommunicator","com.vaadin.data.provider.HierarchicalDataCommunicator","com.vaadin.ui.Grid.Column","com.vaadin.ui.renderers.ComponentRenderer","com.vaadin.ui.renderers.DateRenderer","com.vaadin.ui.Grid.DetailsManager","com.vaadin.ui.components.grid.EditorImpl","com.vaadin.ui.Grid","com.vaadin.ui.components.grid.GridDragSource","com.vaadin.ui.components.grid.GridDropTarget","com.vaadin.ui.renderers.LocalDateRenderer","com.vaadin.ui.renderers.LocalDateTimeRenderer","com.vaadin.ui.components.grid.MultiSelectionModelImpl","com.vaadin.ui.components.grid.NoSelectionModel","com.vaadin.ui.renderers.NumberRenderer","com.vaadin.ui.renderers.ProgressBarRenderer","com.vaadin.ui.components.grid.SingleSelectionModelImpl","com.vaadin.ui.renderers.TextRenderer","com.vaadin.ui.components.grid.TreeGridDragSource","com.vaadin.ui.components.grid.TreeGridDropTarget","com.vaadin.ui.Tree.TreeRenderer","com.vaadin.ui.renderers.HtmlRenderer","com.vaadin.ui.Tree.TreeMultiSelectionModel","com.vaadin.server.BrowserWindowOpener","com.vaadin.ui.dnd.DragSourceExtension","com.vaadin.ui.dnd.DropTargetExtension","com.vaadin.server.FileDownloader","com.vaadin.ui.dnd.FileDropTarget","com.vaadin.server.Responsive","com.vaadin.ui.JavaScript","com.vaadin.ui.AbstractJavaScriptComponent","com.vaadin.ui.AbsoluteLayout","com.vaadin.ui.Accordion","com.vaadin.ui.Audio","com.vaadin.ui.BrowserFrame","com.vaadin.ui.Button","com.vaadin.ui.CheckBox","com.vaadin.ui.ComboBox","com.vaadin.ui.Composite","com.vaadin.ui.CssLayout","com.vaadin.ui.CustomComponent","com.vaadin.ui.CustomField","com.vaadin.ui.CustomLayout","com.vaadin.ui.AbstractLocalDateField","com.vaadin.ui.AbstractLocalDateTimeField","com.vaadin.ui.InlineDateField","com.vaadin.ui.InlineDateTimeField","com.vaadin.ui.DateField","com.vaadin.ui.DateTimeField","com.vaadin.ui.DragAndDropWrapper","com.vaadin.ui.Embedded","com.vaadin.ui.Flash","com.vaadin.ui.FormLayout","com.vaadin.ui.GridLayout","com.vaadin.ui.Image","com.vaadin.ui.Label","com.vaadin.ui.Link","com.vaadin.ui.ListSelect","com.vaadin.ui.LoginForm","com.vaadin.ui.MenuBar","com.vaadin.ui.NativeButton","com.vaadin.ui.NativeSelect","com.vaadin.ui.Notification","com.vaadin.ui.CheckBoxGroup","com.vaadin.ui.RadioButtonGroup","com.vaadin.ui.HorizontalLayout","com.vaadin.ui.VerticalLayout","com.vaadin.ui.Panel","com.vaadin.ui.PasswordField","com.vaadin.ui.PopupView","com.vaadin.ui.ProgressBar","com.vaadin.ui.Slider","com.vaadin.ui.HorizontalSplitPanel","com.vaadin.ui.VerticalSplitPanel","com.vaadin.ui.TabSheet","com.vaadin.ui.TextArea","com.vaadin.ui.TextField","com.vaadin.ui.TreeGrid","com.vaadin.ui.TwinColSelect","com.vaadin.ui.UI","com.vaadin.ui.Upload","com.vaadin.ui.Video","com.vaadin.ui.Window","com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload","com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUpload",}) {
       protected void load(final com.vaadin.client.metadata.TypeDataStore store) {
         new com.google.gwt.core.client.RunAsyncCallback() {
           public void onSuccess() {
@@ -221,6 +221,8 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setClass("com.vaadin.ui.Upload", com.vaadin.client.ui.upload.UploadConnector.class);
             store.setClass("com.vaadin.ui.Video", com.vaadin.client.ui.video.VideoConnector.class);
             store.setClass("com.vaadin.ui.Window", com.vaadin.client.ui.window.WindowConnector.class);
+            store.setClass("com.wcs.wcslib.vaadin.widget.multifileupload.component.CustomUpload", com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class);
+            store.setClass("com.wcs.wcslib.vaadin.widget.multifileupload.component.MultiUpload", com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class);
             store.setConstructor(com.vaadin.client.JavaScriptExtension.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.JavaScriptExtension.class);
@@ -301,14 +303,14 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.connectors.grid.LocalDateTimeRendererConnector.class);
               }
             });
+            load0();
+          }
+          private void load0() {
             store.setConstructor(com.vaadin.client.connectors.grid.MultiSelectionModelConnector.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.connectors.grid.MultiSelectionModelConnector.class);
               }
             });
-            load0();
-          }
-          private void load0() {
             store.setConstructor(com.vaadin.client.connectors.grid.NoSelectionModelConnector.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.connectors.grid.NoSelectionModelConnector.class);
@@ -874,14 +876,14 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.ui.splitpanel.VerticalSplitPanelConnector.class);
               }
             });
+            load1();
+          }
+          private void load1() {
             store.setConstructor(com.vaadin.client.ui.tabsheet.TabsheetConnector.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.ui.tabsheet.TabsheetConnector.class);
               }
             });
-            load1();
-          }
-          private void load1() {
             store.setConstructor(com.vaadin.client.ui.textarea.TextAreaConnector.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(com.vaadin.client.ui.textarea.TextAreaConnector.class);
@@ -1427,6 +1429,19 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return com.google.gwt.core.client.GWT.create(com.vaadin.shared.ui.window.WindowState.class);
               }
             });
+            store.setConstructor(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, new Invoker() {
+              public Object invoke(Object target, Object[] params) {
+                return com.google.gwt.core.client.GWT.create(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class);
+              }
+            });
+            load2();
+          }
+          private void load2() {
+            store.setConstructor(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, new Invoker() {
+              public Object invoke(Object target, Object[] params) {
+                return com.google.gwt.core.client.GWT.create(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class);
+              }
+            });
             store.setConstructor(java.util.HashMap.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return com.google.gwt.core.client.GWT.create(java.util.HashMap.class);
@@ -1434,9 +1449,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             });
             store.setReturnType(com.vaadin.client.JavaScriptExtension.class, "getState", new Type(com.vaadin.shared.JavaScriptExtensionState.class));
             store.setReturnType(com.vaadin.client.connectors.ButtonRendererConnector.class, "getRenderer", new Type(com.vaadin.client.renderers.ButtonRenderer.class));
-            load2();
-          }
-          private void load2() {
             store.setReturnType(com.vaadin.client.connectors.ButtonRendererConnector.class, "getState", new Type(com.vaadin.shared.ui.grid.renderers.ButtonRendererState.class));
             store.setReturnType(com.vaadin.client.connectors.ImageRendererConnector.class, "getRenderer", new Type(com.vaadin.client.renderers.ImageRenderer.class));
             store.setReturnType(com.vaadin.client.connectors.ImageRendererConnector.class, "getState", new Type(com.vaadin.shared.ui.grid.renderers.ImageRendererState.class));
@@ -1584,6 +1596,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setReturnType(com.vaadin.client.ui.video.VideoConnector.class, "getState", new Type(com.vaadin.shared.ui.video.VideoState.class));
             store.setReturnType(com.vaadin.client.ui.window.WindowConnector.class, "getWidget", new Type(com.vaadin.client.ui.VWindow.class));
             store.setReturnType(com.vaadin.client.ui.window.WindowConnector.class, "getState", new Type(com.vaadin.shared.ui.window.WindowState.class));
+            store.setReturnType(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, "getState", new Type(com.vaadin.shared.ui.upload.UploadState.class));
+            store.setReturnType(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, "getWidget", new Type(com.wcs.wcslib.vaadin.widget.multifileupload.client.VCustomUpload.class));
+            store.setReturnType(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, "getState", new Type(com.vaadin.shared.AbstractComponentState.class));
             store.setInvoker(com.vaadin.client.connectors.grid.AbstractSelectionModelConnector.class, "onSelectionAllowedChange",new JsniInvoker() {
               protected native Object jsniInvoke(Object target, com.vaadin.client.JsArrayObject<Object> params) /*-{ 
                 target.@com.vaadin.client.connectors.grid.AbstractSelectionModelConnector::onSelectionAllowedChange(*)();
@@ -1692,6 +1707,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return null;
               }-*/;
             });
+            load3();
+          }
+          private void load3() {
             store.setInvoker(com.vaadin.client.connectors.grid.EditorConnector.class, "updateCancelCaption",new JsniInvoker() {
               protected native Object jsniInvoke(Object target, com.vaadin.client.JsArrayObject<Object> params) /*-{ 
                 target.@com.vaadin.client.connectors.grid.EditorConnector::updateCancelCaption(*)();
@@ -1716,9 +1734,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return null;
               }-*/;
             });
-            load3();
-          }
-          private void load3() {
             store.setInvoker(com.vaadin.client.connectors.grid.GridConnector.class, "updateRowHeight",new JsniInvoker() {
               protected native Object jsniInvoke(Object target, com.vaadin.client.JsArrayObject<Object> params) /*-{ 
                 target.@com.vaadin.client.connectors.grid.GridConnector::updateRowHeight(*)();
@@ -2277,6 +2292,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return null;
               }
             });
+            load4();
+          }
+          private void load4() {
             store.setInvoker(com.vaadin.shared.ui.grid.editor.EditorClientRpc.class, "bind",new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 ((com.vaadin.shared.ui.grid.editor.EditorClientRpc) target).bind((java.lang.Integer) params[0]);
@@ -2307,9 +2325,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 return null;
               }
             });
-            load4();
-          }
-          private void load4() {
             store.setInvoker(com.vaadin.shared.ui.richtextarea.RichTextAreaClientRpc.class, "selectAll",new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 ((com.vaadin.shared.ui.richtextarea.RichTextAreaClientRpc) target).selectAll();
@@ -2397,6 +2412,24 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setInvoker(com.vaadin.shared.ui.upload.UploadClientRpc.class, "submitUpload",new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 ((com.vaadin.shared.ui.upload.UploadClientRpc) target).submitUpload();
+                return null;
+              }
+            });
+            store.setInvoker(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, "onResourceChange",new JsniInvoker() {
+              protected native Object jsniInvoke(Object target, com.vaadin.client.JsArrayObject<Object> params) /*-{ 
+                target.@com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector::onResourceChange(*)();
+                return null;
+              }-*/;
+            });
+            store.setInvoker(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, "onResourceChange",new JsniInvoker() {
+              protected native Object jsniInvoke(Object target, com.vaadin.client.JsArrayObject<Object> params) /*-{ 
+                target.@com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector::onResourceChange(*)();
+                return null;
+              }-*/;
+            });
+            store.setInvoker(com.wcs.wcslib.vaadin.widget.multifileupload.client.VCustomUpload.class, "setAcceptMimeTypes",new Invoker() {
+              public Object invoke(Object target, Object[] params) {
+                ((com.wcs.wcslib.vaadin.widget.multifileupload.client.VCustomUpload) target).setAcceptMimeTypes((java.lang.String) params[0]);
                 return null;
               }
             });
@@ -2593,6 +2626,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 };
               }
             });
+            load5();
+          }
+          private void load5() {
             store.setProxyHandler(com.vaadin.shared.data.selection.MultiSelectServerRpc.class, new com.vaadin.client.metadata.ProxyHandler() {
               public Object createProxy(final com.vaadin.client.metadata.InvokationHandler handler) {
                 return new com.vaadin.shared.data.selection.MultiSelectServerRpc() {
@@ -2623,9 +2659,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 };
               }
             });
-            load5();
-          }
-          private void load5() {
             store.setProxyHandler(com.vaadin.shared.ui.LayoutClickRpc.class, new com.vaadin.client.metadata.ProxyHandler() {
               public Object createProxy(final com.vaadin.client.metadata.InvokationHandler handler) {
                 return new com.vaadin.shared.ui.LayoutClickRpc() {
@@ -3073,6 +3106,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 };
               }
             });
+            load6();
+          }
+          private void load6() {
             store.setProxyHandler(com.vaadin.shared.ui.window.WindowServerRpc.class, new com.vaadin.client.metadata.ProxyHandler() {
               public Object createProxy(final com.vaadin.client.metadata.InvokationHandler handler) {
                 return new com.vaadin.shared.ui.window.WindowServerRpc() {
@@ -3091,9 +3127,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setMethodAttribute(com.vaadin.shared.data.DataProviderRpc.class, "insertRowData", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.NO_LAYOUT);
             store.setMethodAttribute(com.vaadin.shared.data.DataProviderRpc.class, "removeRowData", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.NO_LAYOUT);
             store.setMethodAttribute(com.vaadin.shared.data.DataProviderRpc.class, "setRowData", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.NO_LAYOUT);
-            load6();
-          }
-          private void load6() {
             store.setMethodAttribute(com.vaadin.shared.data.DataProviderRpc.class, "updateRowData", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.NO_LAYOUT);
             store.setMethodAttribute(com.vaadin.shared.data.DataRequestRpc.class, "dropRows", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.DELAYED);
             store.setMethodAttribute(com.vaadin.shared.data.DataRequestRpc.class, "dropRows", com.vaadin.client.metadata.TypeDataStore.MethodAttribute.NO_LOADING_INDICATOR);
@@ -3303,6 +3336,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setPropertyType(com.vaadin.shared.ui.ui.UIState.LocaleData.class, "name", new Type(java.lang.String.class));
             store.setPropertyType(com.vaadin.shared.extension.javascriptmanager.JavaScriptManagerState.class, "names", new Type("java.util.Set", new Type[] {new Type(java.lang.String.class), }));
             store.setPropertyType(com.vaadin.shared.ui.ui.UIState.class, "notificationConfigurations", new Type("java.util.Map", new Type[] {new Type(java.lang.String.class), new Type(com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration.class), }));
+            load7();
+          }
+          private void load7() {
             store.setPropertyType(com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration.class, "notificationRole", new Type(com.vaadin.shared.ui.ui.NotificationRole.class));
             store.setPropertyType(com.vaadin.shared.ui.ui.UIState.TooltipConfigurationState.class, "openDelay", new Type(java.lang.Integer.class));
             store.setPropertyType(com.vaadin.shared.ui.slider.SliderState.class, "orientation", new Type(com.vaadin.shared.ui.slider.SliderOrientation.class));
@@ -3312,9 +3348,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.setPropertyType(com.vaadin.shared.ui.BrowserWindowOpenerState.class, "parameters", new Type("java.util.Map", new Type[] {new Type(java.lang.String.class), new Type(java.lang.String.class), }));
             store.setPropertyType(com.vaadin.shared.ui.embedded.EmbeddedState.class, "parameters", new Type("java.util.Map", new Type[] {new Type(java.lang.String.class), new Type(java.lang.String.class), }));
             store.setPropertyType(com.vaadin.shared.ui.ui.UIState.PushConfigurationState.class, "parameters", new Type("java.util.Map", new Type[] {new Type(java.lang.String.class), new Type(java.lang.String.class), }));
-            load7();
-          }
-          private void load7() {
             store.setPropertyType(com.vaadin.shared.ui.datefield.AbstractDateFieldState.class, "parsable", new Type(java.lang.Boolean.class));
             store.setPropertyType(com.vaadin.shared.extension.PartInformationState.class, "partInformation", new Type(java.lang.String.class));
             store.setPropertyType(com.vaadin.shared.ui.loginform.LoginFormState.class, "passwordFieldConnector", new Type(com.vaadin.shared.Connector.class));
@@ -3686,6 +3719,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 };
               }
             });
+            load8();
+          }
+          private void load8() {
             store.setSerializerFactory(com.vaadin.shared.ui.datefield.AbstractDateFieldState.AccessibleElement.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return new com.vaadin.client.communication.JSONSerializer<com.vaadin.shared.ui.datefield.AbstractDateFieldState.AccessibleElement>() {
@@ -3712,9 +3748,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
                 };
               }
             });
-            load8();
-          }
-          private void load8() {
             store.setSerializerFactory(com.vaadin.shared.ui.dnd.DropEffect.class, new Invoker() {
               public Object invoke(Object target, Object[] params) {
                 return new com.vaadin.client.communication.JSONSerializer<com.vaadin.shared.ui.dnd.DropEffect>() {
@@ -4213,6 +4246,9 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateEditable", new String[] {"editable", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateExpandRatio", new String[] {"expandRatio", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateHandleWidgetEvents", new String[] {"handleWidgetEvents", }));
+            load9();
+          }
+          private void load9() {
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateHidable", new String[] {"hidable", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateHidden", new String[] {"hidden", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateHidingToggleCaption", new String[] {"hidingToggleCaption", }));
@@ -4221,9 +4257,6 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateMinimumWidthFromContent", new String[] {"minimumWidthFromContent", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateRenderer", new String[] {"renderer", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateResizable", new String[] {"resizable", }));
-            load9();
-          }
-          private void load9() {
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateSortable", new String[] {"sortable", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateTooltipContentMode", new String[] {"tooltipContentMode", }));
             store.addOnStateChangeMethod(com.vaadin.client.connectors.grid.ColumnConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateWidth", new String[] {"width", }));
@@ -4338,15 +4371,15 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.addOnStateChangeMethod(com.vaadin.client.ui.nativeselect.NativeSelectConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.nativeselect.NativeSelectConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateSelectedItem", new String[] {"selectedItemKey", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.nativeselect.NativeSelectConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateTabIndex", new String[] {"tabIndex", }));
+            load10();
+          }
+          private void load10() {
             store.addOnStateChangeMethod(com.vaadin.client.ui.nativeselect.NativeSelectConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateWidgetReadOnly", new String[] {"readOnly", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.CheckBoxGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.CheckBoxGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.RadioButtonGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.RadioButtonGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.RadioButtonGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateSelectedItem", new String[] {"selectedItemKey", }));
-            load10();
-          }
-          private void load10() {
             store.addOnStateChangeMethod(com.vaadin.client.ui.optiongroup.RadioButtonGroupConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("updateWidgetReadOnly", new String[] {"readOnly", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.orderedlayout.HorizontalLayoutConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.orderedlayout.HorizontalLayoutConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
@@ -4402,6 +4435,12 @@ public class ConnectorBundleLoaderImpl extends com.vaadin.client.metadata.Connec
             store.addOnStateChangeMethod(com.vaadin.client.ui.video.VideoConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.window.WindowConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
             store.addOnStateChangeMethod(com.vaadin.client.ui.window.WindowConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.CustomUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("onResourceChange", new String[] {"resources", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "setErrorLevel", new String[] {"errorMessage", "errorLevel", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod(com.vaadin.client.ui.AbstractComponentConnector.class, "handleContextClickListenerChange", new String[] {"registeredEventListeners", }));
+            store.addOnStateChangeMethod(com.wcs.wcslib.vaadin.widget.multifileupload.client.MultiUploadConnector.class, new com.vaadin.client.metadata.OnStateChangeMethod("onResourceChange", new String[] {"resources", }));
           }
           @com.google.gwt.core.client.UnsafeNativeLong
           private native void loadNativeJs(com.vaadin.client.metadata.TypeDataStore store) /*-{

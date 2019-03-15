@@ -1,7 +1,7 @@
 package com.qrsynergy.view;
 
 import com.google.common.eventbus.Subscribe;
-import com.qrsynergy.domain.User;
+import com.qrsynergy.domain.user.User;
 import com.qrsynergy.event.DashboardEvent.PostViewChangeEvent;
 import com.qrsynergy.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.event.DashboardEventBus;

@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.domain.ConstURL;
 import com.qrsynergy.domain.LoginResponse;
+import com.qrsynergy.domain.user.UserRepository;
 import com.qrsynergy.event.DashboardEvent;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -25,7 +27,7 @@ import com.qrsynergy.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.event.DashboardEvent.UserLoginRequestedEvent;
 import com.qrsynergy.event.DashboardEvent.WrongLoginEvent;
-import com.qrsynergy.domain.User;
+import com.qrsynergy.domain.user.User;
 import com.qrsynergy.view.LoginView;
 import com.qrsynergy.view.MainView;
 import com.vaadin.ui.Window;
@@ -35,6 +37,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
 
@@ -47,10 +50,14 @@ import java.util.Locale;
  */
 @Theme("dashboard")
 @Title("QR Synergy")
+@Widgetset("com.qrsynergy.MyAppWidgetset")
 public final class DashboardUI extends UI {
 
 
     private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -97,6 +104,10 @@ public final class DashboardUI extends UI {
     @Subscribe
     public void userLoginRequested(final UserLoginRequestedEvent event) {
 
+        User user = userRepository.findByUsername(event.getUserName());
+
+        System.out.println(user.getEmail());
+        /*
         // parse it to the JSON object
         JSONObject json = new JSONObject();
         json.put("username", event.getUserName());
@@ -124,7 +135,7 @@ public final class DashboardUI extends UI {
                 VaadinSession.getCurrent().setAttribute(User.class.getName(),loginResponse.getUser());
 
                 // update view to redirect dashboard
-                updateContent();
+                // updateContent();
             }
             else if(code == 401){
                 // TODO
@@ -138,6 +149,8 @@ public final class DashboardUI extends UI {
             System.out.println("Exception: " + ex);
             DashboardEventBus.post(new WrongLoginEvent("Internal server error"));
         }
+        */
+
     }
 
     /**

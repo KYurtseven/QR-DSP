@@ -40,7 +40,7 @@ public class LoginView extends VerticalLayout {
         notification.setHtmlContentAllowed(true);
         notification.setStyleName("tray dark small closable login-help");
         notification.setPosition(Position.BOTTOM_CENTER);
-        notification.setDelayMsec(20000);
+        notification.setDelayMsec(2000);
         notification.show(Page.getCurrent());
     }
 
