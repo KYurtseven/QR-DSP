@@ -8,31 +8,19 @@ import com.qrsynergy.ui.view.DashboardViewType;
 public abstract class DashboardEvent {
 
     public static final class UserLoginRequestedEvent {
-        private final String userName, password;
+        private final String email, password;
 
-        public UserLoginRequestedEvent(final String userName,final String password) {
-            this.userName = userName;
+        public UserLoginRequestedEvent(final String email,final String password) {
+            this.email = email;
             this.password = password;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getEmail() {
+            return email;
         }
 
         public String getPassword() {
             return password;
-        }
-    }
-
-    public static class WrongLoginEvent{
-
-        private final String message;
-
-        public WrongLoginEvent(final String message){
-            this.message = message;
-        }
-        public String getMessage(){
-            return message;
         }
     }
 

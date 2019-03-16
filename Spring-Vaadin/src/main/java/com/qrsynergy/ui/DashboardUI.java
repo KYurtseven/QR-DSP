@@ -11,12 +11,9 @@ import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.*;
+import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
@@ -25,12 +22,11 @@ import com.qrsynergy.ui.event.DashboardEvent.BrowserResizeEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
-import com.qrsynergy.ui.event.DashboardEvent.WrongLoginEvent;
 import com.qrsynergy.model.User;
 import com.qrsynergy.ui.view.LoginView;
 import com.qrsynergy.ui.view.MainView;
-import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.validation.ValidatorAdapter;
 
 import java.util.Locale;
 
@@ -97,14 +93,25 @@ public final class DashboardUI extends UI {
     @Subscribe
     public void userLoginRequested(final UserLoginRequestedEvent event) {
         // TODO
-        System.out.println("userlogin requested ");
+        // Implement error message when the email or password is not correct
 
-        User user = userService.findByEmail(event.getUserName());
+        // TODO
+        // For speeding up the test, user validation is bypassed
+        // remove it
+        User user = userService.findByEmail("koray@gmail.com");
+        VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
+        updateContent();
+        /*
+        User user = userService.findByEmail(event.getEmail());
         if(user != null){
-            VaadinSession.getCurrent().setAttribute(User.class.getName(),user);
-            updateContent();
+            // TODO
+            // check hashed values for comparison
+            if(user.getPassword().equals(event.getPassword())){
+                VaadinSession.getCurrent().setAttribute(User.class.getName(),user);
+                updateContent();
+            }
         }
-
+        */
     }
 
     /**
