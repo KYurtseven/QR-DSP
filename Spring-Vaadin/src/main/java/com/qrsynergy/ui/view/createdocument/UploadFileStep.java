@@ -85,6 +85,9 @@ public class UploadFileStep implements WizardStep {
                     firstStepInfo.setLastModified(curDate);
                     firstStepInfo.setDiskName(firstStepInfo.getUrl() + ".xlsx");
 
+                    // TODO
+                    // Do not save the file once upload is finished
+                    // Save the file once the finish button is pressed
                     File targetFile = new File(uploadLocation + firstStepInfo.getDiskName());
 
                     java.nio.file.Files.copy(
