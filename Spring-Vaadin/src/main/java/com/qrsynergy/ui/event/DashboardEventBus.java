@@ -17,6 +17,7 @@ public class DashboardEventBus implements SubscriberExceptionHandler {
         DashboardUI.getDashboardEventbus().eventBus.post(event);
     }
 
+
     public static void register(final Object object) {
         DashboardUI.getDashboardEventbus().eventBus.register(object);
     }

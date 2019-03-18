@@ -1,24 +1,43 @@
 package com.qrsynergy.ui.view.createdocument;
 
+import com.qrsynergy.model.QR;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
+import org.apache.commons.io.IOUtils;
 import org.vaadin.teemu.wizards.WizardStep;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import com.vaadin.server.StreamVariable;
+import sun.nio.ch.IOUtil;
+
+import java.io.OutputStream;
+import java.nio.file.StandardCopyOption;
+import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UploadFileStep implements WizardStep {
 
+    public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
     private UploadFinishedHandler uploadFinishedHandler;
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private static final int FILE_COUNT = 1;
     private double uploadSpeed = 100;
-    private Label uploadedFileLabel;
 
+    private FirstStepInfo firstStepInfo;
     private VerticalLayout content;
+
+    public UploadFileStep(FirstStepInfo firstStepInfo){
+        this.firstStepInfo = firstStepInfo;
+    }
+
 
     public String getCaption() {
         return "Upload file";
@@ -53,12 +72,40 @@ public class UploadFileStep implements WizardStep {
 
     private void createUploadFinishedHandler() {
         uploadFinishedHandler = (InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) -> {
-            Notification.show(fileName + " uploaded (" + length + " bytes).", Notification.Type.WARNING_MESSAGE);
 
+            try{
+                String type = fileName.substring(fileName.lastIndexOf(".") +1);
+                if(type.equals("xlsx")){
 
-            uploadedFileLabel = new Label(fileName);
+                    if(firstStepInfo.getUrl() != null){
+                        File toBeDeletedFile = new File(uploadLocation + firstStepInfo.getDiskName());
+                        toBeDeletedFile.delete();
+                    }
 
-            content.addComponent(uploadedFileLabel);
+                    firstStepInfo.setUrl(UUID.randomUUID().toString());
+                    firstStepInfo.setType("xlsx");
+                    firstStepInfo.setOriginalName(fileName);
+                    Date curDate = new Date();
+                    firstStepInfo.setCreatedAt(curDate);
+                    firstStepInfo.setLastModified(curDate);
+                    firstStepInfo.setDiskName(firstStepInfo.getUrl() + ".xlsx");
+
+                    // First, convert Input Stream to Byte[]
+                    // When writing, convert byte[] to file
+                    firstStepInfo.setFileInBytes(IOUtils.toByteArray(stream));
+                }
+                else{
+                    Notification.show("Only 'xlsx' format is supported", Notification.Type.WARNING_MESSAGE);
+                }
+            }
+            catch(Exception e){
+                Notification unhandledUploadFileError = new Notification("Unhandled file upload error is occured");
+                unhandledUploadFileError.setDelayMsec(2000);
+                unhandledUploadFileError.setPosition(Position.MIDDLE_CENTER);
+                unhandledUploadFileError.show(Page.getCurrent());
+                System.out.println("Unhandled file upload error: " + e);
+            }
+
         };
     }
 
@@ -69,6 +116,7 @@ public class UploadFileStep implements WizardStep {
     public boolean onBack() {
         return true;
     }
+
 
 
     private class FileUpload extends MultiFileUpload {

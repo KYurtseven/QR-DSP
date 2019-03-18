@@ -2,7 +2,6 @@ package com.qrsynergy.ui.view;
 
 import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
-import com.qrsynergy.ui.event.DashboardEvent.WrongLoginEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
@@ -60,9 +59,9 @@ public class LoginView extends VerticalLayout {
         HorizontalLayout fields = new HorizontalLayout();
         fields.addStyleName("fields");
 
-        final TextField username = new TextField("Username");
-        username.setIcon(FontAwesome.USER);
-        username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        final TextField email = new TextField("Email");
+        email.setIcon(FontAwesome.USER);
+        email.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 
         final PasswordField password = new PasswordField("Password");
         password.setIcon(FontAwesome.LOCK);
@@ -73,28 +72,17 @@ public class LoginView extends VerticalLayout {
         signin.setClickShortcut(KeyCode.ENTER);
         signin.focus();
 
-        fields.addComponents(username, password, signin);
+        fields.addComponents(email, password, signin);
         fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
 
         signin.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-                DashboardEventBus.post(new UserLoginRequestedEvent(username
+                DashboardEventBus.post(new UserLoginRequestedEvent(email
                         .getValue(), password.getValue()));
             }
         });
         return fields;
-    }
-
-    @Subscribe
-    public void wrongLogin(final WrongLoginEvent event){
-        System.out.println("Wrong login event!");
-        Notification notification = new Notification(event.getMessage());
-        notification.setHtmlContentAllowed(true);
-        notification.setStyleName("tray dark small closable login-help");
-        notification.setPosition(Position.BOTTOM_CENTER);
-        notification.setDelayMsec(2000);
-        notification.show(Page.getCurrent());
     }
 
     private Component buildLabels() {

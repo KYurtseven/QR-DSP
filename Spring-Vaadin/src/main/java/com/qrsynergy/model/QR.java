@@ -6,18 +6,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.GeneratedValue;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Document(collection = "QR")
 public class QR {
 
     @Id
-    @GeneratedValue(generator = "uuid")
     private String url;
     // Owner
     private String o_info;
 
-    private String name;
     private Boolean isPublic;
     // TODO,
     // enum
@@ -43,6 +42,15 @@ public class QR {
     // visible name
     private String originalName;
 
+    @Override
+    public String toString(){
+        return String.format(
+                "url: %s\n" +
+                 "name: %s\n" ,
+            url, originalName
+        );
+    }
+
     public String getUrl() {
         return url;
     }
@@ -57,14 +65,6 @@ public class QR {
 
     public void setO_info(String o_info) {
         this.o_info = o_info;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Boolean getPublic() {
