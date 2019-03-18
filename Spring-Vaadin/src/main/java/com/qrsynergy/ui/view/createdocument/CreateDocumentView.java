@@ -6,14 +6,21 @@ import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
+import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.apache.commons.io.FileUtils;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public final class CreateDocumentView extends Panel implements View{
@@ -106,10 +113,40 @@ public final class CreateDocumentView extends Panel implements View{
 
     public void wizardCompleted(WizardCompletedEvent event) {
         System.out.println("Completed");
+        try{
+            if(firstStepInfo != null){
+                if(firstStepInfo.getUrl() != null){
+                    // There is the file
+
+                    File targetFile = new File(UploadFileStep.uploadLocation + firstStepInfo.getDiskName());
+
+                    FileUtils.writeByteArrayToFile(
+                            targetFile,
+                            firstStepInfo.getFileInBytes()
+                    );
+                    // File is written to the disk
+                    List<String> viewEmails = checkEmails(viewDataProvider);
+
+                }
+            }
+        }
+        catch(IOException e){
+            Notification fileUploadExceptionNotification = new Notification("Unknown error occured");
+            fileUploadExceptionNotification.setDelayMsec(2000);
+            fileUploadExceptionNotification.setPosition(Position.MIDDLE_CENTER);
+            fileUploadExceptionNotification.show(Page.getCurrent());
+            System.out.println("File upload exception: " + e);
+        }
     }
 
-    // TODO
-    // Overwrite wizardCancelled method to call this method
+    public List<String> checkEmails(ListDataProvider<String> dataProvider){
+        List<String> filteredEmails = new ArrayList<>();
+        for(final String email: dataProvider.getItems()){
+
+            System.out.println("email: " + email);
+        }
+        return filteredEmails;
+    }
 
     public void wizardCancelled(WizardCancelledEvent event) {
         try{

@@ -16,6 +16,9 @@ public class FirstStepInfo {
 
     private String diskName;
 
+    // Used for writing input stream to byte[]
+    // Then byte [] to file
+    private byte[] fileInBytes;
 
     public String getUrl() {
         return url;
@@ -63,5 +66,13 @@ public class FirstStepInfo {
 
     public void setDiskName(String diskName) {
         this.diskName = diskName;
+    }
+
+    public byte[] getFileInBytes() {
+        return fileInBytes;
+    }
+
+    public void setFileInBytes(byte[] fileInBytes) {
+        this.fileInBytes = fileInBytes;
     }
 }

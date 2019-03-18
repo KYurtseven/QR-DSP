@@ -2,7 +2,10 @@ package com.qrsynergy.ui.view.createdocument;
 
 import com.qrsynergy.model.QR;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
+import org.apache.commons.io.IOUtils;
 import org.vaadin.teemu.wizards.WizardStep;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
 
@@ -11,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.vaadin.server.StreamVariable;
+import sun.nio.ch.IOUtil;
 
+import java.io.OutputStream;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.UUID;
@@ -85,25 +90,22 @@ public class UploadFileStep implements WizardStep {
                     firstStepInfo.setLastModified(curDate);
                     firstStepInfo.setDiskName(firstStepInfo.getUrl() + ".xlsx");
 
-                    // TODO
-                    // Do not save the file once upload is finished
-                    // Save the file once the finish button is pressed
-                    File targetFile = new File(uploadLocation + firstStepInfo.getDiskName());
-
-                    java.nio.file.Files.copy(
-                            stream,
-                            targetFile.toPath(),
-                            StandardCopyOption.REPLACE_EXISTING);
-
-                    Notification.show(fileName + " uploaded", Notification.Type.ASSISTIVE_NOTIFICATION);
+                    // First, convert Input Stream to Byte[]
+                    // When writing, convert byte[] to file
+                    firstStepInfo.setFileInBytes(IOUtils.toByteArray(stream));
                 }
                 else{
                     Notification.show("Only 'xlsx' format is supported", Notification.Type.WARNING_MESSAGE);
                 }
             }
-            catch(IOException e){
-                Notification.show(fileName + " is not uploaded", Notification.Type.WARNING_MESSAGE);
+            catch(Exception e){
+                Notification unhandledUploadFileError = new Notification("Unhandled file upload error is occured");
+                unhandledUploadFileError.setDelayMsec(2000);
+                unhandledUploadFileError.setPosition(Position.MIDDLE_CENTER);
+                unhandledUploadFileError.show(Page.getCurrent());
+                System.out.println("Unhandled file upload error: " + e);
             }
+
         };
     }
 
