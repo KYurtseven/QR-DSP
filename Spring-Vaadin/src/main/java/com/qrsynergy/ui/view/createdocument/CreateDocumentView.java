@@ -21,11 +21,13 @@ import java.nio.file.StandardCopyOption;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 public final class CreateDocumentView extends Panel implements View{
 
     public static final String TITLE_ID = "createdocument-title";
+    public static final Integer companyRowCount = 10;
 
     private final VerticalLayout root;
     private WizardCancelledEvent cancelledEvent;
@@ -36,11 +38,17 @@ public final class CreateDocumentView extends Panel implements View{
 
     // View Emails page
     private NativeSelect<String> selectViewEmails = new NativeSelect<>("View List");
-    private ListDataProvider<String> viewDataProvider = DataProvider.ofCollection(new ArrayList<>());
+    private ListDataProvider<String> emailViewDataProvider = DataProvider.ofCollection(new ArrayList<>());
 
     // Edit emails page
     private NativeSelect<String> selectEditEmails = new NativeSelect<>("Edit List");
-    private ListDataProvider<String> editDataProvider = DataProvider.ofCollection(new ArrayList<>());
+    private ListDataProvider<String> emailEditDataProvider = DataProvider.ofCollection(new ArrayList<>());
+
+    // View company page
+    private TwinColSelect<String> selectViewCompanies = new TwinColSelect<>("Company List");
+
+    // Edit company page
+    private TwinColSelect<String> selectEditCompanies = new TwinColSelect<>("Company List");
 
     public CreateDocumentView(){
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -87,8 +95,20 @@ public final class CreateDocumentView extends Panel implements View{
 
         // add pages
         wizard.addStep(new UploadFileStep(firstStepInfo), "Upload The Document");
-        wizard.addStep(new AddPeopleStep("view", selectViewEmails, viewDataProvider, wizard), "View rights");
-        wizard.addStep(new AddPeopleStep("edit", selectEditEmails, editDataProvider, wizard), "Edit rights");
+        wizard.addStep(new AddPeopleStep("view", selectViewEmails, emailViewDataProvider, wizard), "Individual view rights");
+        wizard.addStep(new AddPeopleStep("edit", selectEditEmails, emailEditDataProvider, wizard), "Individual edit rights");
+
+        // Fetch company list from the database
+        // TODO
+        // This is mock data
+        selectViewCompanies.setItems("Ford", "Nissan", "Opel");
+        selectViewCompanies.setRows(companyRowCount);
+
+        selectEditCompanies.setItems("Ford", "Nissan", "Opel");
+        selectEditCompanies.setRows(companyRowCount);
+
+        wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
+        wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
 
         return wizard;
     }
@@ -125,7 +145,13 @@ public final class CreateDocumentView extends Panel implements View{
                             firstStepInfo.getFileInBytes()
                     );
                     // File is written to the disk
-                    List<String> viewEmails = checkEmails(viewDataProvider);
+
+                    // TODO
+                    List<String> viewEmails = checkEmails(emailViewDataProvider);
+                    List<String> editEmails = checkEmails(emailEditDataProvider);
+
+                    List<String> viewCompanies = checkCompanies(selectViewCompanies);
+                    List<String> editCompanies = checkCompanies(selectEditCompanies);
 
                 }
             }
@@ -139,6 +165,8 @@ public final class CreateDocumentView extends Panel implements View{
         }
     }
 
+    // TODO
+    // Filter invalid emails
     public List<String> checkEmails(ListDataProvider<String> dataProvider){
         List<String> filteredEmails = new ArrayList<>();
         for(final String email: dataProvider.getItems()){
@@ -147,6 +175,15 @@ public final class CreateDocumentView extends Panel implements View{
         }
         return filteredEmails;
     }
+
+    // TODO
+    // Check them in the database
+    public List<String> checkCompanies(TwinColSelect<String> select){
+        List<String> list = new ArrayList<>(select.getValue());
+
+        return list;
+    }
+
 
     public void wizardCancelled(WizardCancelledEvent event) {
         try{

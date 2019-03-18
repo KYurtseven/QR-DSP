@@ -54,9 +54,9 @@ public class AddPeopleStep implements WizardStep {
      */
     public String getCaption() {
         if(type.equals("view")){
-            return "View rights";
+            return "Individual view rights";
         }
-        return "Edit rights";
+        return "Individual edit rights";
     }
 
     /**
@@ -164,8 +164,7 @@ public class AddPeopleStep implements WizardStep {
      *
      * @param email
      *
-     * TODO
-     * check email
+     * checks email
      * if email is not appropriate, don't accept,
      * show user a notification/warning
      */
@@ -188,6 +187,7 @@ public class AddPeopleStep implements WizardStep {
 
     /**
      * removes selected email from the list
+     * when remove button is pressed
      */
     private void removeSelectedEmailFromList(){
         select.getSelectedItem().ifPresent(selectedItem->{
