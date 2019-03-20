@@ -24,6 +24,11 @@ public abstract class DashboardEvent {
         }
     }
 
+
+    /**
+     * For creating company in the UI
+     * Not used in the production
+     */
     public static final class CompanyCreateRequestedEvent{
         private final String name, emailExtension;
 

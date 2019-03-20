@@ -23,7 +23,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan(value = "com.qrsynergy.DAO.CompanyDAO")
 @SuppressWarnings("serial")
 public final class DashboardView extends Panel implements View,
         DashboardEditListener {
@@ -36,12 +35,6 @@ public final class DashboardView extends Panel implements View,
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
 
-    // TODO
-    // Delete this
-    @Autowired
-    private CompanyDAO companyDAO;
-    @Autowired
-    private CompanyRepository companyRepository;
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -125,17 +118,15 @@ public final class DashboardView extends Panel implements View,
         Responsive.makeResponsive(dashboardPanels);
         dashboardPanels.addComponent(buildNotes());
 
-        // TODO
-        // remove from production
-        dashboardPanels.addComponent(addCompanyComponent());
+        // Below code is used for adding company to the database
+        // removed in the production
+        //dashboardPanels.addComponent(addCompanyComponent());
 
         return dashboardPanels;
     }
 
     /**
      * Component is used for adding company to the database
-     * TODO
-     * remove this function from the production
      * Only used for creating companies in the initial environment
      * @return Component to be added to the UI
      */
