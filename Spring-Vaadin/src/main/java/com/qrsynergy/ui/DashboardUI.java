@@ -4,6 +4,9 @@ import javax.servlet.annotation.WebServlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
+import com.qrsynergy.DAO.CompanyDAO;
+import com.qrsynergy.model.Company;
+import com.qrsynergy.model.User;
 import com.qrsynergy.service.UserService;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.vaadin.annotations.Theme;
@@ -22,7 +25,8 @@ import com.qrsynergy.ui.event.DashboardEvent.BrowserResizeEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
-import com.qrsynergy.model.User;
+import com.qrsynergy.ui.event.DashboardEvent.CompanyCreateRequestedEvent;
+import com.qrsynergy.DAO.UserDAO;
 import com.qrsynergy.ui.view.LoginView;
 import com.qrsynergy.ui.view.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +50,10 @@ public final class DashboardUI extends UI {
     private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
 
     @Autowired
-    UserService userService;
+    private UserDAO userDAO;
+    @Autowired
+    private CompanyDAO companyDAO;
+
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -98,7 +105,8 @@ public final class DashboardUI extends UI {
         // TODO
         // For speeding up the test, user validation is bypassed
         // remove it
-        User user = userService.findByEmail("koray@gmail.com");
+        User user = userDAO.findByEmail("koray@gmail.com");
+
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
         /*
@@ -112,6 +120,19 @@ public final class DashboardUI extends UI {
             }
         }
         */
+    }
+
+    /**
+     * Saves company to the database
+     * Not used in the production
+     * Save occurs from DashboardView component
+     * @param event
+     */
+    @Subscribe
+    public void companyCreateRequested(final CompanyCreateRequestedEvent event){
+
+        Company company = new Company(event.getName(), event.getEmailExtension());
+        companyDAO.saveCompany(company);
     }
 
     /**

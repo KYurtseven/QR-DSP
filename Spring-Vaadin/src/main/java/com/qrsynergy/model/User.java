@@ -24,6 +24,8 @@ public class User {
 
     private String company;
 
+    private String emailExtansion;
+
     // TODO
     // hash it
     private String password;
@@ -66,6 +68,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmailExtansion() {
+        return emailExtansion;
+    }
+
+    public void setEmailExtansion(String emailExtansion) {
+        this.emailExtansion = emailExtansion;
     }
 
     public String toString(){
