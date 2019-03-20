@@ -55,6 +55,11 @@ public final class CreateDocumentView extends Panel implements View{
         setSizeFull();
         DashboardEventBus.register(this);
 
+        // TODO
+        // Fetch companies from the database
+        // add them to the list
+
+
         root = new VerticalLayout();
         root.setSizeFull();
         root.setSpacing(false);
@@ -101,6 +106,9 @@ public final class CreateDocumentView extends Panel implements View{
         // Fetch company list from the database
         // TODO
         // This is mock data
+
+
+
         selectViewCompanies.setItems("Ford", "Nissan", "Opel");
         selectViewCompanies.setRows(companyRowCount);
 

@@ -24,6 +24,28 @@ public abstract class DashboardEvent {
         }
     }
 
+
+    /**
+     * For creating company in the UI
+     * Not used in the production
+     */
+    public static final class CompanyCreateRequestedEvent{
+        private final String name, emailExtension;
+
+        public CompanyCreateRequestedEvent(final String name, final String emailExtension){
+            this.name = name;
+            this.emailExtension = emailExtension;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getEmailExtension() {
+            return emailExtension;
+        }
+    }
+
     public static class BrowserResizeEvent {
 
     }

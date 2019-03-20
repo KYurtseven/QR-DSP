@@ -2,6 +2,10 @@ package com.qrsynergy.ui.view.dashboard;
 
 import java.util.Iterator;
 
+import com.qrsynergy.DAO.CompanyDAO;
+import com.qrsynergy.model.Company;
+import com.qrsynergy.repository.CompanyRepository;
+import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.dashboard.DashboardEdit.DashboardEditListener;
@@ -10,22 +14,14 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 
 @SuppressWarnings("serial")
 public final class DashboardView extends Panel implements View,
@@ -38,6 +34,7 @@ public final class DashboardView extends Panel implements View,
     private Button notificationsButton;
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
+
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -121,7 +118,40 @@ public final class DashboardView extends Panel implements View,
         Responsive.makeResponsive(dashboardPanels);
         dashboardPanels.addComponent(buildNotes());
 
+        // Below code is used for adding company to the database
+        // removed in the production
+        //dashboardPanels.addComponent(addCompanyComponent());
+
         return dashboardPanels;
+    }
+
+    /**
+     * Component is used for adding company to the database
+     * Only used for creating companies in the initial environment
+     * @return Component to be added to the UI
+     */
+    private Component addCompanyComponent(){
+
+        HorizontalLayout addCompanyLayout = new HorizontalLayout();
+
+        TextField companyNameTextField = new TextField("company name");
+        TextField companyEmailExtensionTextField = new TextField("email");
+        Button addCompanyButton = new Button("add Company");
+
+        addCompanyButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                DashboardEventBus.post(new DashboardEvent.CompanyCreateRequestedEvent(companyNameTextField
+                        .getValue(), companyEmailExtensionTextField.getValue()));
+
+                companyNameTextField.clear();
+                companyEmailExtensionTextField.clear();
+            }
+        });
+
+        addCompanyLayout.addComponents(companyNameTextField, companyEmailExtensionTextField, addCompanyButton);
+
+        return addCompanyLayout;
     }
 
 
