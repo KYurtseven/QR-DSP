@@ -167,7 +167,7 @@ public final class DashboardUI extends UI {
 
 
     @WebServlet(urlPatterns = "/*",  asyncSupported = true)
-    @VaadinServletConfiguration(ui = DashboardUI.class, productionMode = true)
+    @VaadinServletConfiguration(ui = DashboardUI.class, productionMode = true/*, widgetset = "com.qrsynergy.MyAppWidgetset"*/)
     public static class MyUIServlet extends VaadinServlet {
     }
 

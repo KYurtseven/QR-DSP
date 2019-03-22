@@ -74,6 +74,8 @@ public final class ViewDocumentView extends Panel implements  View{
                 File excel = new File(path);
                 try{
                     Spreadsheet spreadsheet = new Spreadsheet(excel);
+                    spreadsheet.setReportStyle(true);
+                    spreadsheet.setActiveSheetProtected("asdasdasd");
                     root.addComponent(spreadsheet);
                     root.setExpandRatio(spreadsheet,1);
 
