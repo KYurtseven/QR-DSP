@@ -2,9 +2,9 @@ package com.qrsynergy.ui.view.dashboard;
 
 import java.util.Iterator;
 
-import com.qrsynergy.DAO.CompanyDAO;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.repository.CompanyRepository;
+import com.qrsynergy.service.CompanyService;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
@@ -20,8 +20,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 
 @SuppressWarnings("serial")
 public final class DashboardView extends Panel implements View,
@@ -34,6 +32,7 @@ public final class DashboardView extends Panel implements View,
     private Button notificationsButton;
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
+
 
 
     public DashboardView() {
@@ -51,6 +50,7 @@ public final class DashboardView extends Panel implements View,
         root.addComponent(buildHeader());
 
         root.addComponent(buildSparklines());
+
 
         Component content = buildContent();
         root.addComponent(content);

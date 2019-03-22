@@ -1,31 +1,41 @@
 package com.qrsynergy.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+@Entity
 @Document(collection = "QR")
 public class QR {
 
+    private ObjectId _id;
+
     @Id
+    @Indexed(unique = true)
     private String url;
     // Owner
     private String o_info;
 
     private Boolean isPublic;
+
+    private Boolean isPublished;
     // TODO,
     // enum
     // xlsx, pdf or dynamic form
     private String type;
     // list of company who can edit
-    private List<CompanyScope> e_company;
+    // includes companies email extension
+    private List<String> e_company;
     // list of company who can view
-    private List<CompanyScope> v_company;
+    // includes companies email extension
+    private List<String > v_company;
     // list of people who can edit
     private List<String> e_info;
     // list of people who can view
@@ -83,19 +93,19 @@ public class QR {
         this.type = type;
     }
 
-    public List<CompanyScope> getE_company() {
+    public List<String> getE_company() {
         return e_company;
     }
 
-    public void setE_company(List<CompanyScope> e_company) {
+    public void setE_company(List<String> e_company) {
         this.e_company = e_company;
     }
 
-    public List<CompanyScope> getV_company() {
+    public List<String> getV_company() {
         return v_company;
     }
 
-    public void setV_company(List<CompanyScope> v_company) {
+    public void setV_company(List<String> v_company) {
         this.v_company = v_company;
     }
 
@@ -157,4 +167,19 @@ public class QR {
         this.originalName = originalName;
     }
 
+    public Boolean getPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
 }

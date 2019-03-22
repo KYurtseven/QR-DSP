@@ -8,6 +8,8 @@ public class UserDocument {
     // url of the qr
     private String url;
 
+
+
     public String getName() {
         return name;
     }

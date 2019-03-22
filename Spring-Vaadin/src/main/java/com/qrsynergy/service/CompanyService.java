@@ -1,13 +1,14 @@
-package com.qrsynergy.DAO;
+package com.qrsynergy.service;
 
 import com.qrsynergy.model.Company;
 import com.qrsynergy.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class CompanyDAO {
+import java.util.List;
 
+@Service
+public class CompanyService {
     @Autowired
     CompanyRepository companyRepository;
 
@@ -29,5 +30,13 @@ public class CompanyDAO {
      */
     public Company findByCompanyName(String name){
         return companyRepository.findByName(name.toUpperCase());
+    }
+
+    /**
+     *
+     * @return list of company objects
+     */
+    public List<Company> findAll(){
+        return companyRepository.findAll();
     }
 }

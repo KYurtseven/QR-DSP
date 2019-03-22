@@ -1,10 +1,17 @@
 package com.qrsynergy.ui.view.viewdocument;
 
+import com.qrsynergy.model.User;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.qrsynergy.ui.view.createdocument.UploadFileStep;
+import com.vaadin.addon.spreadsheet.Spreadsheet;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Responsive;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+
+import java.io.File;
+import java.io.IOException;
 
 public final class ViewDocumentView extends Panel implements  View{
 
@@ -28,8 +35,8 @@ public final class ViewDocumentView extends Panel implements  View{
         root.addComponent(buildHeader());
 
         Component content = buildContent();
-        root.addComponent(content);
-        root.setExpandRatio(content, 1);
+        root.addComponent(buildContent());
+        //root.setExpandRatio(content, 1);
 
     }
 
@@ -53,8 +60,28 @@ public final class ViewDocumentView extends Panel implements  View{
      * @return
      */
     private Component buildContent(){
-        Label newLabel = new Label("Write your code here and below!");
+        User user = (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
 
-        return newLabel;
+        String testExcelText = "e3e479e8-c6e8-47ec-ae7f-faefa34f1e50";
+        Button testExcel = new Button(testExcelText);
+
+        testExcel.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                final String path = UploadFileStep.uploadLocation + testExcelText + ".xlsx";
+
+                File excel = new File(path);
+                try{
+                    Spreadsheet spreadsheet = new Spreadsheet(excel);
+                    root.addComponent(spreadsheet);
+                    root.setExpandRatio(spreadsheet,1);
+
+                }catch(IOException e){
+                    System.out.println("io exception: " + e);
+                }
+            }
+        });
+        return testExcel;
     }
 }
