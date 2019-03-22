@@ -1,6 +1,9 @@
 package com.qrsynergy.ui.view.viewdocument;
 
 import com.qrsynergy.model.User;
+import com.qrsynergy.model.UserDocument;
+import com.qrsynergy.model.UserQR;
+import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.createdocument.UploadFileStep;
 import com.vaadin.addon.spreadsheet.Spreadsheet;
@@ -12,6 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public final class ViewDocumentView extends Panel implements  View{
 
@@ -60,30 +64,50 @@ public final class ViewDocumentView extends Panel implements  View{
      * @return
      */
     private Component buildContent(){
-        User user = (User) VaadinSession.getCurrent()
-                .getAttribute(User.class.getName());
+        VerticalLayout content = new VerticalLayout();
 
-        String testExcelText = "e3e479e8-c6e8-47ec-ae7f-faefa34f1e50";
-        Button testExcel = new Button(testExcelText);
+        User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
 
-        testExcel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                final String path = UploadFileStep.uploadLocation + testExcelText + ".xlsx";
+        UserQR userQR = ((DashboardUI) UI.getCurrent()).userQRService.getUserQR(user);
 
-                File excel = new File(path);
-                try{
-                    Spreadsheet spreadsheet = new Spreadsheet(excel);
-                    spreadsheet.setReportStyle(true);
-                    spreadsheet.setActiveSheetProtected("asdasdasd");
-                    root.addComponent(spreadsheet);
-                    root.setExpandRatio(spreadsheet,1);
+        Label ownLabel = new Label("Owned documents");
+        content.addComponent(buildQRItems(userQR.getO_docs()));
 
-                }catch(IOException e){
-                    System.out.println("io exception: " + e);
-                }
-            }
-        });
-        return testExcel;
+        return content;
     }
+
+    private Component buildQRItems(List<UserDocument> userDocuments){
+        HorizontalLayout row = new HorizontalLayout();
+
+        for (UserDocument userDocument: userDocuments) {
+            VerticalLayout column = new VerticalLayout();
+            Label qrName = new Label(userDocument.getName());
+
+            Button openDocument = new Button("Open");
+            openDocument.addClickListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    final String path = UploadFileStep.uploadLocation + userDocument.getUrl() + ".xlsx";
+
+                    File excel = new File(path);
+                    try{
+                        Spreadsheet spreadsheet = new Spreadsheet(excel);
+                        spreadsheet.setReportStyle(true);
+                        spreadsheet.setActiveSheetProtected("asdasdasd");
+                        root.addComponent(spreadsheet);
+                        root.setExpandRatio(spreadsheet,1);
+
+                    }catch(IOException e){
+                        System.out.println("io exception: " + e);
+                    }
+                }
+            });
+
+            column.addComponents(qrName, openDocument);
+            row.addComponent(column);
+        }
+
+        return row;
+    }
+
 }

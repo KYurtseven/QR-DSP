@@ -8,6 +8,7 @@ import com.qrsynergy.model.Company;
 import com.qrsynergy.model.User;
 import com.qrsynergy.service.CompanyService;
 import com.qrsynergy.service.QRService;
+import com.qrsynergy.service.UserQRService;
 import com.qrsynergy.service.UserService;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.vaadin.annotations.Theme;
@@ -56,6 +57,8 @@ public final class DashboardUI extends UI {
     public CompanyService companyService;
     @Autowired
     public QRService qrService;
+    @Autowired
+    public UserQRService userQRService;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
