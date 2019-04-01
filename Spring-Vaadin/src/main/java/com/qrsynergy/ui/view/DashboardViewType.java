@@ -3,6 +3,7 @@ package com.qrsynergy.ui.view;
 import com.qrsynergy.ui.view.dashboard.DashboardView;
 import com.qrsynergy.ui.view.createdocument.CreateDocumentView;
 import com.qrsynergy.ui.view.viewdocument.ViewDocumentView;
+import com.qrsynergy.ui.view.dynamicform.CreateDynamicFormView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
@@ -12,7 +13,8 @@ import java.awt.*;
 public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, false),
     CREATEDOCUMENT("Create Document", CreateDocumentView.class, FontAwesome.FILE_EXCEL_O, false),
-    VIEWDOCUMENT("View Document", ViewDocumentView.class, FontAwesome.EYE, false)
+    VIEWDOCUMENT("View Document", ViewDocumentView.class, FontAwesome.EYE, false),
+    CREATEDYNAMIC("Create Dynamic Form", CreateDynamicFormView.class, FontAwesome.TWITCH /*TODO*/, false )
     ;
 
     private final String viewName;

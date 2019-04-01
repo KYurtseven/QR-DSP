@@ -60,6 +60,7 @@ public class MyUI extends UI{
                     fos.close();
                     */
 
+                    // TODO
                     String path = "C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\";
                     path += qr_id + ".xlsx";
 
@@ -81,7 +82,8 @@ public class MyUI extends UI{
     }
 
     private void initSpreadsheet() {
-        File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
+        //File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
+        File sampleFile = new File("D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {
