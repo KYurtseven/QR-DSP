@@ -4,7 +4,6 @@ import com.qrsynergy.model.Company;
 import com.qrsynergy.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
