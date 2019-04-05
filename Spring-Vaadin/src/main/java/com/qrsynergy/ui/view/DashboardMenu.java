@@ -91,7 +91,7 @@ public final class DashboardMenu extends CustomComponent {
         settings.addStyleName("user-menu");
         settingsItem = settings.addItem("",
                 new ThemeResource("img/profile-pic-300px.jpg"), null);
-        settingsItem.addItem(getCurrentUser().getFullname());
+        settingsItem.addItem(getCurrentUser().getFullName());
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", new Command() {
             @Override

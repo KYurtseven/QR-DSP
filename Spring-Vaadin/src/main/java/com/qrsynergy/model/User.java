@@ -1,5 +1,6 @@
 package com.qrsynergy.model;
 
+import com.qrsynergy.Controller.UserDTO;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -16,7 +17,7 @@ public class User {
 
     private ObjectId _id;
 
-    private String fullname;
+    private String fullName;
 
     @Id
     @Indexed(unique = true)
@@ -24,26 +25,62 @@ public class User {
 
     private String company;
 
-    private String emailExtansion;
+    private String emailExtension;
 
-    // TODO
-    // hash it
+    private String salt;
+
     private String password;
 
+    /**
+     * empty constructor
+     */
+    public User(){
+
+    }
+    /**
+     * Creates User from UserDTO
+     * Hashes password
+     * @param userDTO
+     */
+    public User(UserDTO userDTO){
+        this.fullName = userDTO.getFullName();
+        this.email = userDTO.getEmail();
+        this.company = userDTO.getCompany();
+        this.emailExtension = email.substring(email.lastIndexOf("@") + 1);
+
+        byte[] salt = Password.generateSalt();
+        byte[] hashedPasswordInByte = Password.hashPassword(userDTO.getPassword().toCharArray(), salt);
+
+        this.salt = Password.bytetoString(salt);
+        this.password = Password.bytetoString(hashedPasswordInByte);
+    }
+
+    /**
+     *
+     * @return Mongo db document id
+     */
     public ObjectId get_id() {
         return _id;
     }
 
+    /**
+     * MongoRepository will set this, not used
+     * @param _id mongo db document id
+     */
     public void set_id(ObjectId _id) {
         this._id = _id;
     }
 
-    public String getFullname() {
-        return fullname;
+    /**
+     *
+     * @return
+     */
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -70,15 +107,24 @@ public class User {
         this.password = password;
     }
 
-    public String getEmailExtansion() {
-        return emailExtansion;
+    public String getEmailExtension() {
+        return emailExtension;
     }
 
-    public void setEmailExtansion(String emailExtansion) {
-        this.emailExtansion = emailExtansion;
+    public void setEmailExtension(String emailExtension) {
+        this.emailExtension = emailExtension;
     }
 
     public String toString(){
         return String.format("User{email: %s, company =%s}", email, company);
     }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
 }
