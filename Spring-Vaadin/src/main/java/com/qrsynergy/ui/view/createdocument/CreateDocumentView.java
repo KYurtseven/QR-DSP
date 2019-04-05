@@ -200,10 +200,13 @@ public final class CreateDocumentView extends Panel implements View{
                     qr.setV_company(viewCompanies);
                     qr.setE_company(editCompanies);
 
+
                     qr.setPublished(saveAsDraftInfo.getPublished());
 
                     qr.setPublic(true);
 
+                    // If the document is draft,
+                    // Don't add it to userqr's
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                 }
             }

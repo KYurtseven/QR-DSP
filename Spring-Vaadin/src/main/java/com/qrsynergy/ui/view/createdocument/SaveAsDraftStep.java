@@ -7,7 +7,11 @@ import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.teemu.wizards.WizardStep;
 
-
+/**
+ * Save as draft step. If the user selects saving as draft option
+ * the SaveAsDraftInfo class' value will be changed and the option will be
+ * saved in submit button press, at the end of the wizard
+ */
 public class SaveAsDraftStep implements WizardStep {
 
     private HorizontalLayout content = new HorizontalLayout();

@@ -19,6 +19,7 @@ public class UserQR {
 
     /**
      * Constructor
+     * initialize list of UserDocuments for access
      */
     public UserQR(){
         List<UserDocument> o_docs = new ArrayList<>();

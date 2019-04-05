@@ -1,19 +1,13 @@
 package com.qrsynergy.service;
 
 import com.qrsynergy.model.QR;
-import com.qrsynergy.model.User;
 import com.qrsynergy.model.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.repository.QRRepository;
 import com.qrsynergy.repository.UserQRRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 public class QRService {
@@ -23,20 +17,43 @@ public class QRService {
     @Autowired
     UserQRRepository userQRRepository;
 
+    /**
+     * If the isPublished field of the qr is true
+     * publish the qr. Add qr to user's userqr document
+     * In case of user does not exist in the database, create a userqr
+     * in addToUserQR method
+     * @param qr
+     */
+    public void publishQR(QR qr){
+        // save to the users
+        addToUserQR(qr, qr.getV_info(), "view");
+        addToUserQR(qr, qr.getE_info(), "edit");
+    }
 
+    /**
+     * Saves new QR to the database
+     * If the publish field is false, meaning that do not publish it now,
+     * don't add this QR to user's userqr document.
+     * @param qr qr
+     */
     public void saveNewDocument(QR qr){
         // Save qr to the database
         qrRepository.save(qr);
 
-        // save to the users
-        addToUserQR(qr, qr.getV_info(), "view");
-        addToUserQR(qr, qr.getE_info(), "edit");
-
+        // always save it to the owner's userqr
         addQRToOwnerUserQR(qr);
 
-
+        if(qr.getPublished()){
+            publishQR(qr);
+        }
+        // else part
+        // don't add it to the user's userqr
     }
 
+    /**
+     * Add this qr to owner's userqr document
+     * @param qr qr
+     */
     private void addQRToOwnerUserQR(QR qr){
         // Save to the owner
         UserDocument userDocument = new UserDocument();
@@ -48,22 +65,31 @@ public class QRService {
         userQRRepository.save(userQR);
     }
 
+    /**
+     * Adds qr to user's userqr document
+     * If the user does not exist, create a userqr document for him.
+     * @param qr qr
+     * @param emails list of emails
+     * @param type 'edit' or 'view'
+     */
     private void addToUserQR(QR qr, List<String> emails, String type){
 
-        // TODO
-        // If the email is owner's email
-        // Don't add
-
         for (String email: emails) {
-
-            // Find userqr object
+            // If the email is owner's email
+            // Don't add
+            if(email.equals(qr.getO_info())){
+                continue;
+            }
+            // Find UserQR object
             UserQR userQR = userQRRepository.findByO_info(email);
 
-            // create new userdocument to be added to the list
+            // create new UserDocument to be added to the list
             UserDocument userDocument = new UserDocument();
             userDocument.setName(qr.getOriginalName());
             userDocument.setUrl(qr.getUrl());
 
+            // There is no entry in the database for that user
+            // The user does not exist
             if(userQR == null){
                 // create new user qr
                 UserQR newUserQR = new UserQR();
@@ -78,7 +104,7 @@ public class QRService {
                 userQRRepository.save(newUserQR);
             }
             else{
-                // There exists userqr object
+                // There exists UserQR object
                 if(type.equals("view")){
                     userQR.appendToV_docs(userDocument);
                 }
