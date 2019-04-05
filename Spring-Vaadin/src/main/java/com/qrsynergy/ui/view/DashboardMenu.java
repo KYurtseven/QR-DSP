@@ -23,11 +23,15 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 /**
  * A responsive menu component providing user information and the controls for
  * primary navigation between the views.
  */
+
 @SuppressWarnings({ "serial", "unchecked" })
 public final class DashboardMenu extends CustomComponent {
 
@@ -87,7 +91,7 @@ public final class DashboardMenu extends CustomComponent {
         settings.addStyleName("user-menu");
         settingsItem = settings.addItem("",
                 new ThemeResource("img/profile-pic-300px.jpg"), null);
-        settingsItem.addItem(getCurrentUser().getFullname());
+        settingsItem.addItem(getCurrentUser().getFullName());
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", new Command() {
             @Override

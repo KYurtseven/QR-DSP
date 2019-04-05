@@ -1,27 +1,29 @@
 package com.qrsynergy.ui.view.createdocument;
 
-import com.google.common.eventbus.Subscribe;
-import com.qrsynergy.ui.event.DashboardEvent;
+import com.qrsynergy.model.Company;
+import com.qrsynergy.model.QR;
+import com.qrsynergy.model.User;
+import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.StandardCopyOption;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @SuppressWarnings("serial")
 public final class CreateDocumentView extends Panel implements View{
@@ -50,15 +52,18 @@ public final class CreateDocumentView extends Panel implements View{
     // Edit company page
     private TwinColSelect<String> selectEditCompanies = new TwinColSelect<>("Company List");
 
+    private List<Company> companyListDB = new ArrayList<>();
+    private List<String> companyListUI = new ArrayList<>();
+
+    private SaveAsDraftInfo saveAsDraftInfo = new SaveAsDraftInfo();
+
+    /**
+     * Constructor
+     */
     public CreateDocumentView(){
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
-
-        // TODO
-        // Fetch companies from the database
-        // add them to the list
-
 
         root = new VerticalLayout();
         root.setSizeFull();
@@ -74,9 +79,15 @@ public final class CreateDocumentView extends Panel implements View{
         Component content = buildContent();
         root.addComponent(content);
         root.setExpandRatio(content, 1);
-
     }
 
+    /**
+     * Adds title
+     * TODO
+     * Every Page will implement this
+     * Maybe write it as a Interface???
+     * @return header of the page
+     */
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
@@ -91,6 +102,10 @@ public final class CreateDocumentView extends Panel implements View{
         return header;
     }
 
+    /**
+     * Adds main content, wizard
+     * @return
+     */
     private Component buildContent() {
         Wizard wizard = new Wizard();
 
@@ -103,24 +118,37 @@ public final class CreateDocumentView extends Panel implements View{
         wizard.addStep(new AddPeopleStep("view", selectViewEmails, emailViewDataProvider, wizard), "Individual view rights");
         wizard.addStep(new AddPeopleStep("edit", selectEditEmails, emailEditDataProvider, wizard), "Individual edit rights");
 
-        // Fetch company list from the database
         // TODO
-        // This is mock data
-
-
-
-        selectViewCompanies.setItems("Ford", "Nissan", "Opel");
+        // Cast company list to the string
+        // in better for loop
+        companyListDB = ((DashboardUI) UI.getCurrent()).companyService.findAll();
+        for (Company company: companyListDB) {
+            companyListUI.add(company.getName());
+        }
+        selectViewCompanies.setItems(companyListUI);
         selectViewCompanies.setRows(companyRowCount);
 
-        selectEditCompanies.setItems("Ford", "Nissan", "Opel");
+        selectEditCompanies.setItems(companyListUI);
         selectEditCompanies.setRows(companyRowCount);
 
         wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
         wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
 
+        wizard.addStep(new SaveAsDraftStep(saveAsDraftInfo), "Publish or draft");
+
         return wizard;
     }
 
+    /**
+     * Listens for wizard events
+     *
+     * When the wizard is finished, saves the data to database and excel to disk
+     *
+     * TODO
+     * When cancelled deletes/nullifies objects
+     *
+     * @param wizard
+     */
     public void addWizardListeners(Wizard wizard){
         completedEvent = new WizardCompletedEvent(wizard);
         cancelledEvent = new WizardCancelledEvent(wizard);
@@ -140,7 +168,6 @@ public final class CreateDocumentView extends Panel implements View{
     }
 
     public void wizardCompleted(WizardCompletedEvent event) {
-        System.out.println("Completed");
         try{
             if(firstStepInfo != null){
                 if(firstStepInfo.getUrl() != null){
@@ -154,13 +181,33 @@ public final class CreateDocumentView extends Panel implements View{
                     );
                     // File is written to the disk
 
-                    // TODO
                     List<String> viewEmails = checkEmails(emailViewDataProvider);
                     List<String> editEmails = checkEmails(emailEditDataProvider);
 
                     List<String> viewCompanies = checkCompanies(selectViewCompanies);
                     List<String> editCompanies = checkCompanies(selectEditCompanies);
 
+
+                    QR qr = new QR();
+                    setFirstStepInfo(firstStepInfo, qr);
+
+                    User user = (User) VaadinSession.getCurrent()
+                            .getAttribute(User.class.getName());
+                    qr.setO_info(user.getEmail());
+
+                    qr.setV_info(viewEmails);
+                    qr.setE_info(editEmails);
+                    qr.setV_company(viewCompanies);
+                    qr.setE_company(editCompanies);
+
+
+                    qr.setPublished(saveAsDraftInfo.getPublished());
+
+                    qr.setPublic(true);
+
+                    // If the document is draft,
+                    // Don't add it to userqr's
+                    ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                 }
             }
         }
@@ -173,26 +220,69 @@ public final class CreateDocumentView extends Panel implements View{
         }
     }
 
-    // TODO
-    // Filter invalid emails
-    public List<String> checkEmails(ListDataProvider<String> dataProvider){
-        List<String> filteredEmails = new ArrayList<>();
-        for(final String email: dataProvider.getItems()){
+    /**
+     * Sets File parameters to the QR
+     * @param firstStepInfo file info from the first step
+     * @param qr object to be saved to the database
+     */
+    private void setFirstStepInfo(FirstStepInfo firstStepInfo, QR qr){
+        qr.setUrl(firstStepInfo.getUrl());
+        qr.setType(firstStepInfo.getType());
+        qr.setOriginalName(firstStepInfo.getOriginalName());
+        qr.setCreatedAt(firstStepInfo.getCreatedAt());
+        qr.setLastModified(firstStepInfo.getLastModified());
+        qr.setDiskName(firstStepInfo.getDiskName());
+    }
 
-            System.out.println("email: " + email);
+    /**
+     * Filters email that user has provided
+     * @param dataProvider
+     * @return correct list of emails
+     */
+    public List<String> checkEmails(ListDataProvider<String> dataProvider){
+
+        List<String> filteredEmails = new ArrayList<>();
+
+        for(final String email: dataProvider.getItems()){
+            boolean valid = EmailValidator.getInstance().isValid(email);
+            if(valid){
+                filteredEmails.add(email);
+            }
         }
         return filteredEmails;
     }
 
-    // TODO
-    // Check them in the database
+    /**
+     * Check selected companies with the companies
+     * that have already present in the scope in case
+     * the user somehow changed the values
+     */
     public List<String> checkCompanies(TwinColSelect<String> select){
-        List<String> list = new ArrayList<>(select.getValue());
+        List<String> list = new ArrayList<>();
 
-        return list;
+       List<String> selectedList = new ArrayList<>(select.getSelectedItems());
+
+       // Check for user inputs
+        for (String companyName: selectedList) {
+            for(int i = 0; i < companyListDB.size(); i++){
+                if(companyName.equals(companyListDB.get(i).getName())){
+                    list.add(companyListDB.get(i).getEmailExtension());
+                    break;
+                }
+            }
+        }
+
+       return list;
     }
 
-
+    /**
+     * TODO
+     * We don't need to delete the file on disk since it was
+     * never ever saved.
+     * Nullify objects
+     *
+     * @param event
+     */
     public void wizardCancelled(WizardCancelledEvent event) {
         try{
             if(firstStepInfo != null){

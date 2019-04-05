@@ -1,6 +1,5 @@
 package com.qrsynergy.ui.view.createdocument;
 
-import com.qrsynergy.model.QR;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
@@ -10,21 +9,22 @@ import org.vaadin.teemu.wizards.WizardStep;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 import com.vaadin.server.StreamVariable;
-import sun.nio.ch.IOUtil;
-
-import java.io.OutputStream;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Wizard step for uploading the file
+ * Once the upload is finished, the data is saved in FirstStepInfo
+ * which will be used later when the submit button is pressed
+ */
 public class UploadFileStep implements WizardStep {
 
+    // TODO
     public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
     private UploadFinishedHandler uploadFinishedHandler;
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
@@ -34,11 +34,19 @@ public class UploadFileStep implements WizardStep {
     private FirstStepInfo firstStepInfo;
     private VerticalLayout content;
 
+    /**
+     * Constructor
+     * @param firstStepInfo
+     */
     public UploadFileStep(FirstStepInfo firstStepInfo){
         this.firstStepInfo = firstStepInfo;
     }
 
 
+    /**
+     * Title of the wizard step
+     * @return
+     */
     public String getCaption() {
         return "Upload file";
     }
@@ -53,6 +61,9 @@ public class UploadFileStep implements WizardStep {
         return content;
     }
 
+    /**
+     * Creates uploadFile area
+     */
     private void addUpload(){
         final FileUpload fileUpload = new FileUpload(uploadFinishedHandler, uploadStateWindow);
         int maxFileSize = 5242880; //5 MB
@@ -70,18 +81,16 @@ public class UploadFileStep implements WizardStep {
 
     }
 
+    /**
+     * Saves the file info to the FirstStepInfo class
+     *
+     */
     private void createUploadFinishedHandler() {
         uploadFinishedHandler = (InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) -> {
 
             try{
                 String type = fileName.substring(fileName.lastIndexOf(".") +1);
                 if(type.equals("xlsx")){
-
-                    if(firstStepInfo.getUrl() != null){
-                        File toBeDeletedFile = new File(uploadLocation + firstStepInfo.getDiskName());
-                        toBeDeletedFile.delete();
-                    }
-
                     firstStepInfo.setUrl(UUID.randomUUID().toString());
                     firstStepInfo.setType("xlsx");
                     firstStepInfo.setOriginalName(fileName);
@@ -109,16 +118,26 @@ public class UploadFileStep implements WizardStep {
         };
     }
 
+    /**
+     * It goes forward
+     * @return
+     */
     public boolean onAdvance() {
         return true;
     }
 
+    /**
+     * It does not go backward
+     * @return
+     */
     public boolean onBack() {
-        return true;
+        return false;
     }
 
 
-
+    /**
+     * Helper class for file upload
+     */
     private class FileUpload extends MultiFileUpload {
 
         public FileUpload(UploadFinishedHandler handler, UploadStateWindow uploadStateWindow) {
@@ -131,6 +150,9 @@ public class UploadFileStep implements WizardStep {
         }
     }
 
+    /**
+     * Helper class for showing the user upload duration
+     */
     private class FileUploadStatePanel extends UploadStatePanel {
 
         public FileUploadStatePanel(UploadStateWindow window) {

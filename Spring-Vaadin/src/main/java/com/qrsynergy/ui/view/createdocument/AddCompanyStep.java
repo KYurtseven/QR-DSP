@@ -55,17 +55,17 @@ public class AddCompanyStep implements WizardStep {
     }
 
     /**
-     * Edit company list is last step
-     * Don't show next button
+     * It can go forward
      * @return
      */
     public boolean onAdvance() {
-        if(this.type.equals("edit"))
-            return false;
-        else
-            return true;
+        return true;
     }
 
+    /**
+     * It can go backwards
+     * @return
+     */
     public boolean onBack() {
         return true;
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.Email;
 
+@Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
     public User findByEmail(String email);

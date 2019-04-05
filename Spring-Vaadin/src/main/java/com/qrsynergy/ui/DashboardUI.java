@@ -4,9 +4,11 @@ import javax.servlet.annotation.WebServlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
-import com.qrsynergy.DAO.CompanyDAO;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.User;
+import com.qrsynergy.service.CompanyService;
+import com.qrsynergy.service.QRService;
+import com.qrsynergy.service.UserQRService;
 import com.qrsynergy.service.UserService;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.vaadin.annotations.Theme;
@@ -26,10 +28,10 @@ import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CompanyCreateRequestedEvent;
-import com.qrsynergy.DAO.UserDAO;
 import com.qrsynergy.ui.view.LoginView;
 import com.qrsynergy.ui.view.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.autoconfigure.validation.ValidatorAdapter;
 
 import java.util.Locale;
@@ -50,10 +52,13 @@ public final class DashboardUI extends UI {
     private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
 
     @Autowired
-    private UserDAO userDAO;
+    public UserService userService;
     @Autowired
-    private CompanyDAO companyDAO;
-
+    public CompanyService companyService;
+    @Autowired
+    public QRService qrService;
+    @Autowired
+    public UserQRService userQRService;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -105,7 +110,7 @@ public final class DashboardUI extends UI {
         // TODO
         // For speeding up the test, user validation is bypassed
         // remove it
-        User user = userDAO.findByEmail("koray@gmail.com");
+        User user = userService.findByEmail("koray@gmail.com");
 
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
@@ -132,7 +137,7 @@ public final class DashboardUI extends UI {
     public void companyCreateRequested(final CompanyCreateRequestedEvent event){
 
         Company company = new Company(event.getName(), event.getEmailExtension());
-        companyDAO.saveCompany(company);
+        companyService.saveCompany(company);
     }
 
     /**
@@ -163,10 +168,10 @@ public final class DashboardUI extends UI {
         return ((DashboardUI) getCurrent()).dashboardEventbus;
     }
 
-    /*
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = DashboardUI.class, productionMode = false)
+
+    @WebServlet(urlPatterns = "/*",  asyncSupported = true)
+    @VaadinServletConfiguration(ui = DashboardUI.class, productionMode = true/*, widgetset = "com.qrsynergy.MyAppWidgetset"*/)
     public static class MyUIServlet extends VaadinServlet {
     }
-    */
+
 }
