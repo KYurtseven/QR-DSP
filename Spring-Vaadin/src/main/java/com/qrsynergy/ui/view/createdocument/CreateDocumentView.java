@@ -58,15 +58,8 @@ public final class CreateDocumentView extends Panel implements View{
     private List<String> companyListUI = new ArrayList<>();
 
     // Save as draft
-    private boolean isPublished = false;
+    private boolean isPublished = true;
 
-    public boolean isPublished() {
-        return isPublished;
-    }
-
-    public void setPublished(boolean published) {
-        isPublished = published;
-    }
     /**
      * Constructor
      */
@@ -144,7 +137,7 @@ public final class CreateDocumentView extends Panel implements View{
         wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
         wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
 
-        wizard.addStep(new SaveAsDraftStep(wizard), "Publish or draft");
+        wizard.addStep(new SaveAsDraftStep(isPublished), "Publish or draft");
 
         return wizard;
     }
@@ -210,8 +203,8 @@ public final class CreateDocumentView extends Panel implements View{
                     qr.setV_company(viewCompanies);
                     qr.setE_company(editCompanies);
 
-                    // TODO
-                    qr.setPublished(true);
+                    qr.setPublished(isPublished);
+
                     qr.setPublic(true);
 
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
