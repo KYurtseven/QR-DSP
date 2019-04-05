@@ -55,8 +55,7 @@ public class AddCompanyStep implements WizardStep {
     }
 
     /**
-     * Edit company list is last step
-     * Don't show next button
+     *
      * @return
      */
     public boolean onAdvance() {

@@ -57,6 +57,16 @@ public final class CreateDocumentView extends Panel implements View{
     private List<Company> companyListDB = new ArrayList<>();
     private List<String> companyListUI = new ArrayList<>();
 
+    // Save as draft
+    private boolean isPublished = false;
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
+    }
     /**
      * Constructor
      */
@@ -133,6 +143,8 @@ public final class CreateDocumentView extends Panel implements View{
 
         wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
         wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
+
+        wizard.addStep(new SaveAsDraftStep(wizard), "Publish or draft");
 
         return wizard;
     }
