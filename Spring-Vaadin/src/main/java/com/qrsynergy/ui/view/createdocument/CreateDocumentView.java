@@ -55,7 +55,7 @@ public final class CreateDocumentView extends Panel implements View{
     private List<Company> companyListDB = new ArrayList<>();
     private List<String> companyListUI = new ArrayList<>();
 
-    private SaveAsDraftInfo saveAsDraftInfo = new SaveAsDraftInfo();
+    private AdditionalOptionsInfo additionalOptionsInfo = new AdditionalOptionsInfo();
 
     /**
      * Constructor
@@ -134,7 +134,7 @@ public final class CreateDocumentView extends Panel implements View{
         wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
         wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
 
-        wizard.addStep(new SaveAsDraftStep(saveAsDraftInfo), "Publish or draft");
+        wizard.addStep(new AdditionalOptionsStep(additionalOptionsInfo), "Additional options");
 
         return wizard;
     }
@@ -187,26 +187,29 @@ public final class CreateDocumentView extends Panel implements View{
                     List<String> viewCompanies = checkCompanies(selectViewCompanies);
                     List<String> editCompanies = checkCompanies(selectEditCompanies);
 
-
                     QR qr = new QR();
+                    // set file info
                     setFirstStepInfo(firstStepInfo, qr);
 
                     User user = (User) VaadinSession.getCurrent()
                             .getAttribute(User.class.getName());
+                    // set owner info
                     qr.setO_info(user.getEmail());
 
+                    // set people info
                     qr.setV_info(viewEmails);
                     qr.setE_info(editEmails);
+
+                    // set company info
                     qr.setV_company(viewCompanies);
                     qr.setE_company(editCompanies);
 
+                    // set additional info
+                    qr.setPublic(additionalOptionsInfo.isPublic());
+                    qr.setPublished(additionalOptionsInfo.isPublished());
+                    qr.setExpirationDate(additionalOptionsInfo.getExpirationDate());
 
-                    qr.setPublished(saveAsDraftInfo.getPublished());
-
-                    qr.setPublic(true);
-
-                    // If the document is draft,
-                    // Don't add it to userqr's
+                    // save document to the database
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                 }
             }

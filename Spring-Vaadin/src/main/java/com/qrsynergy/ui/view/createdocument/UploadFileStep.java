@@ -48,7 +48,7 @@ public class UploadFileStep implements WizardStep {
      * @return
      */
     public String getCaption() {
-        return "Upload file";
+        return "Upload";
     }
 
     public Component getContent() {

@@ -22,6 +22,7 @@ public class AddPeopleStep implements WizardStep {
     private TextField emailField = new TextField("Enter email address");
     private NativeSelect<String> select;
     private ListDataProvider<String> dataProvider;
+    private Label titleLabel;
 
     // Listeners
     private Registration addToListRegistration;
@@ -46,6 +47,13 @@ public class AddPeopleStep implements WizardStep {
         this.select = select;
         this.dataProvider = dataProvider;
         this.owner = owner;
+
+        if(type.equals("view")){
+            titleLabel = new Label("Individual view rights");
+        }
+        else{
+            titleLabel = new Label("Individual edit rights");
+        }
     }
 
     /**
@@ -54,9 +62,9 @@ public class AddPeopleStep implements WizardStep {
      */
     public String getCaption() {
         if(type.equals("view")){
-            return "Individual view rights";
+            return "View";
         }
-        return "Individual edit rights";
+        return "Edit";
     }
 
     /**
@@ -87,7 +95,7 @@ public class AddPeopleStep implements WizardStep {
 
 
         HorizontalLayout row1 = new HorizontalLayout();
-        row1.addComponents(emailField, addToListButton);
+        row1.addComponents(titleLabel, emailField, addToListButton);
 
         HorizontalLayout row2 = new HorizontalLayout();
         row2.addComponents(select, deleteFromListButton);
