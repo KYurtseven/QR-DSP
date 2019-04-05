@@ -1,11 +1,9 @@
 package com.qrsynergy.ui.view.createdocument;
 
-import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.ui.DashboardUI;
-import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -57,8 +55,7 @@ public final class CreateDocumentView extends Panel implements View{
     private List<Company> companyListDB = new ArrayList<>();
     private List<String> companyListUI = new ArrayList<>();
 
-    // Save as draft
-    private boolean isPublished = true;
+    private SaveAsDraftInfo saveAsDraftInfo = new SaveAsDraftInfo();
 
     /**
      * Constructor
@@ -89,7 +86,7 @@ public final class CreateDocumentView extends Panel implements View{
      * TODO
      * Every Page will implement this
      * Maybe write it as a Interface???
-     * @return
+     * @return header of the page
      */
     private Component buildHeader() {
         HorizontalLayout header = new HorizontalLayout();
@@ -137,7 +134,7 @@ public final class CreateDocumentView extends Panel implements View{
         wizard.addStep(new AddCompanyStep("view", selectViewCompanies, wizard), "Company view rights");
         wizard.addStep(new AddCompanyStep("edit", selectEditCompanies, wizard), "Company edit rights");
 
-        wizard.addStep(new SaveAsDraftStep(isPublished), "Publish or draft");
+        wizard.addStep(new SaveAsDraftStep(saveAsDraftInfo), "Publish or draft");
 
         return wizard;
     }
@@ -203,7 +200,7 @@ public final class CreateDocumentView extends Panel implements View{
                     qr.setV_company(viewCompanies);
                     qr.setE_company(editCompanies);
 
-                    qr.setPublished(isPublished);
+                    qr.setPublished(saveAsDraftInfo.getPublished());
 
                     qr.setPublic(true);
 

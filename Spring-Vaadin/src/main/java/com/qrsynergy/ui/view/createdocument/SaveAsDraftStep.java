@@ -5,16 +5,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.themes.ValoTheme;
-import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class SaveAsDraftStep implements WizardStep {
 
     private HorizontalLayout content = new HorizontalLayout();
-    private boolean isPublished;
+    private SaveAsDraftInfo saveAsDraftInfo;
 
     private final String optionDraft = "Save as draft";
     private final String optionPublishNow = "Publish now";
@@ -22,10 +19,10 @@ public class SaveAsDraftStep implements WizardStep {
     /**
      * Constructor
      * Wizard will be used to set published value of the document
-     * @param isPublished value to set CreateDocumentView
+     * @param saveAsDraftInfo value to set CreateDocumentView
      */
-    public SaveAsDraftStep(boolean isPublished){
-        this.isPublished = isPublished;
+    public SaveAsDraftStep(SaveAsDraftInfo saveAsDraftInfo){
+        this.saveAsDraftInfo = saveAsDraftInfo;
     }
 
     /**
@@ -53,10 +50,10 @@ public class SaveAsDraftStep implements WizardStep {
 
         radioButton.addValueChangeListener(event->{
             if(event.getValue().equals(optionDraft)){
-                isPublished = false;
+                saveAsDraftInfo.setPublished(false);
             }
             else{
-                isPublished = true;
+                saveAsDraftInfo.setPublished(true);
             }
         });
 
