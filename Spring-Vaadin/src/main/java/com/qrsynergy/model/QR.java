@@ -51,8 +51,6 @@ public class QR {
 
     private String originalName;
 
-    private String qrImage;
-
     @Override
     public String toString(){
         return String.format(
@@ -312,19 +310,4 @@ public class QR {
         this._id = _id;
     }
 
-    /**
-     *
-     * @return qr image in string
-     */
-    public String getQrImage() {
-        return qrImage;
-    }
-
-    /**
-     *
-     * @param qrImage Stores qr image in string
-     */
-    public void setQrImage(String qrImage) {
-        this.qrImage = qrImage;
-    }
 }

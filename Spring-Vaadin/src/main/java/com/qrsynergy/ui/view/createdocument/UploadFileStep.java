@@ -48,7 +48,7 @@ public class UploadFileStep implements WizardStep {
      * @return
      */
     public String getCaption() {
-        return "Upload file";
+        return "Upload";
     }
 
     public Component getContent() {
@@ -165,7 +165,7 @@ public class UploadFileStep implements WizardStep {
                 // upload speed
                 Thread.sleep((int) uploadSpeed);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CreateDocumentView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ShareDocumentView.class.getName()).log(Level.SEVERE, null, ex);
             }
             super.onProgress(event);
         }

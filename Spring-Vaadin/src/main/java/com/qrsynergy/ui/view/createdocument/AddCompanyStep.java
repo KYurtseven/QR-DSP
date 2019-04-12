@@ -1,10 +1,7 @@
 package com.qrsynergy.ui.view.createdocument;
 
-import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
 
@@ -14,6 +11,7 @@ public class AddCompanyStep implements WizardStep {
     private HorizontalLayout content = new HorizontalLayout();
     private TwinColSelect<String> select;
     private Wizard owner;
+    private Label titleLabel;
 
     /**
      * Constructor for Wizard
@@ -31,6 +29,12 @@ public class AddCompanyStep implements WizardStep {
         this.type = type;
         this.select = select;
         this.owner = owner;
+        if(type.equals("view")){
+            titleLabel = new Label("Company view rights");
+        }
+        else{
+            titleLabel = new Label("Company edit rights");
+        }
     }
 
     /**
@@ -39,9 +43,9 @@ public class AddCompanyStep implements WizardStep {
      */
     public String getCaption() {
         if(type.equals("view")){
-            return "Company view rights";
+            return "View";
         }
-        return "Company edit rights";
+        return "Edit";
     }
 
 
@@ -49,7 +53,7 @@ public class AddCompanyStep implements WizardStep {
     public Component getContent() {
         Responsive.makeResponsive(content);
 
-        content.addComponent(select);
+        content.addComponents(titleLabel, select);
 
         return content;
     }
