@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class UploadFileStep implements WizardStep {
 
     // TODO
-    public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
+    public static final String uploadLocation = "C:\\Users\\uguro\\Desktop\\qr_github\\QR-DSP\\Spring-Vaadin\\FILES\\";
     private UploadFinishedHandler uploadFinishedHandler;
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private static final int FILE_COUNT = 1;
