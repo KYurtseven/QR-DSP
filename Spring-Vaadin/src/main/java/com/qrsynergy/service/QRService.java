@@ -1,8 +1,10 @@
 package com.qrsynergy.service;
 
+import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.UserDocument;
 import com.qrsynergy.model.UserQR;
+import com.qrsynergy.repository.CommentRepository;
 import com.qrsynergy.repository.QRRepository;
 import com.qrsynergy.repository.UserQRRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ public class QRService {
     QRRepository qrRepository;
     @Autowired
     UserQRRepository userQRRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     /**
      * If the isPublished field of the qr is true
@@ -43,9 +47,15 @@ public class QRService {
         // always save it to the owner's userqr
         addQRToOwnerUserQR(qr);
 
+        // Create Comment entry for QR
+        Comment comment = new Comment(qr.getUrl());
+        commentRepository.save(comment);
+
         if(qr.getPublished()){
             publishQR(qr);
         }
+
+
         // else part
         // don't add it to the user's userqr
     }
@@ -117,4 +127,8 @@ public class QRService {
         }
     }
 
+
+    public List<QR> findQRListByUrls(List<String> urls){
+        return qrRepository.findByUrlIn(urls);
+    }
 }

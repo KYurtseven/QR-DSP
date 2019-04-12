@@ -1,19 +1,19 @@
 package com.qrsynergy.ui.view.viewdocument;
 
+import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.model.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.ui.DashboardUI;
-import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.List;
 
-import com.vaadin.server.BrowserWindowOpener;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public final class ViewDocumentView extends Panel implements  View{
@@ -23,7 +23,7 @@ public final class ViewDocumentView extends Panel implements  View{
 
     public ViewDocumentView(){
         addStyleName(ValoTheme.PANEL_BORDERLESS);
-        setSizeFull();
+
         DashboardEventBus.register(this);
 
         root = new VerticalLayout();
@@ -58,43 +58,63 @@ public final class ViewDocumentView extends Panel implements  View{
     }
 
     /**
+     * accepts UserQR, fetches urls from it
+     * @return list of urls
+     */
+    private List<String> userQRToUrl(List<UserDocument> userDocuments){
+        List<String> urls = new ArrayList<>();
+        for(int i = 0; i < userDocuments.size(); i++){
+            urls.add(userDocuments.get(i).getUrl());
+        }
+        return urls;
+    }
+
+    /**
      * TODO
      * Document will be viewed under this function!
      * @return
      */
     private Component buildContent(){
         VerticalLayout content = new VerticalLayout();
+        content.setSizeFull();
 
         User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
 
         UserQR userQR = ((DashboardUI) UI.getCurrent()).userQRService.getUserQR(user);
 
+        List<String> ownUrls = userQRToUrl(userQR.getO_docs());
+        List<String> editUrls = userQRToUrl(userQR.getE_docs());
+        List<String> viewUrls = userQRToUrl(userQR.getV_docs());
+
+        List<QR> ownQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(ownUrls);
+        List<QR> editQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(editUrls);
+        List<QR> viewQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(viewUrls);
+
         Label ownLabel = new Label("Owned documents");
-        content.addComponent(buildQRItems(userQR.getO_docs()));
+        content.addComponents(ownLabel, buildQRItems(ownQRs));
+
+        Label editLabel = new Label("Editable documents");
+        content.addComponents(editLabel, buildQRItems(editQRs));
+
+
+        Label viewLabel = new Label("Viewable documents");
+        content.addComponents(viewLabel, buildQRItems(viewQRs));
 
         return content;
     }
 
-    private Component buildQRItems(List<UserDocument> userDocuments){
-        HorizontalLayout row = new HorizontalLayout();
+    private Component buildQRItems(List<QR> QRs){
+        Grid<QR> grid = new Grid<>();
+        grid.setSizeFull();
+        grid.setItems(QRs);
 
-        for (UserDocument userDocument: userDocuments) {
-            VerticalLayout column = new VerticalLayout();
-            // create horizontal layout
-            HorizontalLayout nameAndButton = new HorizontalLayout();
-            // push name and button to horizontal layout
-            Label qrName = new Label(userDocument.getName());
-            Button openDocument = new Button("Open");
-            BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
-            //opener.setFeatures( "height=600,width=900,resizable" ); //use this to make pop-up
-            opener.extend(openDocument);
-            opener.setParameter("qr_id", userDocument.getUrl());
+        grid.addColumn(QR::getOriginalName).setCaption("Name").setWidth(10);
+        grid.addColumn(QR::getPublic).setCaption("Is Public");
 
-            nameAndButton.addComponents(qrName, openDocument);
-            column.addComponent(nameAndButton);
-            row.addComponent(column);
-        }
+        grid.addColumn(QR::getCreationDate).setCaption("Creation Date");
+        grid.addColumn(QR::getExpirationDate).setCaption("Expiration Date");
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
 
-        return row;
+        return grid;
     }
 }
