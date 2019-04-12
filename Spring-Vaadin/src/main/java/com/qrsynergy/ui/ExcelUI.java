@@ -12,6 +12,13 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import org.vaadin.sliderpanel.SliderPanel;
+import org.vaadin.sliderpanel.SliderPanelBuilder;
+import org.vaadin.sliderpanel.SliderPanelStyles;
+import org.vaadin.sliderpanel.client.SliderMode;
+import org.vaadin.sliderpanel.client.SliderTabPosition;
+
+
 
 
 @Theme("mytheme")
@@ -19,61 +26,32 @@ public class ExcelUI extends UI{
 
     private Spreadsheet spreadsheet = null;
     private String qr_id;
+    private SliderPanel rightSlider = null;
+    private Button buttonInSlider = new Button("Comment");
+    private TextArea textArea = new TextArea();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
-        setContent(layout);
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        setContent(horizontalLayout);
 
         qr_id = vaadinRequest.getParameter( "qr_id" );
 
+        //initialize spreadsheet
         initSpreadsheet();
-        layout.addComponent(spreadsheet);
-        layout.setExpandRatio(spreadsheet, 1);
+        horizontalLayout.addComponent(spreadsheet);
+        //layout.addComponent(spreadsheet);
+        horizontalLayout.setSizeFull();
+        horizontalLayout.setExpandRatio(spreadsheet, (float)1);
 
-        Button saveButton = new Button("Save");
-        saveButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                try {
-                    /*
-                    String path = "C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\";
-                    path += qr_id + ".xlsx";
-
-                    Workbook workbook = spreadsheet.getWorkbook();
-
-                    File file = new File(path);
-
-                    FileOutputStream fos = new FileOutputStream(file, false);
-                    workbook.write(fos);
-                    fos.close();
-                    */
-
-                    // TODO
-                    String path = "C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\";
-                    path += qr_id + ".xlsx";
-
-                    spreadsheet.write(path);
-
-                    //spreadsheet.read(new FileInputStream("C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\"));
-                    //System.out.println("QRID: " + qr_id);
-                }
-                catch (FileNotFoundException fn) {
-                    System.out.println("File not found");
-                }
-                catch(IOException e){
-                    System.out.println("io exception: " + e);
-                }
-            }
-        });
-
-        layout.addComponent(saveButton);
+        //initialize Slider
+        initSliderPanel();
+        horizontalLayout.addComponent(this.rightSlider);
+        horizontalLayout.setExpandRatio(rightSlider,(float) 0);
     }
 
     private void initSpreadsheet() {
-        //File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qrdsp_last_version\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
-        File sampleFile = new File("D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
+        File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qr_github\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {
@@ -81,6 +59,23 @@ public class ExcelUI extends UI{
         }
     }
 
+    private void initSliderPanel()
+    {
+        VerticalLayout sliderVerticalLayout = new VerticalLayout();
+            sliderVerticalLayout.addComponent(this.textArea);
+
+
+        this.rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
+                                .expanded(false)
+                                .mode(SliderMode.RIGHT)
+                                .caption("Slider")
+                                .tabPosition(SliderTabPosition.MIDDLE)
+                                .autoCollapseSlider(true)
+                                .flowInContent(true)
+                                .style(SliderPanelStyles.ICON_BLACK)
+                                //.zIndex(9980)
+                                .build();
+    }
 
     @WebServlet(urlPatterns = "/*",  asyncSupported = true)
     @VaadinServletConfiguration(ui = ExcelUI.class, productionMode = true)
