@@ -232,7 +232,7 @@ public final class ShareDocumentView extends Panel implements View{
         qr.setUrl(firstStepInfo.getUrl());
         qr.setType(firstStepInfo.getType());
         qr.setOriginalName(firstStepInfo.getOriginalName());
-        qr.setCreationDate(firstStepInfo.getCreatedAt());
+        qr.setCreationDate(firstStepInfo.getCreationDate());
         qr.setLastModified(firstStepInfo.getLastModified());
         qr.setDiskName(firstStepInfo.getDiskName());
     }

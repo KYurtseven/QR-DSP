@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.qrsynergy.ui.view.createdocument.UploadFileStep;
 import com.vaadin.ui.*;
 
 import com.vaadin.addon.spreadsheet.Spreadsheet;
@@ -51,7 +52,7 @@ public class ExcelUI extends UI{
     }
 
     private void initSpreadsheet() {
-        File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qr_github\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
+        File sampleFile = new File(UploadFileStep.uploadLocation + qr_id + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {

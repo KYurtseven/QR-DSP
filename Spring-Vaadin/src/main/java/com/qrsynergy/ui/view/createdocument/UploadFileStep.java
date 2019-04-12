@@ -8,7 +8,6 @@ import org.apache.commons.io.IOUtils;
 import org.vaadin.teemu.wizards.WizardStep;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
 
-import java.io.File;
 import java.io.InputStream;
 
 import com.vaadin.server.StreamVariable;
@@ -25,7 +24,7 @@ import java.util.logging.Logger;
 public class UploadFileStep implements WizardStep {
 
     // TODO
-    public static final String uploadLocation = "C:\\Users\\uguro\\Desktop\\qr_github\\QR-DSP\\Spring-Vaadin\\FILES\\";
+    public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
     private UploadFinishedHandler uploadFinishedHandler;
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private static final int FILE_COUNT = 1;
@@ -95,7 +94,7 @@ public class UploadFileStep implements WizardStep {
                     firstStepInfo.setType("xlsx");
                     firstStepInfo.setOriginalName(fileName);
                     Date curDate = new Date();
-                    firstStepInfo.setCreatedAt(curDate);
+                    firstStepInfo.setCreationDate(curDate);
                     firstStepInfo.setLastModified(curDate);
                     firstStepInfo.setDiskName(firstStepInfo.getUrl() + ".xlsx");
 

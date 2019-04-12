@@ -14,7 +14,7 @@ public class FirstStepInfo {
 
     private String originalName;
 
-    private Date createdAt;
+    private Date creationDate;
 
     private Date lastModified;
 
@@ -78,16 +78,16 @@ public class FirstStepInfo {
      *
      * @return QR's creation date, now
      */
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     /**
      *
-     * @param createdAt QR's creation date, now
+     * @param creationDate QR's creation date, now
      */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     /**

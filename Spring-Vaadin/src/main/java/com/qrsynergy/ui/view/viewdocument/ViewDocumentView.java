@@ -5,11 +5,16 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.model.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.ui.DashboardUI;
+import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
+import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.ArrayList;
@@ -103,18 +108,69 @@ public final class ViewDocumentView extends Panel implements  View{
         return content;
     }
 
+    private Button buildDeleteButton(QR qr) {
+
+        Button button = new Button(VaadinIcons.CLOSE);
+        BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
+        opener.extend(button);
+        opener.setParameter("qr_id", qr.getUrl());
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        //button.addClickListener(e -> deletePerson(p));
+        return button;
+    }
+
     private Component buildQRItems(List<QR> QRs){
         Grid<QR> grid = new Grid<>();
         grid.setSizeFull();
         grid.setItems(QRs);
 
-        grid.addColumn(QR::getOriginalName).setCaption("Name").setWidth(10);
+        grid.addColumn(QR::getOriginalName).setCaption("Name");
         grid.addColumn(QR::getPublic).setCaption("Is Public");
 
         grid.addColumn(QR::getCreationDate).setCaption("Creation Date");
         grid.addColumn(QR::getExpirationDate).setCaption("Expiration Date");
+
+
+        /*
+        Button openDocument = new Button("Open");
+        BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
+        //opener.setFeatures( "height=600,width=900,resizable" ); //use this to make pop-up
+        opener.extend(openDocument);
+        opener.setParameter("qr_id", QR::getUrl);
+
+        column.addComponents(qrName, openDocument);
+        nameAndButton.addComponents(qrName, openDocument);
+        column.addComponent(nameAndButton);
+
+        grid.addColumn(qr ->
+                new ButtonRenderer(clickEvent ->{
+                    opener.setParameter("qr_id", qr.getUrl());
+                    }));
+                //new Label(qr.getUrl()), new ComponentRenderer());
+        */
+        grid.addColumn(
+                qr -> getButton(qr) ,
+                new ComponentRenderer()
+        ).setCaption( "Full Name" );
+        //grid.addColumn(this::buildDeleteButton);
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         return grid;
+    }
+
+    public Button getButton(QR qr){
+        Button btn = new Button();
+        BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
+        opener.extend(btn);
+        opener.setParameter("qr_id", qr.getUrl());
+        /*
+        btn.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+
+            }
+        });
+        */
+        return  btn;
     }
 }
