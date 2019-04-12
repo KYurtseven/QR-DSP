@@ -41,7 +41,7 @@ public class QR {
 
     private List<String> v_info;
 
-    private Date createdAt;
+    private Date creationDate;
 
     private Date lastModified;
 
@@ -195,16 +195,16 @@ public class QR {
      *
      * @return QR's creation date
      */
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     /**
      *
-     * @param createdAt QR's creation date
+     * @param creationDate QR's creation date
      */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     /**
