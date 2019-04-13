@@ -1,4 +1,4 @@
-package com.qrsynergy.Controller;
+package com.qrsynergy.controller.helper;
 
 /**
  * Used for fetching request from REST API and the information

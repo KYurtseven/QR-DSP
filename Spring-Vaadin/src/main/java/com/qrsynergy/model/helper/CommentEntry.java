@@ -1,4 +1,4 @@
-package com.qrsynergy.model;
+package com.qrsynergy.model.helper;
 
 import java.util.Date;
 

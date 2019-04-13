@@ -1,15 +1,13 @@
 package com.qrsynergy.model;
 
-import com.qrsynergy.Controller.UserDTO;
+import com.qrsynergy.controller.helper.UserDTO;
+import com.qrsynergy.model.helper.Password;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
-import javax.validation.constraints.Email;
-import java.util.Date;
 
 @Entity
 @Document(collection = "USER")

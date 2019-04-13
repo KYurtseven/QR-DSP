@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.qrsynergy.ui.view.createdocument.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.UploadFileStep;
 import com.vaadin.ui.*;
 
 import com.vaadin.addon.spreadsheet.Spreadsheet;

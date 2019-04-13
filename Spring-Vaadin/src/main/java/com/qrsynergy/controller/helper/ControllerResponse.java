@@ -1,4 +1,4 @@
-package com.qrsynergy.Controller;
+package com.qrsynergy.controller.helper;
 
 /**
  * Contains response to be sent to the user

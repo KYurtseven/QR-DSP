@@ -1,9 +1,10 @@
-package com.qrsynergy.Controller;
+package com.qrsynergy.controller;
 
+import com.qrsynergy.controller.helper.ControllerResponse;
+import com.qrsynergy.controller.helper.UserDTO;
 import com.qrsynergy.model.Company;
-import com.qrsynergy.model.Password;
+import com.qrsynergy.model.helper.Password;
 import com.qrsynergy.model.User;
-import com.qrsynergy.model.UserDocument;
 import com.qrsynergy.service.CompanyService;
 import com.qrsynergy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,5 +99,6 @@ public class UserController {
             return controllerResponse;
         }
     }
+
 }
 

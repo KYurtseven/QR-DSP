@@ -1,11 +1,11 @@
 package com.qrsynergy.model;
 
+import com.qrsynergy.model.helper.UserDocument;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +15,6 @@ import java.util.List;
 public class UserQR {
 
     private ObjectId _id;
-
-
-    /**
-     * Constructor
-     * initialize list of UserDocuments for access
-     */
-    public UserQR(){
-        List<UserDocument> o_docs = new ArrayList<>();
-        this.o_docs = o_docs;
-
-        List<UserDocument> e_docs = new ArrayList<>();
-        this.e_docs = e_docs;
-
-        List<UserDocument> v_docs = new ArrayList<>();
-        this.v_docs = v_docs;
-    }
-
 
     @Id
     @Indexed(unique = true)
@@ -47,6 +30,29 @@ public class UserQR {
 
     // list of documents that user can view
     private List<UserDocument> v_docs;
+
+    /**
+     * Constructor
+     * @param o_info owner's email
+     */
+    public UserQR(String o_info){
+        this.o_info = o_info;
+        initializeLists();
+    }
+
+    /**
+     * initialize list of UserDocuments for access
+     */
+    private void initializeLists(){
+        List<UserDocument> o_docs = new ArrayList<>();
+        this.o_docs = o_docs;
+
+        List<UserDocument> e_docs = new ArrayList<>();
+        this.e_docs = e_docs;
+
+        List<UserDocument> v_docs = new ArrayList<>();
+        this.v_docs = v_docs;
+    }
 
     public String getO_info() {
         return o_info;

@@ -12,6 +12,11 @@ public class UserQRService {
     @Autowired
     UserQRRepository userQRRepository;
 
+    /**
+     * Finds user's UserQR by user's email
+     * @param user
+     * @return UserQR of the user
+     */
     public UserQR getUserQR(User user){
         return userQRRepository.findByO_info(user.getEmail());
     }

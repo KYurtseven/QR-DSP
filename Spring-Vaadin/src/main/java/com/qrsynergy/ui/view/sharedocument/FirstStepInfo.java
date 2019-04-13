@@ -1,4 +1,4 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument;
 
 import java.util.Date;
 

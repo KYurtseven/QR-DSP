@@ -2,7 +2,7 @@ package com.qrsynergy.service;
 
 import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
-import com.qrsynergy.model.UserDocument;
+import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.repository.CommentRepository;
 import com.qrsynergy.repository.QRRepository;
@@ -43,21 +43,19 @@ public class QRService {
     public void saveNewDocument(QR qr){
         // Save qr to the database
         qrRepository.save(qr);
-
-        // always save it to the owner's userqr
+        // always save it to the owner's UserQR
         addQRToOwnerUserQR(qr);
-
         // Create Comment entry for QR
         Comment comment = new Comment(qr.getUrl());
         commentRepository.save(comment);
-
+        // publish now or later?
         if(qr.getPublished()){
             publishQR(qr);
         }
-
-
         // else part
-        // don't add it to the user's userqr
+        // don't add it to the user's UserQR
+        // when the QR is published later, QR will be added user's UserQRs
+        // in a different method
     }
 
     /**
@@ -65,13 +63,13 @@ public class QRService {
      * @param qr qr
      */
     private void addQRToOwnerUserQR(QR qr){
-        // Save to the owner
-        UserDocument userDocument = new UserDocument();
-        userDocument.setName(qr.getOriginalName());
-        userDocument.setUrl(qr.getUrl());
+        // create UserDocument
+        UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
+        // find user's UserQR
         UserQR userQR = userQRRepository.findByO_info(qr.getO_info());
+        // append to the user's owned document
         userQR.appendToO_docs(userDocument);
-
+        // save
         userQRRepository.save(userQR);
     }
 
@@ -90,37 +88,36 @@ public class QRService {
             if(email.equals(qr.getO_info())){
                 continue;
             }
-            // Find UserQR object
+            // Find user's UserQR
             UserQR userQR = userQRRepository.findByO_info(email);
-
-            // create new UserDocument to be added to the list
-            UserDocument userDocument = new UserDocument();
-            userDocument.setName(qr.getOriginalName());
-            userDocument.setUrl(qr.getUrl());
+            // create UserDocument
+            UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
 
             // There is no entry in the database for that user
             // The user does not exist
             if(userQR == null){
-                // create new user qr
-                UserQR newUserQR = new UserQR();
-                newUserQR.setO_info(email);
-
+                // create new UserQR for (to be created) user
+                UserQR newUserQR = new UserQR(email);
+                // append UserDocument to appropriate list
                 if(type.equals("view")){
                     newUserQR.appendToV_docs(userDocument);
                 }
                 else{
                     newUserQR.appendToE_docs(userDocument);
                 }
+                // save
                 userQRRepository.save(newUserQR);
             }
             else{
-                // There exists UserQR object
+                // There exists UserQR for the user
+                // append UserDocument to appropriate list
                 if(type.equals("view")){
                     userQR.appendToV_docs(userDocument);
                 }
                 else{
                     userQR.appendToE_docs(userDocument);
                 }
+                // save
                 userQRRepository.save(userQR);
             }
 
@@ -128,6 +125,14 @@ public class QRService {
     }
 
 
+    /**
+     * Don't use this function with mixed urls.
+     * i.e. don't mix view, own and edit urls in a list and try to fetch together.
+     * If you do that, this functions return all of them and you must iterate all QR list
+     * to find user's rights for each document
+     * @param urls list of uuid of the documents
+     * @return list of qr documents
+     */
     public List<QR> findQRListByUrls(List<String> urls){
         return qrRepository.findByUrlIn(urls);
     }

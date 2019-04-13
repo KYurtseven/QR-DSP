@@ -1,4 +1,4 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument;
 
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public final class ShareDocumentView extends Panel implements View{
 
-    public static final String TITLE_ID = "createdocument-title";
+    public static final String TITLE_ID = "sharedocument-title";
     public static final Integer companyRowCount = 10;
 
     private final VerticalLayout root;

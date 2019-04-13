@@ -10,5 +10,10 @@ import javax.validation.constraints.Email;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
+    /**
+     *
+     * @param email email of the user
+     * @return User
+     */
     public User findByEmail(String email);
 }
