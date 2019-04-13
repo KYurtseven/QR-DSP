@@ -3,9 +3,11 @@ package com.qrsynergy.controller;
 import com.qrsynergy.controller.helper.ControllerResponse;
 import com.qrsynergy.controller.helper.UserDTO;
 import com.qrsynergy.model.Company;
+import com.qrsynergy.model.UserQR;
 import com.qrsynergy.model.helper.Password;
 import com.qrsynergy.model.User;
 import com.qrsynergy.service.CompanyService;
+import com.qrsynergy.service.UserQRService;
 import com.qrsynergy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +25,25 @@ public class UserController {
     CompanyService companyService;
     @Autowired
     UserService userService;
+    @Autowired
+    UserQRService userQRService;
 
+    /**
+     * Checks fields in the userDTO
+     * if the user did not entered required fields
+     * don't register the user
+     * @param userDTO request of the user
+     * @return whether our system should accept this request or not
+     */
+    private boolean isOkForSignUp(UserDTO userDTO){
+        if(userDTO.getEmail().length() == 0 ||
+                userDTO.getFullName().length() == 0 ||
+                userDTO.getPassword().length() == 0){
+            return false;
+
+        }
+        return true;
+    }
     /**
      *
      * Correct input
@@ -44,13 +64,41 @@ public class UserController {
         // Do better approach
         ControllerResponse controllerResponse = new ControllerResponse();
         try{
+            // Try to find out whether the user entered an unregistered company
             Company company = companyService.findByCompanyName(userDTO.getCompany());
             if(company == null){
                 userDTO.setCompany(null);
             }
+            // Check fields
+            if(!isOkForSignUp(userDTO)){
+                // don't add the user
+                controllerResponse.setBody("Fields are required");
+                return controllerResponse;
+            }
+            else{
+                // don't accept if there is a user with that email
+                User oldUser = userService.findByEmail(userDTO.getEmail());
+                if(oldUser != null){
+                    // There is already a registered user with that email
+                    controllerResponse.setBody("Email is in use");
+                    return controllerResponse;
+                }
+            }
+            // at this point, user input is correct
+            // and there is no other user with the same email
+            // try to find UserQR. If there is no UserQR, create it
+            UserQR userQR = userQRService.getUserQrByEmail(userDTO.getEmail());
+            if(userQR == null){
+                // create a UserQR for the user
+                UserQR newUserQR = new UserQR(userDTO.getEmail());
+                // save
+                userQRService.saveUserQR(newUserQR);
+            }
+            // create a user
             User user = new User(userDTO);
-
+            // save the user to the database
             userService.saveUser(user);
+
             controllerResponse.setBody("User is saved");
             return controllerResponse;
 

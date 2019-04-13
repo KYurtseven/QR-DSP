@@ -15,11 +15,13 @@ import java.util.List;
 public class QRService {
 
     @Autowired
+    UserQRService userQRService;
+
+    @Autowired
     QRRepository qrRepository;
+
     @Autowired
-    UserQRRepository userQRRepository;
-    @Autowired
-    CommentRepository commentRepository;
+    CommentService commentService;
 
     /**
      * If the isPublished field of the qr is true
@@ -47,7 +49,7 @@ public class QRService {
         addQRToOwnerUserQR(qr);
         // Create Comment entry for QR
         Comment comment = new Comment(qr.getUrl());
-        commentRepository.save(comment);
+        commentService.saveComment(comment);
         // publish now or later?
         if(qr.getPublished()){
             publishQR(qr);
@@ -66,11 +68,11 @@ public class QRService {
         // create UserDocument
         UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
         // find user's UserQR
-        UserQR userQR = userQRRepository.findByO_info(qr.getO_info());
+        UserQR userQR = userQRService.getUserQrByEmail(qr.getO_info());
         // append to the user's owned document
         userQR.appendToO_docs(userDocument);
         // save
-        userQRRepository.save(userQR);
+        userQRService.saveUserQR(userQR);
     }
 
     /**
@@ -89,7 +91,7 @@ public class QRService {
                 continue;
             }
             // Find user's UserQR
-            UserQR userQR = userQRRepository.findByO_info(email);
+            UserQR userQR = userQRService.getUserQrByEmail(email);
             // create UserDocument
             UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
 
@@ -106,7 +108,7 @@ public class QRService {
                     newUserQR.appendToE_docs(userDocument);
                 }
                 // save
-                userQRRepository.save(newUserQR);
+                userQRService.saveUserQR(newUserQR);
             }
             else{
                 // There exists UserQR for the user
@@ -118,7 +120,7 @@ public class QRService {
                     userQR.appendToE_docs(userDocument);
                 }
                 // save
-                userQRRepository.save(userQR);
+                userQRService.saveUserQR(userQR);
             }
 
         }

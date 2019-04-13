@@ -20,4 +20,21 @@ public class UserQRService {
     public UserQR getUserQR(User user){
         return userQRRepository.findByO_info(user.getEmail());
     }
+
+    /**
+     * Finds UserQR by email
+     * @param email email of the user
+     * @return UserQR of the user
+     */
+    public UserQR getUserQrByEmail(String email){
+        return userQRRepository.findByO_info(email);
+    }
+
+    /**
+     * Saves UserQR to the database
+     * @param userQR
+     */
+    public void saveUserQR(UserQR userQR){
+        userQRRepository.save(userQR);
+    }
 }

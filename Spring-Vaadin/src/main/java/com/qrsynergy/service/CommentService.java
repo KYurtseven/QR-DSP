@@ -29,4 +29,12 @@ public class CommentService {
         comment.appendToCommentEntry(commentEntry);
         commentRepository.save(comment);
     }
+
+    /**
+     * Saves comment entity to the database
+     * @param comment comment entity
+     */
+    public void saveComment(Comment comment){
+        commentRepository.save(comment);
+    }
 }
