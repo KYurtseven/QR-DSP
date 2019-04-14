@@ -126,21 +126,26 @@ public class UserController {
 
         try{
             User user = userService.findByEmail(userDTO.getEmail());
+            if(user != null){
+                byte[] salt = Password.stringToByte(user.getSalt());
+                byte[] userPasswordInByte =  Password.hashPassword(userDTO.getPassword().toCharArray(), salt);
 
-            byte[] salt = Password.stringToByte(user.getSalt());
-            byte[] userPasswordInByte =  Password.hashPassword(userDTO.getPassword().toCharArray(), salt);
+                String userHashedPassword = Password.bytetoString(userPasswordInByte);
+                String dbPassword = user.getPassword();
 
-            String userHashedPassword = Password.bytetoString(userPasswordInByte);
-            String dbPassword = user.getPassword();
-
-            // TODO
-            if(dbPassword.equals(userHashedPassword)){
-                controllerResponse.setBody("correct");
+                // TODO
+                if(dbPassword.equals(userHashedPassword)){
+                    controllerResponse.setBody("correct");
+                }
+                else{
+                    controllerResponse.setBody("Incorrect email or password");
+                }
+                return controllerResponse;
             }
             else{
-                controllerResponse.setBody("false");
+                controllerResponse.setBody("Incorrect email or password");
+                return controllerResponse;
             }
-            return controllerResponse;
         }
         catch(Exception e){
             controllerResponse.setBody("Error  "+ e);
