@@ -15,14 +15,17 @@ public class UserDocument {
 
     private String url;
 
+    private DocumentType documentType;
+
     /**
      * Constructor
      * @param name original name of the document
      * @param url uuid of the document
      */
-    public UserDocument(String name, String url){
+    public UserDocument(String name, String url, DocumentType documentType){
         this.name = name;
         this.url = url;
+        this.documentType = documentType;
     }
 
     /**
@@ -57,4 +60,19 @@ public class UserDocument {
         this.url = url;
     }
 
+    /**
+     *
+     * @return document type
+     */
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    /**
+     *
+     * @param documentType document type to set
+     */
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
 }

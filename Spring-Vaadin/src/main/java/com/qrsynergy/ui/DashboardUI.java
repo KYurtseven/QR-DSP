@@ -109,7 +109,7 @@ public final class DashboardUI extends UI {
         // TODO
         // For speeding up the test, user validation is bypassed
         // remove it
-        User user = userService.findByEmail("koray@gmail.com");
+        User user = userService.findByEmail("koray.can.yurtseven@gmail.com");
 
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();

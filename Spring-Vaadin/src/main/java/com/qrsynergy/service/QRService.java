@@ -66,7 +66,7 @@ public class QRService {
      */
     private void addQRToOwnerUserQR(QR qr){
         // create UserDocument
-        UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
+        UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl(), qr.getDocumentType());
         // find user's UserQR
         UserQR userQR = userQRService.getUserQrByEmail(qr.getO_info());
         // append to the user's owned document
@@ -93,7 +93,7 @@ public class QRService {
             // Find user's UserQR
             UserQR userQR = userQRService.getUserQrByEmail(email);
             // create UserDocument
-            UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl());
+            UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl(), qr.getDocumentType());
 
             // There is no entry in the database for that user
             // The user does not exist
@@ -128,6 +128,9 @@ public class QRService {
 
 
     /**
+     * TODO
+     * We are not using this right now
+     *
      * Don't use this function with mixed urls.
      * i.e. don't mix view, own and edit urls in a list and try to fetch together.
      * If you do that, this functions return all of them and you must iterate all QR list
@@ -137,5 +140,15 @@ public class QRService {
      */
     public List<QR> findQRListByUrls(List<String> urls){
         return qrRepository.findByUrlIn(urls);
+    }
+
+
+    /**
+     * Finds QR by url
+     * @param url url of the QR
+     * @return QR
+     */
+    public QR findQRByUrl(String url){
+        return qrRepository.findByUrl(url);
     }
 }

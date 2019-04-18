@@ -1,5 +1,6 @@
 package com.qrsynergy.ui.view.sharedocument;
 
+import com.qrsynergy.model.helper.DocumentType;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
@@ -82,7 +83,8 @@ public class UploadFileStep implements WizardStep {
 
     /**
      * Saves the file info to the FirstStepInfo class
-     *
+     * TODO
+     * Right now, it only accepts xlsx.
      */
     private void createUploadFinishedHandler() {
         uploadFinishedHandler = (InputStream stream, String fileName, String mimeType, long length, int filesLeftInQueue) -> {
@@ -91,7 +93,9 @@ public class UploadFileStep implements WizardStep {
                 String type = fileName.substring(fileName.lastIndexOf(".") +1);
                 if(type.equals("xlsx")){
                     firstStepInfo.setUrl(UUID.randomUUID().toString());
-                    firstStepInfo.setType("xlsx");
+                    // TODO
+                    // Right now, it only accepts xlsx.
+                    firstStepInfo.setDocumentType(DocumentType.EXCEL);
                     firstStepInfo.setOriginalName(fileName);
                     Date curDate = new Date();
                     firstStepInfo.setCreationDate(curDate);

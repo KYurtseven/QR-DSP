@@ -230,7 +230,7 @@ public final class ShareDocumentView extends Panel implements View{
      */
     private void setFirstStepInfo(FirstStepInfo firstStepInfo, QR qr){
         qr.setUrl(firstStepInfo.getUrl());
-        qr.setType(firstStepInfo.getType());
+        qr.setDocumentType(firstStepInfo.getDocumentType());
         qr.setOriginalName(firstStepInfo.getOriginalName());
         qr.setCreationDate(firstStepInfo.getCreationDate());
         qr.setLastModified(firstStepInfo.getLastModified());

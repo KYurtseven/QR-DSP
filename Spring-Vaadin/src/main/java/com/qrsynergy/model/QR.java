@@ -1,5 +1,6 @@
 package com.qrsynergy.model;
 
+import com.qrsynergy.model.helper.DocumentType;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -28,10 +29,7 @@ public class QR {
 
     private Boolean isPublished;
 
-    // TODO,
-    // enum
-    // xlsx, pdf or dynamic form
-    private String type;
+    private DocumentType documentType;
 
     private List<String> e_company;
 
@@ -110,21 +108,18 @@ public class QR {
     }
 
     /**
-     * TODO
-     * right now, it is xlsx
+     *
      * @return type of the document
      */
-    public String getType() {
-        return type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
-
     /**
-     * TODO
-     * right now, it is xlsx
-     * @param type type of the document, xlsx, pdf or dynamicform
+     *
+     * @param documentType type of the document, xlsx, pdf or dynamicform
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 
     /**

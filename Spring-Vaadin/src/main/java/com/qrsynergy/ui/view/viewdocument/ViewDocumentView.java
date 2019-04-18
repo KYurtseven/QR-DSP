@@ -2,20 +2,29 @@ package com.qrsynergy.ui.view.viewdocument;
 
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
+import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.vaadin.client.ui.Icon;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.BrowserWindowOpener;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.renderers.ComponentRenderer;
+import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,48 +94,105 @@ public final class ViewDocumentView extends Panel implements  View{
 
         UserQR userQR = ((DashboardUI) UI.getCurrent()).userQRService.getUserQR(user);
 
-        List<String> ownUrls = userQRToUrl(userQR.getO_docs());
-        List<String> editUrls = userQRToUrl(userQR.getE_docs());
-        List<String> viewUrls = userQRToUrl(userQR.getV_docs());
-
-        List<QR> ownQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(ownUrls);
-        List<QR> editQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(editUrls);
-        List<QR> viewQRs = ((DashboardUI) UI.getCurrent()).qrService.findQRListByUrls(viewUrls);
+        List<UserDocument> ownDocuments = userQR.getO_docs();
+        List<UserDocument> editDocuments = userQR.getE_docs();
+        List<UserDocument> viewDocuments = userQR.getV_docs();
 
         Label ownLabel = new Label("Owned documents");
-        content.addComponents(ownLabel, buildQRItems(ownQRs));
+        content.addComponents(ownLabel, buildQRItems(ownDocuments));
 
         Label editLabel = new Label("Editable documents");
-        content.addComponents(editLabel, buildQRItems(editQRs));
+        content.addComponents(editLabel, buildQRItems(editDocuments));
 
         Label viewLabel = new Label("Viewable documents");
-        content.addComponents(viewLabel, buildQRItems(viewQRs));
+        content.addComponents(viewLabel, buildQRItems(viewDocuments));
 
         return content;
     }
 
-    private Component buildQRItems(List<QR> QRs){
-        Grid<QR> grid = new Grid<>();
+    private Component buildQRItems(List<UserDocument> userDocuments){
+        Grid<UserDocument> grid = new Grid<>();
         grid.setSizeFull();
-        grid.setItems(QRs);
+        grid.setItems(userDocuments);
 
-        grid.addColumn(QR::getOriginalName).setCaption("Name");
-        grid.addColumn(QR::getPublic).setCaption("Is Public");
-        grid.addColumn(QR::getCreationDate).setCaption("Creation Date");
-        grid.addColumn(QR::getExpirationDate).setCaption("Expiration Date");
+        grid.addColumn(userDocument -> renderTypeThumbnail(userDocument), new HtmlRenderer()).setCaption("Type");
+        grid.addColumn(UserDocument::getName).setCaption("Name");
         // Button for opening excel in the new tab
-        grid.addColumn(qr -> openExcelInNewTab(qr) ,
+        grid.addColumn(userDocument -> openExcelInNewTab(userDocument) ,
                 new ComponentRenderer()).setCaption( "View" );
-        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        grid.addColumn(userDocument -> {
+            Button btn = new Button("Details");
+            btn.addClickListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    if(grid.isDetailsVisible(userDocument)){
+                        grid.setDetailsVisible(userDocument, false);
+                    }
+                    else{
+                        grid.setDetailsVisible(userDocument, true);
+                    }
+                }
+            });
+            return btn;
+        }, new ComponentRenderer()).setCaption("Details");
+        // details
+        grid.setDetailsGenerator(userDocument -> {
+            QR qr = ((DashboardUI) UI.getCurrent()).qrService.findQRByUrl(userDocument.getUrl());
+            VerticalLayout layout = new VerticalLayout();
+            TabSheet tabSheet = new TabSheet();
+            layout.addComponent(tabSheet);
+            tabSheet.addTab(qrInfoTab(qr), "Info");
+            tabSheet.addTab(denemeTab(), "deneme");
+            return layout;
+        });
 
         return grid;
     }
 
-    private Button openExcelInNewTab(QR qr){
+    // TODO
+    // DELETE
+    private Component denemeTab(){
+        VerticalLayout layout = new VerticalLayout();
+        Label newLabel = new Label("deneme");
+        layout.addComponent(newLabel);
+        return layout;
+    }
+
+    /**
+     * TODO
+     * Better UI
+     * @param qr QR
+     * @return component to be rendered in the tab
+     */
+    private Component qrInfoTab(QR qr){
+        VerticalLayout layout = new VerticalLayout();
+
+        Label url = new Label("url: " + qr.getUrl());
+        Label originalName = new Label("original name: " + qr.getOriginalName());
+        Label isPublished = new Label("publish: " + qr.getPublished());
+        Label documentType = new Label("document type: " + qr.getDocumentType());
+        Label creationDate = new Label("creation date: " + qr.getCreationDate());
+        Label expirationDate = new Label("expiration date: " + qr.getExpirationDate());
+
+        layout.addComponents(url, originalName, isPublished, documentType, creationDate, expirationDate);
+        return layout;
+    }
+
+    private String renderTypeThumbnail(UserDocument userDocument){
+        if(userDocument.getDocumentType().equals(DocumentType.EXCEL)){
+           return FontAwesome.FILE_EXCEL_O.getHtml();
+        }
+        else{
+            // TODO
+            return FontAwesome.GRADUATION_CAP.getHtml();
+        }
+    }
+
+    private Button openExcelInNewTab(UserDocument userDocument){
         Button btn = new Button("Open");
         BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
         opener.extend(btn);
-        opener.setParameter("qr_id", qr.getUrl());
+        opener.setParameter("qr_id", userDocument.getUrl());
         return  btn;
     }
 }

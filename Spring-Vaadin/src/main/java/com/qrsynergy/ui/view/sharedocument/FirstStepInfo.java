@@ -1,5 +1,7 @@
 package com.qrsynergy.ui.view.sharedocument;
 
+import com.qrsynergy.model.helper.DocumentType;
+
 import java.util.Date;
 
 /**
@@ -10,7 +12,7 @@ public class FirstStepInfo {
 
     private String url;
 
-    private String type;
+    private DocumentType documentType;
 
     private String originalName;
 
@@ -42,19 +44,19 @@ public class FirstStepInfo {
     /**
      * TODO
      * right now, it is xlsx
-     * @return type of the document
+     * @return DocumentType of the document
      */
-    public String getType() {
-        return type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
 
     /**
      * TODO
      * right now, it is xlsx
-     * @param type type of the document, xlsx, pdf or dynamicform
+     * @param documentType type of the document, xlsx, pdf or dynamicform
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 
     /**
