@@ -126,6 +126,11 @@
 			<artifactId>javase</artifactId>
 			<version>3.3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addon</groupId>
+			<artifactId>confirmdialog</artifactId>
+			<version>3.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

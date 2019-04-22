@@ -29,7 +29,7 @@ public class ExcelUI extends UI{
     private String qr_id;
     private SliderPanel rightSlider = null;
     private Button buttonInSlider = new Button("Comment");
-    private TextArea textArea = new TextArea();
+    private TextArea textArea = new TextArea("hi");
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -47,7 +47,7 @@ public class ExcelUI extends UI{
 
         //initialize Slider
         initSliderPanel();
-        horizontalLayout.addComponent(this.rightSlider);
+        horizontalLayout.addComponent(rightSlider);
         horizontalLayout.setExpandRatio(rightSlider,(float) 0);
     }
 
@@ -63,10 +63,9 @@ public class ExcelUI extends UI{
     private void initSliderPanel()
     {
         VerticalLayout sliderVerticalLayout = new VerticalLayout();
-            sliderVerticalLayout.addComponent(this.textArea);
+        sliderVerticalLayout.addComponent(this.textArea);
 
-
-        this.rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
+        rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
                                 .expanded(false)
                                 .mode(SliderMode.RIGHT)
                                 .caption("Slider")
@@ -76,6 +75,7 @@ public class ExcelUI extends UI{
                                 .style(SliderPanelStyles.ICON_BLACK)
                                 //.zIndex(9980)
                                 .build();
+
     }
 
     @WebServlet(urlPatterns = "/*",  asyncSupported = true)

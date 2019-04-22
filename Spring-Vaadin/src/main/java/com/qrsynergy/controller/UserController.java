@@ -1,7 +1,6 @@
 package com.qrsynergy.controller;
 
-import com.qrsynergy.controller.helper.ControllerResponse;
-import com.qrsynergy.controller.helper.UserDTO;
+import com.qrsynergy.controller.helper.*;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.model.helper.Password;
@@ -9,6 +8,7 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.service.CompanyService;
 import com.qrsynergy.service.UserQRService;
 import com.qrsynergy.service.UserService;
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class UserController {
         return true;
     }
     /**
-     *
+     * REST API: /api/user/signup
      * Correct input
      * {
      * 	"fullName" : "koray can yurtseven",
@@ -58,30 +58,24 @@ public class UserController {
      * @return success or failure
      */
     @PostMapping("/signup")
-    public ControllerResponse signup(@Valid @RequestBody UserDTO userDTO) {
+    public SignUpResponse signup(@Valid @RequestBody UserDTO userDTO) {
 
-        // TODO
-        // Do better approach
-        ControllerResponse controllerResponse = new ControllerResponse();
+        SignUpResponse signUpResponse = new SignUpResponse();
+
         try{
-            // Try to find out whether the user entered an unregistered company
-            Company company = companyService.findByCompanyName(userDTO.getCompany());
-            if(company == null){
-                userDTO.setCompany(null);
-            }
             // Check fields
             if(!isOkForSignUp(userDTO)){
                 // don't add the user
-                controllerResponse.setBody("Fields are required");
-                return controllerResponse;
+                signUpResponse.failureSignUpResponse(FailureMessage.SIGNUP_FIELDS_REQUIRED);
+                return signUpResponse;
             }
             else{
                 // don't accept if there is a user with that email
                 User oldUser = userService.findByEmail(userDTO.getEmail());
                 if(oldUser != null){
                     // There is already a registered user with that email
-                    controllerResponse.setBody("Email is in use");
-                    return controllerResponse;
+                    signUpResponse.failureSignUpResponse(FailureMessage.SIGNUP_EMAIL_IN_USE);
+                    return signUpResponse;
                 }
             }
             // at this point, user input is correct
@@ -94,35 +88,84 @@ public class UserController {
                 // save
                 userQRService.saveUserQR(newUserQR);
             }
-            // create a user
-            User user = new User(userDTO);
+            // check user's input in company field
+            User user = checkCompanySignUp(userDTO);
+
             // save the user to the database
             userService.saveUser(user);
+            signUpResponse.successSignUpResponse();
 
-            controllerResponse.setBody("User is saved");
-            return controllerResponse;
+            return signUpResponse;
 
         }
         catch(Exception e){
-            controllerResponse.setBody("Error  "+ e);
-            return controllerResponse;
+            signUpResponse.failureSignUpResponse(FailureMessage.UNKNOWN_ERROR);
+            System.out.println("Exception in userController signup: " + e);
+            return signUpResponse;
         }
     }
 
     /**
+     * Checks company field of user's input.
+     * Check DB, whether the company exists or not
+     * Check user's email extension and company extension. If they don't match,
+     * set user's company to null
+     * @param userDTO
+     * @return user
+     */
+    private User checkCompanySignUp(UserDTO userDTO){
+        // create a user
+        User user = new User(userDTO);
+
+        // Try to find out whether the user entered an unregistered company
+        Company company = companyService.findByCompanyName(userDTO.getCompany());
+        // If the entered company name is not registered in our database
+        // set company of the user null
+        if(company == null){
+            user.setCompany(null);
+        }
+        else{
+            // If the company is registered and its email extension is not equal to
+            // the user's email
+            // (i.e. user: koray@ford.com, company mail extension is not: ford.com )
+            // reject, set company of the user null
+            if(!company.getEmailExtension().equals(user.getEmailExtension())){
+                user.setCompany(null);
+            }
+            // accept
+        }
+        return user;
+    }
+
+    /**
+     * REST API: /api/user/login
      * Correct input
      * {
      * 	"email" : "koray.can.yurtseven@gmail.com",
      * 	"password" : "123123abc"
      * }
+     * Output success
+     * {
+     *     "status" : "SUCCESS",
+     *     "message" : null,
+     *     "fullName" : "full name of the user,
+     *     "email" : "email of the user",
+     *     "company" : "company of the user"
+     * }
+     *
+     * Output failure
+     * {
+     *     "status" : "FAILURE,
+     *     "message" : "failure message"
+     * }
+     *
      * @param userDTO user credentials
-     * @return success or failure
+     * @return login response
      */
     @PostMapping("/login")
-    public ControllerResponse login(@Valid @RequestBody UserDTO userDTO){
-        // TODO
-        // Do better approach
-        ControllerResponse controllerResponse = new ControllerResponse();
+    public LoginResponse login(@Valid @RequestBody UserDTO userDTO){
+
+        LoginResponse loginResponse = new LoginResponse();
 
         try{
             User user = userService.findByEmail(userDTO.getEmail());
@@ -133,23 +176,23 @@ public class UserController {
                 String userHashedPassword = Password.bytetoString(userPasswordInByte);
                 String dbPassword = user.getPassword();
 
-                // TODO
                 if(dbPassword.equals(userHashedPassword)){
-                    controllerResponse.setBody("correct");
+                    loginResponse.successLoginResponse(user);
                 }
                 else{
-                    controllerResponse.setBody("Incorrect email or password");
+                    loginResponse.failureLoginResponse(FailureMessage.LOGIN_INCORRECT_CREDENTIALS);
                 }
-                return controllerResponse;
+                return loginResponse;
             }
             else{
-                controllerResponse.setBody("Incorrect email or password");
-                return controllerResponse;
+                loginResponse.failureLoginResponse(FailureMessage.LOGIN_INCORRECT_CREDENTIALS);
+                return loginResponse;
             }
         }
         catch(Exception e){
-            controllerResponse.setBody("Error  "+ e);
-            return controllerResponse;
+            loginResponse.failureLoginResponse(FailureMessage.UNKNOWN_ERROR);
+            System.out.println("Exception in userController login: " + e);
+            return loginResponse;
         }
     }
 

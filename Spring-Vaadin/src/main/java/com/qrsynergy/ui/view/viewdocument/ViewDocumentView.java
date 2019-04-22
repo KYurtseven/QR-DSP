@@ -23,6 +23,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,6 +34,12 @@ public final class ViewDocumentView extends Panel implements  View{
 
     public static final String TITLE_ID = "viewdocument-title";
     private final VerticalLayout root;
+    private final String userRemovalConfirmation1 = "Are you sure to remove ";
+    private final String userRemovalConfirmation3 = "from";
+    private final String userRemovalConfirmation4_edit = " editing this QR";
+    private final String userRemovalConfirmation4_view = " viewing this QR";
+
+
 
     public ViewDocumentView(){
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -176,6 +183,59 @@ public final class ViewDocumentView extends Panel implements  View{
 
         layout.addComponents(url, originalName, isPublished, documentType, creationDate, expirationDate);
         return layout;
+    }
+
+    /**
+     * In this tab, user can add or remore users.
+     * Either for editing users or viewing users
+     * TODO
+     * Do it with grid.
+     * @param qr QR
+     * @param user_infos QR's user_info
+     * @param type view or edit
+     * @return
+     */
+    private Component editPeopleTab(QR qr, List<String> user_infos, String type){
+        VerticalLayout layout = new VerticalLayout();
+        for(String user_info: user_infos){
+            HorizontalLayout hLayout = new HorizontalLayout();
+            Label user_infoLabel = new Label(user_info);
+            Button removeUserButton = new Button("-");
+            removeUserButton.addClickListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    ConfirmDialog.show(UI.getCurrent(), buildConfirmationUserRemoval(user_info, type),
+                            new ConfirmDialog.Listener() {
+                                @Override
+                                public void onClose(ConfirmDialog confirmDialog) {
+                                    if(confirmDialog.isConfirmed()){
+                                        // TODO
+                                    }
+                                    else{
+                                        // TODO
+                                    }
+                                }
+                            });
+                }
+            });
+        }
+        return null;
+    }
+
+    /**
+     * TODO
+     * Better string building
+     * @param user_info to be removed user's email
+     * @param type view or edit
+     * @return string to be rendered
+     */
+    private String buildConfirmationUserRemoval(String user_info, String type){
+        if(type.equals("view")){
+            return userRemovalConfirmation1 + user_info + userRemovalConfirmation3 + userRemovalConfirmation4_view;
+        }
+        else{
+            return userRemovalConfirmation1 + user_info + userRemovalConfirmation3 +   userRemovalConfirmation4_edit;
+        }
     }
 
     private String renderTypeThumbnail(UserDocument userDocument){
