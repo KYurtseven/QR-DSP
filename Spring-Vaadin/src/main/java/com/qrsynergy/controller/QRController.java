@@ -37,6 +37,7 @@ public class QRController {
                 // TODO
             }
             else{
+                // cannot access this document, not enough rights
                 qrResponse.failureQRResponse(FailureMessage.QR_CANNOT_SEE_DOCUMENT);
             }
 
@@ -51,10 +52,10 @@ public class QRController {
 
     /**
      * Returns true if the email can access this document
-     * @param qrResponse
-     * @param qr
-     * @param email
-     * @return
+     * @param qrResponse response object which will be returned to the user
+     * @param qr qr
+     * @param email email of the user
+     * @return true if the user can access this document
      */
     private boolean checkAccessRights(QRResponse qrResponse, QR qr, String email){
         // check whether this is the owner

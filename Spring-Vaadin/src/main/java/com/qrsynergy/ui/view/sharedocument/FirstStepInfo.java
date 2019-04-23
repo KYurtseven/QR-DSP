@@ -1,7 +1,10 @@
 package com.qrsynergy.ui.view.sharedocument;
 
 import com.qrsynergy.model.helper.DocumentType;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -23,6 +26,35 @@ public class FirstStepInfo {
     private String diskName;
 
     private byte[] fileInBytes;
+
+
+    /**
+     * Writes byte array to file
+     * @throws IOException
+     */
+    public void writeByteToFile() throws IOException {
+        File targetFile = new File(UploadFileStep.uploadLocation + this.diskName);
+
+        FileUtils.writeByteArrayToFile(
+                targetFile,
+                this.fileInBytes
+        );
+    }
+
+    /**
+     * Writes byte array to csv file, only for excel
+     * CSV file is used for fetching in the mobile application
+     * @throws Exception
+     */
+    public void writeByteToCSV() throws Exception{
+
+        DataConvertionUtil.excelToCSV(
+                UploadFileStep.uploadLocation + this.diskName,
+                UploadFileStep.uploadLocation + this.url + ".csv"
+        );
+    }
+
+
 
     /**
      *

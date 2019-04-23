@@ -10,6 +10,8 @@ import com.qrsynergy.service.UserQRService;
 import com.qrsynergy.service.UserService;
 import org.apache.commons.collections.bag.SynchronizedSortedBag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +60,7 @@ public class UserController {
      * @return success or failure
      */
     @PostMapping("/signup")
-    public SignUpResponse signup(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<SignUpResponse> signup(@Valid @RequestBody UserDTO userDTO) {
 
         SignUpResponse signUpResponse = new SignUpResponse();
 
@@ -67,7 +69,7 @@ public class UserController {
             if(!isOkForSignUp(userDTO)){
                 // don't add the user
                 signUpResponse.failureSignUpResponse(FailureMessage.SIGNUP_FIELDS_REQUIRED);
-                return signUpResponse;
+                return ResponseEntity.badRequest().body(signUpResponse);
             }
             else{
                 // don't accept if there is a user with that email
@@ -75,7 +77,7 @@ public class UserController {
                 if(oldUser != null){
                     // There is already a registered user with that email
                     signUpResponse.failureSignUpResponse(FailureMessage.SIGNUP_EMAIL_IN_USE);
-                    return signUpResponse;
+                    return ResponseEntity.badRequest().body(signUpResponse);
                 }
             }
             // at this point, user input is correct
@@ -95,13 +97,13 @@ public class UserController {
             userService.saveUser(user);
             signUpResponse.successSignUpResponse();
 
-            return signUpResponse;
+            return ResponseEntity.ok(signUpResponse);
 
         }
         catch(Exception e){
             signUpResponse.failureSignUpResponse(FailureMessage.UNKNOWN_ERROR);
             System.out.println("Exception in userController signup: " + e);
-            return signUpResponse;
+            return ResponseEntity.badRequest().body(signUpResponse);
         }
     }
 
@@ -145,6 +147,7 @@ public class UserController {
      * 	"password" : "123123abc"
      * }
      * Output success
+     * Status code : 200
      * {
      *     "status" : "SUCCESS",
      *     "message" : null,
@@ -154,6 +157,7 @@ public class UserController {
      * }
      *
      * Output failure
+     * Status code: 400
      * {
      *     "status" : "FAILURE,
      *     "message" : "failure message"
@@ -163,7 +167,7 @@ public class UserController {
      * @return login response
      */
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody UserDTO userDTO){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserDTO userDTO){
 
         LoginResponse loginResponse = new LoginResponse();
 
@@ -178,22 +182,24 @@ public class UserController {
 
                 if(dbPassword.equals(userHashedPassword)){
                     loginResponse.successLoginResponse(user);
+                    return ResponseEntity.ok(loginResponse);
                 }
                 else{
                     loginResponse.failureLoginResponse(FailureMessage.LOGIN_INCORRECT_CREDENTIALS);
                 }
-                return loginResponse;
+
             }
             else{
                 loginResponse.failureLoginResponse(FailureMessage.LOGIN_INCORRECT_CREDENTIALS);
-                return loginResponse;
             }
+            return ResponseEntity.badRequest().body(loginResponse);
         }
         catch(Exception e){
             loginResponse.failureLoginResponse(FailureMessage.UNKNOWN_ERROR);
             System.out.println("Exception in userController login: " + e);
-            return loginResponse;
+            return ResponseEntity.badRequest().body(loginResponse);
         }
+
     }
 
 }

@@ -3,6 +3,7 @@ package com.qrsynergy.ui.view.sharedocument;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
+import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.data.provider.DataProvider;
@@ -171,50 +172,23 @@ public final class ShareDocumentView extends Panel implements View{
         try{
             if(firstStepInfo != null){
                 if(firstStepInfo.getUrl() != null){
-                    // There is the file
 
-                    File targetFile = new File(UploadFileStep.uploadLocation + firstStepInfo.getDiskName());
-
-                    FileUtils.writeByteArrayToFile(
-                            targetFile,
-                            firstStepInfo.getFileInBytes()
-                    );
+                    firstStepInfo.writeByteToFile();
                     // File is written to the disk
 
-                    List<String> viewEmails = checkEmails(emailViewDataProvider);
-                    List<String> editEmails = checkEmails(emailEditDataProvider);
+                    // Convert file to csv, and save that too
+                    if(firstStepInfo.getDocumentType().equals(DocumentType.EXCEL)){
+                        firstStepInfo.writeByteToCSV();
+                    }
 
-                    List<String> viewCompanies = checkCompanies(selectViewCompanies);
-                    List<String> editCompanies = checkCompanies(selectEditCompanies);
-
-                    QR qr = new QR();
-                    // set file info
-                    setFirstStepInfo(firstStepInfo, qr);
-
-                    User user = (User) VaadinSession.getCurrent()
-                            .getAttribute(User.class.getName());
-                    // set owner info
-                    qr.setO_info(user.getEmail());
-
-                    // set people info
-                    qr.setV_info(viewEmails);
-                    qr.setE_info(editEmails);
-
-                    // set company info
-                    qr.setV_company(viewCompanies);
-                    qr.setE_company(editCompanies);
-
-                    // set additional info
-                    qr.setPublic(additionalOptionsInfo.isPublic());
-                    qr.setPublished(additionalOptionsInfo.isPublished());
-                    qr.setExpirationDate(additionalOptionsInfo.getExpirationDate());
+                    QR qr = prepareQRFields();
 
                     // save document to the database
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                 }
             }
         }
-        catch(IOException e){
+        catch(Exception e){
             Notification fileUploadExceptionNotification = new Notification("Unknown error occured");
             fileUploadExceptionNotification.setDelayMsec(2000);
             fileUploadExceptionNotification.setPosition(Position.MIDDLE_CENTER);
@@ -224,17 +198,37 @@ public final class ShareDocumentView extends Panel implements View{
     }
 
     /**
-     * Sets File parameters to the QR
-     * @param firstStepInfo file info from the first step
-     * @param qr object to be saved to the database
+     * Prepare QR's fields for saving
+     * @return
      */
-    private void setFirstStepInfo(FirstStepInfo firstStepInfo, QR qr){
-        qr.setUrl(firstStepInfo.getUrl());
-        qr.setDocumentType(firstStepInfo.getDocumentType());
-        qr.setOriginalName(firstStepInfo.getOriginalName());
-        qr.setCreationDate(firstStepInfo.getCreationDate());
-        qr.setLastModified(firstStepInfo.getLastModified());
-        qr.setDiskName(firstStepInfo.getDiskName());
+    private QR prepareQRFields(){
+        List<String> viewEmails = checkEmails(emailViewDataProvider);
+        List<String> editEmails = checkEmails(emailEditDataProvider);
+
+        List<String> viewCompanies = checkCompanies(selectViewCompanies);
+        List<String> editCompanies = checkCompanies(selectEditCompanies);
+
+        QR qr = new QR(firstStepInfo);
+
+        User user = (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
+        // set owner info
+        qr.setO_info(user.getEmail());
+
+        // set people info
+        qr.setV_info(viewEmails);
+        qr.setE_info(editEmails);
+
+        // set company info
+        qr.setV_company(viewCompanies);
+        qr.setE_company(editCompanies);
+
+        // set additional info
+        qr.setPublic(additionalOptionsInfo.isPublic());
+        qr.setPublished(additionalOptionsInfo.isPublished());
+        qr.setExpirationDate(additionalOptionsInfo.getExpirationDate());
+
+        return qr;
     }
 
     /**
