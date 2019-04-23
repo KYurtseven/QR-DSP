@@ -46,6 +46,7 @@ public class UserController {
         }
         return true;
     }
+
     /**
      * REST API: /api/user/signup
      * Correct input

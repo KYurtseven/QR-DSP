@@ -1,5 +1,10 @@
 package com.qrsynergy.controller.helper;
 
+/**
+ * QR api response
+ * TODO
+ * This is not used for now. Use it
+ */
 public class QRResponse {
     private ResponseStatusType status;
 
@@ -8,6 +13,13 @@ public class QRResponse {
     private QRAccessType accessType;
 
     // TODO
+
+    /**
+     * empty constructor
+     */
+    public QRResponse(){
+
+    }
 
     public void failureQRResponse(FailureMessage message){
         this.status = ResponseStatusType.FAILURE;
