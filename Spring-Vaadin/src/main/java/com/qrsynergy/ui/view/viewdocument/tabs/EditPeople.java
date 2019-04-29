@@ -8,6 +8,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ComponentRenderer;
+import com.vaadin.ui.themes.ValoTheme;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.dialogs.ConfirmDialog;
@@ -21,26 +22,35 @@ public class EditPeople {
     private final String userRemovalConfirmation4_edit = " editing this QR";
     private final String userRemovalConfirmation4_view = " viewing this QR";
 
-    VerticalLayout content;
+    HorizontalLayout content;
     QR qr;
 
     public EditPeople(QR qr){
-        content = new VerticalLayout();
+        content = new HorizontalLayout();
         this.qr = qr;
     }
 
     // TODO
     public Component getContent() {
         Responsive.makeResponsive(content);
-        content.addComponent(editEditPeople(qr));
+
+
+        content.addComponent(buildGrid(RightType.EDIT));
+        content.addComponent(buildGrid(RightType.VIEW));
+
         return content;
     }
 
-    private Component editEditPeople(QR qr){
-        VerticalLayout verticalLayout = new VerticalLayout();
+    private Component buildGrid(RightType rightType){
 
+        Label label = new Label(rightType.toString());
         Grid<String> grid = new Grid<>(String.class);
-        grid.setItems(qr.getE_info());
+
+        if(rightType.equals(RightType.EDIT))
+            grid.setItems(qr.getE_info());
+        else
+            grid.setItems(qr.getV_info());
+
         grid.removeAllColumns();
 
         grid.addColumn(String::toString).setCaption("Email");
@@ -51,7 +61,7 @@ public class EditPeople {
                 public void buttonClick(Button.ClickEvent event) {
 
                     if(((DashboardUI) UI.getCurrent()).qrService
-                            .removeUserFromQR(qr, email, RightType.EDIT)){
+                            .removeUserFromQR(qr, email, rightType)){
                         grid.getDataProvider().refreshAll();
                         // TODO
                         // Notification
@@ -67,16 +77,16 @@ public class EditPeople {
 
         TextField newEditPerson = new TextField("New person's email:");
 
-        // TODO
-        // rename
-        Button addButton = new Button("Add edit");
+
+        Button addButton = new Button("Add");
         addButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 boolean valid = EmailValidator.getInstance().isValid(newEditPerson.getValue());
                 if(valid){
+
                     if(((DashboardUI) UI.getCurrent()).qrService
-                            .addUserToQR(qr, newEditPerson.getValue(), RightType.EDIT)){
+                            .addUserToQR(qr, newEditPerson.getValue(), rightType)){
                         grid.getDataProvider().refreshAll();
                         newEditPerson.clear();
                         // TODO
@@ -93,7 +103,11 @@ public class EditPeople {
                 }
             }
         });
-        verticalLayout.addComponents(grid, newEditPerson, addButton);
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponents(newEditPerson, addButton);
+        verticalLayout.addComponents(label, grid, horizontalLayout);
         return verticalLayout;
     }
 

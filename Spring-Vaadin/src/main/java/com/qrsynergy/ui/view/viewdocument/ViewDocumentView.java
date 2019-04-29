@@ -28,6 +28,7 @@ import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.dialogs.ConfirmDialog;
+import sun.font.FontAccess;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -59,9 +60,8 @@ public final class ViewDocumentView extends Panel implements  View{
         root.addComponent(buildHeader());
 
         Component content = buildContent();
-        root.addComponent(buildContent());
+        root.addComponent(content);
         //root.setExpandRatio(content, 1);
-
     }
 
     private Component buildHeader() {
@@ -82,6 +82,7 @@ public final class ViewDocumentView extends Panel implements  View{
      * accepts UserQR, fetches urls from it
      * @return list of urls
      */
+    @Deprecated
     private List<String> userQRToUrl(List<UserDocument> userDocuments){
         List<String> urls = new ArrayList<>();
         for(int i = 0; i < userDocuments.size(); i++){
@@ -118,18 +119,22 @@ public final class ViewDocumentView extends Panel implements  View{
         return content;
     }
 
+    /**
+     * Builds grids
+     * Owned documents grid, editable documents grid or viewable documents grid
+     * The parameter is set in buildContent method
+     * @param userDocuments list of user documents
+     * @return grid of the documents
+     */
     private Component buildQRItems(List<UserDocument> userDocuments){
         Grid<UserDocument> grid = new Grid<>();
         grid.setSizeFull();
         grid.setItems(userDocuments);
 
-        grid.addColumn(userDocument -> renderTypeThumbnail(userDocument), new HtmlRenderer()).setCaption("Type");
-        grid.addColumn(UserDocument::getName).setCaption("Name");
-        // Button for opening excel in the new tab
-        grid.addColumn(userDocument -> openExcelInNewTab(userDocument) ,
-                new ComponentRenderer()).setCaption( "View" );
         grid.addColumn(userDocument -> {
-            Button btn = new Button("Details");
+            Button btn = new Button();
+            btn.setIcon(FontAwesome.EXPAND);
+            btn.setHeight("25px");
             btn.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
@@ -142,7 +147,28 @@ public final class ViewDocumentView extends Panel implements  View{
                 }
             });
             return btn;
-        }, new ComponentRenderer()).setCaption("Details");
+        }, new ComponentRenderer()).setCaption("Details")
+                .setWidth(90)
+                .setResizable(false)
+                .setSortable(false);
+
+        grid.addColumn(userDocument -> renderTypeThumbnail(userDocument), new HtmlRenderer())
+                .setCaption("Type")
+                .setWidth(100)
+                .setResizable(false)
+                .setSortable(true);
+
+        grid.addColumn(UserDocument::getName).setCaption("Name")
+                .setResizable(false)
+                .setSortable(true);
+
+        // Button for opening excel in the new tab
+        grid.addColumn(userDocument -> openExcelInNewTab(userDocument) ,
+                new ComponentRenderer()).setCaption( "View" )
+                .setWidth(100)
+                .setResizable(false)
+                .setSortable(false);
+
         // details
         grid.setDetailsGenerator(userDocument -> {
             QR qr = ((DashboardUI) UI.getCurrent()).qrService.findQRByUrl(userDocument.getUrl());
@@ -173,7 +199,9 @@ public final class ViewDocumentView extends Panel implements  View{
     }
 
     private Button openExcelInNewTab(UserDocument userDocument){
-        Button btn = new Button("Open");
+        Button btn = new Button();
+        btn.setIcon(FontAwesome.EYE);
+        btn.setHeight("25px");
         BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
         opener.extend(btn);
         opener.setParameter("qr_id", userDocument.getUrl());

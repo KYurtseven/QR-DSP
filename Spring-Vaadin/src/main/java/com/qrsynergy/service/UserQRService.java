@@ -43,17 +43,20 @@ public class UserQRService {
 
     /**
      * Removes QR from the user qr, with given rights
-     * @param rightType
-     * @param qr
+     * Find user's UserQR. Find the QR with given url, inside the UserQR
+     * Remove UserDocument from that UserQR and save the updated UserQR to the database
+     * @param rightType edit or view
+     * @param url url of the QR
+     * @param email email of the user.
      */
-    public void removeQRFromUserQR(RightType rightType, QR qr){
+    public void removeQRFromUserQR(RightType rightType, String url, String email){
 
         // Find userQR from the database
-        UserQR userQR = userQRRepository.findByO_info(qr.getO_info());
+        UserQR userQR = userQRRepository.findByO_info(email);
         if(rightType.equals(RightType.EDIT)){
             // find correct UserDocument entry to be removed
             for(UserDocument userDocument: userQR.getE_docs()){
-                if(userDocument.getUrl().equals(qr.getUrl())){
+                if(userDocument.getUrl().equals(url)){
                     // remove from userQR
                     userQR.getE_docs().remove(userDocument);
                     // save to the database
@@ -64,7 +67,7 @@ public class UserQRService {
         else if(rightType.equals(RightType.VIEW)){
             // find correct UserDocument entry to be removed
             for(UserDocument userDocument: userQR.getV_docs()){
-                if(userDocument.getUrl().equals(qr.getUrl())){
+                if(userDocument.getUrl().equals(url)){
                     // remove from userQR
                     userQR.getV_docs().remove(userDocument);
                     // save to the database
@@ -77,8 +80,6 @@ public class UserQRService {
             // Remove from owner
         }
     }
-
-    // TODO
 
     /**
      * Find userQR

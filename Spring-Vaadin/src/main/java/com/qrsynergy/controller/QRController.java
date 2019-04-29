@@ -2,8 +2,10 @@ package com.qrsynergy.controller;
 
 import com.qrsynergy.controller.helper.FailureMessage;
 import com.qrsynergy.model.QR;
+import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.service.QRService;
+import com.qrsynergy.service.UserService;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +23,8 @@ public class QRController {
 
     @Autowired
     QRService qrService;
+    @Autowired
+    UserService userService;
 
     /**
      * REST API: /api/qr/view/{url}/{email}
@@ -62,6 +66,7 @@ public class QRController {
                 }
                 else{
                     // TODO
+                    // Return other type of documents as well
                     return null;
                 }
             }
@@ -136,6 +141,22 @@ public class QRController {
                 return true;
             }
         }
+
+        // If the user's company can view/edit this document, show it
+        User user = userService.findByEmail(email);
+        if(user != null){
+            for(String companyMail: qr.getE_company()){
+                if(companyMail.equals(user.getEmailExtension())){
+                    return true;
+                }
+            }
+            for(String companyMail: qr.getV_company()){
+                if(companyMail.equals(user.getEmailExtension())){
+                    return true;
+                }
+            }
+        }
+        // Last chance, public
         if(qr.getPublic()){
             // public access
             return true;

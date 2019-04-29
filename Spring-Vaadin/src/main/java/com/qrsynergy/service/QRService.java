@@ -267,9 +267,9 @@ public class QRService {
      * @return true if successful, false on error or owner removal
      */
     public boolean removeUserFromQR(QR qr, String toBeRemovedEmail, RightType rightType){
-
         // TODO
-        // Remove from toBeRemovedEmail's UserQR
+        // There is an error while removing a user in the View list
+        // Debug this
         try{
             if(rightType.equals(RightType.OWNER)){
                 // TODO
@@ -285,6 +285,7 @@ public class QRService {
                         break;
                     }
                 }
+                userQRService.removeQRFromUserQR(rightType, qr.getUrl(), toBeRemovedEmail);
                 qrRepository.save(qr);
                 return true;
             }
@@ -296,6 +297,7 @@ public class QRService {
                         break;
                     }
                 }
+                userQRService.removeQRFromUserQR(rightType, qr.getUrl(), toBeRemovedEmail);
                 qrRepository.save(qr);
                 return true;
             }
