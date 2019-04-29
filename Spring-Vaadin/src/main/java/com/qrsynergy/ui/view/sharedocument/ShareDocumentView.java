@@ -6,6 +6,12 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.qrsynergy.ui.view.sharedocument.infos.AdditionalOptionsInfo;
+import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
+import com.qrsynergy.ui.view.sharedocument.steps.AddCompanyStep;
+import com.qrsynergy.ui.view.sharedocument.steps.AddPeopleStep;
+import com.qrsynergy.ui.view.sharedocument.steps.AdditionalOptionsStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
@@ -15,14 +21,12 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

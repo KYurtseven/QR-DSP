@@ -1,6 +1,7 @@
 package com.qrsynergy.controller.helper;
 
 public enum FailureMessage {
+    QR_EXPIRED("QR is expired"),
     QR_FILE_NOT_FOUND("File not found"),
     QR_NOT_FOUND("QR is not found"),
     QR_CANNOT_SEE_DOCUMENT("You cannot see this document"),

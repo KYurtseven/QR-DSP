@@ -4,7 +4,7 @@ import com.qrsynergy.controller.helper.FailureMessage;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.service.QRService;
-import com.qrsynergy.ui.view.sharedocument.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -48,10 +48,15 @@ public class QRController {
             QR qr = qrService.findQRByUrl(url);
             if(qr == null){
                 // qr is not found response
-                responseEntity = new ResponseEntity(FailureMessage.QR_NOT_FOUND, HttpStatus.OK);
+                responseEntity = new ResponseEntity(FailureMessage.QR_NOT_FOUND, HttpStatus.NOT_FOUND);
                 return responseEntity;
             }
             if(checkAccessRights(qr, email)){
+                if(qr.isExpired())
+                {
+                    responseEntity = new ResponseEntity(FailureMessage.QR_EXPIRED, HttpStatus.UNAUTHORIZED);
+                    return responseEntity;
+                }
                 if(qr.getDocumentType().equals(DocumentType.EXCEL)){
                     return getCSV(qr);
                 }

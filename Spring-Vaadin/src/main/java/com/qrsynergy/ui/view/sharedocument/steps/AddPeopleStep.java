@@ -1,4 +1,4 @@
-package com.qrsynergy.ui.view.sharedocument;
+package com.qrsynergy.ui.view.sharedocument.steps;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.data.provider.ListDataProvider;

@@ -5,9 +5,12 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
+import com.qrsynergy.service.QRService;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.qrsynergy.ui.view.viewdocument.tabs.Details;
+import com.qrsynergy.ui.view.viewdocument.tabs.EditPeople;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -23,6 +26,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.awt.*;
@@ -34,12 +38,9 @@ public final class ViewDocumentView extends Panel implements  View{
 
     public static final String TITLE_ID = "viewdocument-title";
     private final VerticalLayout root;
-    private final String userRemovalConfirmation1 = "Are you sure to remove ";
-    private final String userRemovalConfirmation3 = "from";
-    private final String userRemovalConfirmation4_edit = " editing this QR";
-    private final String userRemovalConfirmation4_view = " viewing this QR";
 
-
+    @Autowired
+    QRService qrService;
 
     public ViewDocumentView(){
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -148,95 +149,18 @@ public final class ViewDocumentView extends Panel implements  View{
             VerticalLayout layout = new VerticalLayout();
             TabSheet tabSheet = new TabSheet();
             layout.addComponent(tabSheet);
-            tabSheet.addTab(qrInfoTab(qr), "Info");
-            tabSheet.addTab(denemeTab(), "deneme");
+
+            tabSheet.addTab(Details.qrInfoTab(qr), "Info");
+
+            EditPeople editPeople = new EditPeople(qr);
+            tabSheet.addTab(editPeople.getContent(), "Edit people");
+
             return layout;
         });
 
         return grid;
     }
 
-    // TODO
-    // DELETE
-    private Component denemeTab(){
-        VerticalLayout layout = new VerticalLayout();
-        Label newLabel = new Label("deneme");
-        layout.addComponent(newLabel);
-        return layout;
-    }
-
-    /**
-     * TODO
-     * Better UI
-     * @param qr QR
-     * @return component to be rendered in the tab
-     */
-    private Component qrInfoTab(QR qr){
-        VerticalLayout layout = new VerticalLayout();
-
-        Label url = new Label("url: " + qr.getUrl());
-        Label originalName = new Label("original name: " + qr.getOriginalName());
-        Label isPublished = new Label("publish: " + qr.getPublished());
-        Label documentType = new Label("document type: " + qr.getDocumentType());
-        Label creationDate = new Label("creation date: " + qr.getCreationDate());
-        Label expirationDate = new Label("expiration date: " + qr.getExpirationDate());
-
-        layout.addComponents(url, originalName, isPublished, documentType, creationDate, expirationDate);
-        return layout;
-    }
-
-    /**
-     * In this tab, user can add or remore users.
-     * Either for editing users or viewing users
-     * TODO
-     * Do it with grid.
-     * @param qr QR
-     * @param user_infos QR's user_info
-     * @param type view or edit
-     * @return
-     */
-    private Component editPeopleTab(QR qr, List<String> user_infos, String type){
-        VerticalLayout layout = new VerticalLayout();
-        for(String user_info: user_infos){
-            HorizontalLayout hLayout = new HorizontalLayout();
-            Label user_infoLabel = new Label(user_info);
-            Button removeUserButton = new Button("-");
-            removeUserButton.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    ConfirmDialog.show(UI.getCurrent(), buildConfirmationUserRemoval(user_info, type),
-                            new ConfirmDialog.Listener() {
-                                @Override
-                                public void onClose(ConfirmDialog confirmDialog) {
-                                    if(confirmDialog.isConfirmed()){
-                                        // TODO
-                                    }
-                                    else{
-                                        // TODO
-                                    }
-                                }
-                            });
-                }
-            });
-        }
-        return null;
-    }
-
-    /**
-     * TODO
-     * Better string building
-     * @param user_info to be removed user's email
-     * @param type view or edit
-     * @return string to be rendered
-     */
-    private String buildConfirmationUserRemoval(String user_info, String type){
-        if(type.equals("view")){
-            return userRemovalConfirmation1 + user_info + userRemovalConfirmation3 + userRemovalConfirmation4_view;
-        }
-        else{
-            return userRemovalConfirmation1 + user_info + userRemovalConfirmation3 +   userRemovalConfirmation4_edit;
-        }
-    }
 
     private String renderTypeThumbnail(UserDocument userDocument){
         if(userDocument.getDocumentType().equals(DocumentType.EXCEL)){

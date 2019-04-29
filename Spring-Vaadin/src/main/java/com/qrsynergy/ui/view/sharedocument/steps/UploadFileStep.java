@@ -1,6 +1,8 @@
-package com.qrsynergy.ui.view.sharedocument;
+package com.qrsynergy.ui.view.sharedocument.steps;
 
 import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
+import com.qrsynergy.ui.view.sharedocument.ShareDocumentView;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
@@ -33,7 +35,6 @@ public class UploadFileStep implements WizardStep {
 
     private FirstStepInfo firstStepInfo;
     private VerticalLayout content;
-
     /**
      * Constructor
      * @param firstStepInfo
@@ -65,20 +66,23 @@ public class UploadFileStep implements WizardStep {
      * Creates uploadFile area
      */
     private void addUpload(){
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+
         final FileUpload fileUpload = new FileUpload(uploadFinishedHandler, uploadStateWindow);
         int maxFileSize = 5242880; //5 MB
         fileUpload.setMaxFileSize(maxFileSize);
         String errorMsgPattern = "File is too big (max = {0}): {2} ({1})";
         fileUpload.setSizeErrorMsgPattern(errorMsgPattern);
-        fileUpload.setCaption(this.getCaption());
-        fileUpload.setPanelCaption(this.getCaption());
         fileUpload.setMaxFileCount(FILE_COUNT);
 
         fileUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
         fileUpload.getSmartUpload().setUploadButtonIcon(FontAwesome.UPLOAD);
 
-        content.addComponent(fileUpload,0);
-
+        vl.addComponent(fileUpload);
+        vl.setComponentAlignment(fileUpload, Alignment.MIDDLE_CENTER);
+        vl.setResponsive(true);
+        content.addComponent(vl);
     }
 
     /**

@@ -1,6 +1,8 @@
-package com.qrsynergy.ui.view.sharedocument;
+package com.qrsynergy.ui.view.sharedocument.infos;
 
 import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.ui.view.sharedocument.DataConvertionUtil;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

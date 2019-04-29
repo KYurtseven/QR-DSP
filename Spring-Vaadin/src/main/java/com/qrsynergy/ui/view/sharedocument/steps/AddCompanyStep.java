@@ -1,4 +1,4 @@
-package com.qrsynergy.ui.view.sharedocument;
+package com.qrsynergy.ui.view.sharedocument.steps;
 
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.*;

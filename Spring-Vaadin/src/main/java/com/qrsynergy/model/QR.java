@@ -1,13 +1,16 @@
 package com.qrsynergy.model;
 
 import com.qrsynergy.model.helper.DocumentType;
-import com.qrsynergy.ui.view.sharedocument.FirstStepInfo;
+import com.qrsynergy.model.helper.UserDocument;
+import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +52,15 @@ public class QR {
     private String diskName;
 
     private String originalName;
+
+    /**
+     *
+     * @return true if expired, expiration date is less than now
+     */
+    public boolean isExpired(){
+        return(this.expirationDate.getTime() < Calendar.getInstance().getTime().getTime());
+    }
+
 
     /**
      * empty constructor
@@ -324,6 +336,15 @@ public class QR {
      */
     public void set_id(ObjectId _id) {
         this._id = _id;
+    }
+
+
+    public void appendToE_info(String email){
+        e_info.add(email);
+    }
+
+    public void appendToV_info(String email){
+        v_info.add(email);
     }
 
 }
