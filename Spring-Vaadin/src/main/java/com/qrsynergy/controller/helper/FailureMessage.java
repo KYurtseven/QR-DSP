@@ -1,6 +1,7 @@
 package com.qrsynergy.controller.helper;
 
 public enum FailureMessage {
+    EMAIL_COMPANYMAIL_DONT_MATCH("Entered email and company email are not matched"),
     QR_EXPIRED("QR is expired"),
     QR_FILE_NOT_FOUND("File not found"),
     QR_NOT_FOUND("QR is not found"),
@@ -14,5 +15,9 @@ public enum FailureMessage {
 
     private FailureMessage(final String message){
         this.message = message;
+    }
+
+    public String getMessage(){
+        return this.message;
     }
 }

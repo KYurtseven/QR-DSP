@@ -15,6 +15,27 @@ public class UserDTO {
     private String password;
 
     /**
+     * Empty constructor
+     */
+    public UserDTO(){
+
+    }
+
+    /**
+     * Constructor
+     * @param fullName name of the user
+     * @param email email of the user
+     * @param password password of the user
+     * @param company company of the user
+     */
+    public UserDTO(String fullName, String email, String password, String company){
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.company = company;
+    }
+
+    /**
      *
      * @return full name of the user
      */

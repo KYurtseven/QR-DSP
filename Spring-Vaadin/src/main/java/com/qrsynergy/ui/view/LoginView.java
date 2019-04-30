@@ -1,7 +1,7 @@
 package com.qrsynergy.ui.view;
 
-import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.UserSignUpRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
@@ -12,7 +12,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -52,6 +51,7 @@ public class LoginView extends VerticalLayout {
 
         loginPanel.addComponent(buildLabels());
         loginPanel.addComponent(buildFields());
+        loginPanel.addComponent(buildSignUp());
         return loginPanel;
     }
 
@@ -103,4 +103,23 @@ public class LoginView extends VerticalLayout {
         return labels;
     }
 
+
+    private Component buildSignUp(){
+        HorizontalLayout layout = new HorizontalLayout();
+        Label signUpText = new Label("Create an account");
+
+        Button signUpButton = new Button("Sign Up");
+        signUpButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+
+        signUpButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                DashboardEventBus.post(new UserSignUpRequestedEvent());
+            }
+        });
+
+        layout.addComponents(signUpText, signUpButton);
+
+        return layout;
+    }
 }

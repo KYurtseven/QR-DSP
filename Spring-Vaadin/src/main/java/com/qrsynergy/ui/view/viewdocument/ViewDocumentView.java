@@ -11,8 +11,6 @@ import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.viewdocument.tabs.Details;
 import com.qrsynergy.ui.view.viewdocument.tabs.EditPeople;
-import com.vaadin.client.ui.Icon;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.FontAwesome;
@@ -27,10 +25,7 @@ import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.dialogs.ConfirmDialog;
-import sun.font.FontAccess;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
