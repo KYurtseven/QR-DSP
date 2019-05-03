@@ -2,7 +2,7 @@ package com.qrsynergy.ui.view.sharedocument.infos;
 
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.ui.view.sharedocument.DataConvertionUtil;
-import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public class FirstStepInfo {
      * @throws IOException
      */
     public void writeByteToFile() throws IOException {
-        File targetFile = new File(UploadFileStep.uploadLocation + this.diskName);
+        File targetFile = new File(UploadAndAddPeople.uploadLocation + this.diskName);
 
         FileUtils.writeByteArrayToFile(
                 targetFile,
@@ -51,8 +51,8 @@ public class FirstStepInfo {
     public void writeByteToCSV() throws Exception{
 
         DataConvertionUtil.excelToCSV(
-                UploadFileStep.uploadLocation + this.diskName,
-                UploadFileStep.uploadLocation + this.url + ".csv"
+                UploadAndAddPeople.uploadLocation + this.diskName,
+                UploadAndAddPeople.uploadLocation + this.url + ".csv"
         );
     }
 

@@ -5,6 +5,7 @@ import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
 import com.qrsynergy.ui.view.sharedocument.ShareDocumentView;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import org.apache.commons.io.IOUtils;
@@ -14,6 +15,8 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.ui.*;
 import java.io.InputStream;
 
 import com.vaadin.server.StreamVariable;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -24,7 +27,7 @@ import java.util.logging.Logger;
  * Once the upload is finished, the data is saved in FirstStepInfo
  * which will be used later when the submit button is pressed
  */
-public class UploadFileStep implements WizardStep {
+public class UploadAndAddPeople implements WizardStep {
 
     // TODO
     public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
@@ -34,13 +37,15 @@ public class UploadFileStep implements WizardStep {
     private double uploadSpeed = 100;
 
     private FirstStepInfo firstStepInfo;
+    private Grid grid;
     private VerticalLayout content;
     /**
      * Constructor
      * @param firstStepInfo
      */
-    public UploadFileStep(FirstStepInfo firstStepInfo){
+    public UploadAndAddPeople(FirstStepInfo firstStepInfo, Grid grid){
         this.firstStepInfo = firstStepInfo;
+        this.grid = grid;
     }
 
 
@@ -54,22 +59,29 @@ public class UploadFileStep implements WizardStep {
 
     public Component getContent() {
         content = new VerticalLayout();
-        content.setMargin(true);
+        content.setSizeFull();
+        content.addStyleName("text-center");
 
         createUploadFinishedHandler();
-        addUpload();
 
+        VerticalLayout wrapper = new VerticalLayout();
+        wrapper.addStyleNames( "text-center", "slot-text-center");
+
+        wrapper.addComponent(buildUpload());
+        wrapper.addComponent(buildGrid());
+
+        content.addComponent(wrapper);
         return content;
     }
 
     /**
      * Creates uploadFile area
      */
-    private void addUpload(){
-        VerticalLayout vl = new VerticalLayout();
-        vl.setSizeFull();
+    private Component buildUpload(){
 
         final FileUpload fileUpload = new FileUpload(uploadFinishedHandler, uploadStateWindow);
+        fileUpload.addStyleName("text-center");
+
         int maxFileSize = 5242880; //5 MB
         fileUpload.setMaxFileSize(maxFileSize);
         String errorMsgPattern = "File is too big (max = {0}): {2} ({1})";
@@ -79,11 +91,24 @@ public class UploadFileStep implements WizardStep {
         fileUpload.getSmartUpload().setUploadButtonCaptions("Upload File", "Upload Files");
         fileUpload.getSmartUpload().setUploadButtonIcon(FontAwesome.UPLOAD);
 
-        vl.addComponent(fileUpload);
-        vl.setComponentAlignment(fileUpload, Alignment.MIDDLE_CENTER);
-        vl.setResponsive(true);
-        content.addComponent(vl);
+        return fileUpload;
     }
+
+    /**
+     * Builds grid for adding people
+     * @return
+     */
+    private Component buildGrid(){
+
+        Grid<String> grid = new Grid<String>();
+        grid.setItems(new ArrayList<String>());
+        grid.addColumn(input -> "a").setCaption("hi");
+        grid.addColumn(input -> "b").setCaption("iki");
+        grid.addStyleName("slot-text-center");
+
+        return grid;
+    }
+
 
     /**
      * Saves the file info to the FirstStepInfo class

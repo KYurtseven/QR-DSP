@@ -105,8 +105,9 @@ public class LoginView extends VerticalLayout {
 
 
     private Component buildSignUp(){
-        HorizontalLayout layout = new HorizontalLayout();
+        CssLayout layout = new CssLayout();
         Label signUpText = new Label("Create an account");
+        signUpText.setWidth("390px");
 
         Button signUpButton = new Button("Sign Up");
         signUpButton.addStyleName(ValoTheme.BUTTON_PRIMARY);

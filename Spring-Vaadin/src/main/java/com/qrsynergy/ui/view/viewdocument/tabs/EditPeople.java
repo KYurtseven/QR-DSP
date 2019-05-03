@@ -13,6 +13,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.dialogs.ConfirmDialog;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class EditPeople {
@@ -36,7 +37,6 @@ public class EditPeople {
 
 
         content.addComponent(buildGrid(RightType.EDIT));
-        content.addComponent(buildGrid(RightType.VIEW));
 
         return content;
     }
@@ -46,10 +46,16 @@ public class EditPeople {
         Label label = new Label(rightType.toString());
         Grid<String> grid = new Grid<>(String.class);
 
-        if(rightType.equals(RightType.EDIT))
-            grid.setItems(qr.getE_info());
-        else
-            grid.setItems(qr.getV_info());
+        HashMap<String, Boolean> editMap = new HashMap<>();
+
+        for(String email: qr.getE_info()){
+            editMap.put(email, true);
+        }
+        for(String email: qr.getV_info()){
+            editMap.put(email, false);
+        }
+
+        grid.setItems(editMap.keySet());
 
         grid.removeAllColumns();
 
@@ -75,10 +81,21 @@ public class EditPeople {
             return removeButton;
         }, new ComponentRenderer()).setCaption("Remove");
 
+        // build checkbox
+        grid.addComponentColumn(email -> {
+            CheckBox checkbox = new CheckBox();
+            checkbox.setValue(editMap.get(email));
+            return checkbox;
+        })
+            .setWidth(50)
+            .setCaption("Can edit")
+            .setResizable(false);
+
         TextField newEditPerson = new TextField("New person's email:");
 
 
         Button addButton = new Button("Add");
+        addButton.addStyleName("margin-top-25");
         addButton.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {

@@ -6,7 +6,7 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.service.QRService;
 import com.qrsynergy.service.UserService;
-import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -93,7 +93,7 @@ public class QRController {
      */
     private ResponseEntity getCSV(QR qr) throws Exception{
         // csv path
-        String fullFileName = UploadFileStep.uploadLocation + qr.getUrl() + ".csv";
+        String fullFileName = UploadAndAddPeople.uploadLocation + qr.getUrl() + ".csv";
         String fileName = qr.getUrl() + ".csv";
 
         ResponseEntity responseEntity = null;

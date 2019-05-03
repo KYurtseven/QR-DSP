@@ -11,7 +11,7 @@ import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
 import com.qrsynergy.ui.view.sharedocument.steps.AddCompanyStep;
 import com.qrsynergy.ui.view.sharedocument.steps.AddPeopleStep;
 import com.qrsynergy.ui.view.sharedocument.steps.AdditionalOptionsStep;
-import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
@@ -40,8 +40,9 @@ public final class ShareDocumentView extends Panel implements View{
     private WizardCancelledEvent cancelledEvent;
     private WizardCompletedEvent completedEvent;
 
-    // Upload file page
+    // UploadFile and AddPeople page
     private FirstStepInfo firstStepInfo = new FirstStepInfo();
+    private Grid<String> addPeopleGrid = new Grid<>();
 
     // View Emails page
     private NativeSelect<String> selectViewEmails = new NativeSelect<>("View List");
@@ -119,7 +120,8 @@ public final class ShareDocumentView extends Panel implements View{
         wizard.setUriFragmentEnabled(true);
 
         // add pages
-        wizard.addStep(new UploadFileStep(firstStepInfo), "Upload The Document");
+        wizard.addStep(new UploadAndAddPeople(firstStepInfo, addPeopleGrid),
+                "upload and add people");
         wizard.addStep(new AddPeopleStep("view", selectViewEmails, emailViewDataProvider, wizard), "Individual view rights");
         wizard.addStep(new AddPeopleStep("edit", selectEditEmails, emailEditDataProvider, wizard), "Individual edit rights");
 
@@ -289,7 +291,7 @@ public final class ShareDocumentView extends Panel implements View{
             if(firstStepInfo != null){
                 if(firstStepInfo.getUrl() != null){
                     // delete the file on the disk
-                    File toBeDeletedFile = new File(UploadFileStep.uploadLocation + firstStepInfo.getDiskName());
+                    File toBeDeletedFile = new File(UploadAndAddPeople.uploadLocation + firstStepInfo.getDiskName());
                     toBeDeletedFile.delete();
                 }
             }

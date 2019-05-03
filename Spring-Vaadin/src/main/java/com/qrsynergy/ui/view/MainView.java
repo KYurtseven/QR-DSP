@@ -28,7 +28,7 @@ public class MainView extends HorizontalLayout {
         addComponent(new DashboardMenu());
 
         ComponentContainer content = new CssLayout();
-        content.addStyleName("view-content");
+        content.addStyleNames("view-content","overflow-auto");
         content.setSizeFull();
         addComponent(content);
         setExpandRatio(content, 1.0f);

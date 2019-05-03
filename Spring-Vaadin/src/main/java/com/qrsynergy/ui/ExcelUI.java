@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.qrsynergy.ui.view.sharedocument.steps.UploadFileStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.ui.*;
 
 import com.vaadin.addon.spreadsheet.Spreadsheet;
@@ -52,7 +52,7 @@ public class ExcelUI extends UI{
     }
 
     private void initSpreadsheet() {
-        File sampleFile = new File(UploadFileStep.uploadLocation + qr_id + ".xlsx");
+        File sampleFile = new File(UploadAndAddPeople.uploadLocation + qr_id + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {

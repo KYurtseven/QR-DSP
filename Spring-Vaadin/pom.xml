@@ -132,8 +132,9 @@
 			<version>3.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-select-flow</artifactId>
+			<groupId>org.vaadin.extension</groupId>
+			<artifactId>GridScrollExtension</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 	</dependencies>
 
