@@ -13,6 +13,7 @@ import org.vaadin.teemu.wizards.Wizard;
 import com.vaadin.shared.Registration;
 import org.apache.commons.validator.routines.EmailValidator;
 
+@Deprecated
 public class AddPeopleStep implements WizardStep {
 
     private String type;

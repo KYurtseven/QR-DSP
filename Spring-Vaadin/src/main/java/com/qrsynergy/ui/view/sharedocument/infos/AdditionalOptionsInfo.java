@@ -1,5 +1,8 @@
 package com.qrsynergy.ui.view.sharedocument.infos;
 
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -7,7 +10,7 @@ import java.util.Date;
  * Expiration date of the qr and,
  * Public/not public of the qr.
  * Default type is publish
- * Default date is null
+ * Default date is today + 30 days
  * Default is not public
  */
 public class AdditionalOptionsInfo {
@@ -20,14 +23,22 @@ public class AdditionalOptionsInfo {
 
     /**
      * Constructor
-     * Default is published, 1970 date, not public
+     * Default is published, current date + 30 days, not public
      */
     public AdditionalOptionsInfo() {
         this.isPublished = true;
-        this.expirationDate = new Date(0L);
+        this.expirationDate = Date.from(LocalDate.now().plusDays(30)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
         this.isPublic = false;
     }
 
+    /**
+     *
+     * @return local date of the object
+     */
+    public LocalDate getLocalDate(){
+        return this.expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
     /**
      *
      * @return is document published or draft?
@@ -50,6 +61,14 @@ public class AdditionalOptionsInfo {
      */
     public Date getExpirationDate() {
         return expirationDate;
+    }
+
+    /**
+     * Sets expiration date from local date
+     * @param localDate local date
+     */
+    public void setExpirationDate(LocalDate localDate){
+        this.expirationDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     /**

@@ -13,7 +13,7 @@ import java.util.Date;
  * Class for sending data from upload file step to submit button
  *
  */
-public class FirstStepInfo {
+public class FileInfo {
 
     private String url;
 
@@ -32,15 +32,19 @@ public class FirstStepInfo {
 
     /**
      * Writes byte array to file
+     * If the file is excel, writes CSV to disk too
      * @throws IOException
      */
-    public void writeByteToFile() throws IOException {
+    public void writeByteToFile() throws IOException,Exception {
         File targetFile = new File(UploadAndAddPeople.uploadLocation + this.diskName);
 
         FileUtils.writeByteArrayToFile(
                 targetFile,
                 this.fileInBytes
         );
+        if(documentType.equals(DocumentType.EXCEL)){
+            writeByteToCSV();
+        }
     }
 
     /**
