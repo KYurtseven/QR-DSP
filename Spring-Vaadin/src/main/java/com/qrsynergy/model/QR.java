@@ -2,7 +2,7 @@ package com.qrsynergy.model;
 
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.model.helper.UserDocument;
-import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
+import com.qrsynergy.ui.view.sharedocument.infos.FileInfo;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -71,15 +71,15 @@ public class QR {
 
     /**
      * Creates QR from first step info (file upload step)
-     * @param firstStepInfo file and file upload information
+     * @param fileInfo file and file upload information
      */
-    public QR(FirstStepInfo firstStepInfo){
-        this.url = firstStepInfo.getUrl();
-        this.documentType = firstStepInfo.getDocumentType();
-        this.originalName = firstStepInfo.getOriginalName();
-        this.creationDate = firstStepInfo.getCreationDate();
-        this.lastModified = firstStepInfo.getLastModified();
-        this.diskName = firstStepInfo.getDiskName();
+    public QR(FileInfo fileInfo){
+        this.url = fileInfo.getUrl();
+        this.documentType = fileInfo.getDocumentType();
+        this.originalName = fileInfo.getOriginalName();
+        this.creationDate = fileInfo.getCreationDate();
+        this.lastModified = fileInfo.getLastModified();
+        this.diskName = fileInfo.getDiskName();
     }
 
     @Override

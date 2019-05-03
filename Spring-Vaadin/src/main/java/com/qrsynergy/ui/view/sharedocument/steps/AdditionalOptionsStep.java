@@ -1,7 +1,6 @@
 package com.qrsynergy.ui.view.sharedocument.steps;
 
 import com.qrsynergy.ui.view.sharedocument.infos.AdditionalOptionsInfo;
-import com.vaadin.server.Responsive;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.teemu.wizards.WizardStep;
@@ -16,14 +15,14 @@ import java.util.Date;
  */
 public class AdditionalOptionsStep implements WizardStep {
 
-    private VerticalLayout content = new VerticalLayout();
+    private VerticalLayout content;
     private AdditionalOptionsInfo additionalOptionsInfo;
 
     private final String optionDraft = "Save as draft";
     private final String optionPublishNow = "Publish now";
 
     private final String optionPublicYes = "Yes";
-    private final String optionPublinNo = "No";
+    private final String optionPublicNo = "No";
 
 
     /**
@@ -51,12 +50,23 @@ public class AdditionalOptionsStep implements WizardStep {
      */
     @Override
     public Component getContent() {
-        Responsive.makeResponsive(content);
+        content = new VerticalLayout();
+        content.setSizeFull();
+        content.addStyleName("text-center");
 
-        content.addComponent(addPublishRadioButton());
-        content.addComponent(addPublicRadioButton());
-        content.addComponent(addExpirationDate());
+        VerticalLayout wrapper = new VerticalLayout();
+        wrapper.addStyleNames("text-center", "slot-text-center");
+        wrapper.setId("wrapper");
+        wrapper.setWidthUndefined();
 
+        VerticalLayout wrapper2 = new VerticalLayout();
+        wrapper2.setId("wrapper2");
+        wrapper2.addComponent(addPublishRadioButton());
+        wrapper2.addComponent(addPublicRadioButton());
+        wrapper2.addComponent(addExpirationDate());
+
+        wrapper.addComponent(wrapper2);
+        content.addComponent(wrapper);
         return content;
     }
 
@@ -67,15 +77,14 @@ public class AdditionalOptionsStep implements WizardStep {
     private Component addExpirationDate(){
 
         DateField dateField = new DateField();
+
         dateField.setCaption("Expiration date");
-        dateField.setValue(LocalDate.now().plusDays(30));
+        dateField.setValue(additionalOptionsInfo.getLocalDate());
         dateField.setDateFormat("yyyy-MM-dd");
 
         dateField.addValueChangeListener(event ->{
-
-            Date date = Date.from(event.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            additionalOptionsInfo.setExpirationDate(date);
-
+            // set expiration date, from local date to date
+            additionalOptionsInfo.setExpirationDate(event.getValue());
         });
 
         return dateField;
@@ -89,11 +98,16 @@ public class AdditionalOptionsStep implements WizardStep {
         RadioButtonGroup<String> publicRadio = new RadioButtonGroup<>
                 ("Is this document public accessible?");
 
-        publicRadio.setValue(optionPublinNo);
-        publicRadio.setItems(optionPublicYes, optionPublinNo);
+        if(additionalOptionsInfo.isPublic()){
+            publicRadio.setValue(optionPublicYes);
+        }
+        else{
+            publicRadio.setValue(optionPublicNo);
+        }
+
+        publicRadio.setItems(optionPublicYes, optionPublicNo);
 
         publicRadio.addValueChangeListener(event ->{
-
             if(event.getValue().equals(optionPublicYes)){
                 additionalOptionsInfo.setPublic(true);
             }
@@ -114,7 +128,13 @@ public class AdditionalOptionsStep implements WizardStep {
         RadioButtonGroup<String> publishRadio = new RadioButtonGroup<>
                 ("Please, select publish method");
 
-        publishRadio.setValue(optionPublishNow);
+        if(additionalOptionsInfo.isPublished()){
+            publishRadio.setValue(optionPublishNow);
+        }
+        else{
+            publishRadio.setValue(optionDraft);
+        }
+
         publishRadio.setItems(optionDraft, optionPublishNow);
 
         publishRadio.addValueChangeListener(event->{
