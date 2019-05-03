@@ -1,5 +1,6 @@
 package com.qrsynergy.model;
 
+import com.qrsynergy.model.helper.CommentEntry;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -7,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,15 +21,15 @@ public class Comment {
     @Indexed(unique = true)
     private String url;
 
-    private List<CommentEntry> commentEntrys;
+    private List<CommentEntry> commentEntries;
 
     /**
      * Constructor
      * initialize list of Comment for access
      */
     public Comment(){
-        List<CommentEntry> commentEntrys = new ArrayList<>();
-        this.commentEntrys = commentEntrys;
+        List<CommentEntry> commentEntries = new ArrayList<>();
+        this.commentEntries = commentEntries;
     }
 
     /**
@@ -39,8 +39,8 @@ public class Comment {
      */
     public Comment(String url){
         this.url = url;
-        List<CommentEntry> commentEntrys = new ArrayList<>();
-        this.commentEntrys = commentEntrys;
+        List<CommentEntry> commentEntries = new ArrayList<>();
+        this.commentEntries = commentEntries;
     }
 
 
@@ -49,7 +49,7 @@ public class Comment {
      * @param commentEntry
      */
     public void appendToCommentEntry(CommentEntry commentEntry){
-        commentEntrys.add(commentEntry);
+        commentEntries.add(commentEntry);
     }
 
 
@@ -81,15 +81,15 @@ public class Comment {
      * List of comment entries
      * @return
      */
-    public List<CommentEntry> getCommentEntrys() {
-        return commentEntrys;
+    public List<CommentEntry> getCommentEntries() {
+        return commentEntries;
     }
 
     /**
      * List of comment entries
-     * @param commentEntrys
+     * @param commentEntries
      */
-    public void setCommentEntrys(List<CommentEntry> commentEntrys) {
-        this.commentEntrys = commentEntrys;
+    public void setCommentEntries(List<CommentEntry> commentEntries) {
+        this.commentEntries = commentEntries;
     }
 }

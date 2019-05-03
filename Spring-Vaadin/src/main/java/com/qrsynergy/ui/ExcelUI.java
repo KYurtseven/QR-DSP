@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.ui.*;
 
 import com.vaadin.addon.spreadsheet.Spreadsheet;
@@ -28,7 +29,7 @@ public class ExcelUI extends UI{
     private String qr_id;
     private SliderPanel rightSlider = null;
     private Button buttonInSlider = new Button("Comment");
-    private TextArea textArea = new TextArea();
+    private TextArea textArea = new TextArea("hi");
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -46,12 +47,12 @@ public class ExcelUI extends UI{
 
         //initialize Slider
         initSliderPanel();
-        horizontalLayout.addComponent(this.rightSlider);
+        horizontalLayout.addComponent(rightSlider);
         horizontalLayout.setExpandRatio(rightSlider,(float) 0);
     }
 
     private void initSpreadsheet() {
-        File sampleFile = new File("C:\\Users\\uguro\\Desktop\\qr_github\\QR-DSP\\Spring-Vaadin\\FILES\\" + qr_id + ".xlsx");
+        File sampleFile = new File(UploadAndAddPeople.uploadLocation + qr_id + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {
@@ -62,10 +63,9 @@ public class ExcelUI extends UI{
     private void initSliderPanel()
     {
         VerticalLayout sliderVerticalLayout = new VerticalLayout();
-            sliderVerticalLayout.addComponent(this.textArea);
+        sliderVerticalLayout.addComponent(this.textArea);
 
-
-        this.rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
+        rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
                                 .expanded(false)
                                 .mode(SliderMode.RIGHT)
                                 .caption("Slider")
@@ -75,6 +75,7 @@ public class ExcelUI extends UI{
                                 .style(SliderPanelStyles.ICON_BLACK)
                                 //.zIndex(9980)
                                 .build();
+
     }
 
     @WebServlet(urlPatterns = "/*",  asyncSupported = true)

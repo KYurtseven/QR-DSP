@@ -1,10 +1,17 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument;
 
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
+import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.qrsynergy.ui.view.sharedocument.infos.AdditionalOptionsInfo;
+import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
+import com.qrsynergy.ui.view.sharedocument.steps.AddCompanyStep;
+import com.qrsynergy.ui.view.sharedocument.steps.AddPeopleStep;
+import com.qrsynergy.ui.view.sharedocument.steps.AdditionalOptionsStep;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
@@ -14,29 +21,28 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
 public final class ShareDocumentView extends Panel implements View{
 
-    public static final String TITLE_ID = "createdocument-title";
+    public static final String TITLE_ID = "sharedocument-title";
     public static final Integer companyRowCount = 10;
 
     private final VerticalLayout root;
     private WizardCancelledEvent cancelledEvent;
     private WizardCompletedEvent completedEvent;
 
-    // Upload file page
+    // UploadFile and AddPeople page
     private FirstStepInfo firstStepInfo = new FirstStepInfo();
+    private Grid<String> addPeopleGrid = new Grid<>();
 
     // View Emails page
     private NativeSelect<String> selectViewEmails = new NativeSelect<>("View List");
@@ -114,7 +120,8 @@ public final class ShareDocumentView extends Panel implements View{
         wizard.setUriFragmentEnabled(true);
 
         // add pages
-        wizard.addStep(new UploadFileStep(firstStepInfo), "Upload The Document");
+        wizard.addStep(new UploadAndAddPeople(firstStepInfo, addPeopleGrid),
+                "upload and add people");
         wizard.addStep(new AddPeopleStep("view", selectViewEmails, emailViewDataProvider, wizard), "Individual view rights");
         wizard.addStep(new AddPeopleStep("edit", selectEditEmails, emailEditDataProvider, wizard), "Individual edit rights");
 
@@ -171,50 +178,23 @@ public final class ShareDocumentView extends Panel implements View{
         try{
             if(firstStepInfo != null){
                 if(firstStepInfo.getUrl() != null){
-                    // There is the file
 
-                    File targetFile = new File(UploadFileStep.uploadLocation + firstStepInfo.getDiskName());
-
-                    FileUtils.writeByteArrayToFile(
-                            targetFile,
-                            firstStepInfo.getFileInBytes()
-                    );
+                    firstStepInfo.writeByteToFile();
                     // File is written to the disk
 
-                    List<String> viewEmails = checkEmails(emailViewDataProvider);
-                    List<String> editEmails = checkEmails(emailEditDataProvider);
+                    // Convert file to csv, and save that too
+                    if(firstStepInfo.getDocumentType().equals(DocumentType.EXCEL)){
+                        firstStepInfo.writeByteToCSV();
+                    }
 
-                    List<String> viewCompanies = checkCompanies(selectViewCompanies);
-                    List<String> editCompanies = checkCompanies(selectEditCompanies);
-
-                    QR qr = new QR();
-                    // set file info
-                    setFirstStepInfo(firstStepInfo, qr);
-
-                    User user = (User) VaadinSession.getCurrent()
-                            .getAttribute(User.class.getName());
-                    // set owner info
-                    qr.setO_info(user.getEmail());
-
-                    // set people info
-                    qr.setV_info(viewEmails);
-                    qr.setE_info(editEmails);
-
-                    // set company info
-                    qr.setV_company(viewCompanies);
-                    qr.setE_company(editCompanies);
-
-                    // set additional info
-                    qr.setPublic(additionalOptionsInfo.isPublic());
-                    qr.setPublished(additionalOptionsInfo.isPublished());
-                    qr.setExpirationDate(additionalOptionsInfo.getExpirationDate());
+                    QR qr = prepareQRFields();
 
                     // save document to the database
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                 }
             }
         }
-        catch(IOException e){
+        catch(Exception e){
             Notification fileUploadExceptionNotification = new Notification("Unknown error occured");
             fileUploadExceptionNotification.setDelayMsec(2000);
             fileUploadExceptionNotification.setPosition(Position.MIDDLE_CENTER);
@@ -224,17 +204,37 @@ public final class ShareDocumentView extends Panel implements View{
     }
 
     /**
-     * Sets File parameters to the QR
-     * @param firstStepInfo file info from the first step
-     * @param qr object to be saved to the database
+     * Prepare QR's fields for saving
+     * @return
      */
-    private void setFirstStepInfo(FirstStepInfo firstStepInfo, QR qr){
-        qr.setUrl(firstStepInfo.getUrl());
-        qr.setType(firstStepInfo.getType());
-        qr.setOriginalName(firstStepInfo.getOriginalName());
-        qr.setCreationDate(firstStepInfo.getCreatedAt());
-        qr.setLastModified(firstStepInfo.getLastModified());
-        qr.setDiskName(firstStepInfo.getDiskName());
+    private QR prepareQRFields(){
+        List<String> viewEmails = checkEmails(emailViewDataProvider);
+        List<String> editEmails = checkEmails(emailEditDataProvider);
+
+        List<String> viewCompanies = checkCompanies(selectViewCompanies);
+        List<String> editCompanies = checkCompanies(selectEditCompanies);
+
+        QR qr = new QR(firstStepInfo);
+
+        User user = (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
+        // set owner info
+        qr.setO_info(user.getEmail());
+
+        // set people info
+        qr.setV_info(viewEmails);
+        qr.setE_info(editEmails);
+
+        // set company info
+        qr.setV_company(viewCompanies);
+        qr.setE_company(editCompanies);
+
+        // set additional info
+        qr.setPublic(additionalOptionsInfo.isPublic());
+        qr.setPublished(additionalOptionsInfo.isPublished());
+        qr.setExpirationDate(additionalOptionsInfo.getExpirationDate());
+
+        return qr;
     }
 
     /**
@@ -291,7 +291,7 @@ public final class ShareDocumentView extends Panel implements View{
             if(firstStepInfo != null){
                 if(firstStepInfo.getUrl() != null){
                     // delete the file on the disk
-                    File toBeDeletedFile = new File(UploadFileStep.uploadLocation + firstStepInfo.getDiskName());
+                    File toBeDeletedFile = new File(UploadAndAddPeople.uploadLocation + firstStepInfo.getDiskName());
                     toBeDeletedFile.delete();
                 }
             }

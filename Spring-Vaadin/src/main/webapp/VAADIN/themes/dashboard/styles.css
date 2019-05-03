@@ -15891,3 +15891,23 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .reports .transaction .seats {
 	left: 60%;
 }
+
+.dashboard .overflow-auto {
+	overflow: auto;
+}
+
+.dashboard .margin-top-25 {
+	margin-top: 25px;
+}
+
+.dashboard .text-center .v-customcomponent {
+	text-align: center;
+}
+
+.dashboard .width-auto {
+	width: auto !important;
+}
+
+.dashboard .v-slot-slot-text-center {
+	text-align: center;
+}

@@ -1,6 +1,5 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument.infos;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 /**

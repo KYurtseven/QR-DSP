@@ -2,18 +2,15 @@ package com.qrsynergy.ui;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.User;
 import com.qrsynergy.service.*;
-import com.qrsynergy.ui.event.DashboardEvent;
+import com.qrsynergy.ui.view.SignUpView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.*;
-import com.vaadin.shared.Position;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.qrsynergy.ui.event.DashboardEventBus;
@@ -25,11 +22,10 @@ import com.qrsynergy.ui.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CompanyCreateRequestedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.UserSignUpRequestedEvent;
 import com.qrsynergy.ui.view.LoginView;
 import com.qrsynergy.ui.view.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.boot.autoconfigure.validation.ValidatorAdapter;
 
 import java.util.Locale;
 
@@ -70,13 +66,13 @@ public final class DashboardUI extends UI {
         updateContent();
 
         Page.getCurrent().addBrowserWindowResizeListener(
-                new BrowserWindowResizeListener() {
-                    @Override
-                    public void browserWindowResized(
-                            final BrowserWindowResizeEvent event) {
-                        DashboardEventBus.post(new BrowserResizeEvent());
-                    }
-                });
+            new BrowserWindowResizeListener() {
+                @Override
+                public void browserWindowResized(
+                        final BrowserWindowResizeEvent event) {
+                    DashboardEventBus.post(new BrowserResizeEvent());
+                }
+            });
     }
 
     /**
@@ -109,7 +105,7 @@ public final class DashboardUI extends UI {
         // TODO
         // For speeding up the test, user validation is bypassed
         // remove it
-        User user = userService.findByEmail("koray@gmail.com");
+        User user = userService.findByEmail("koray.can.yurtseven@gmail.com");
 
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
@@ -125,6 +121,13 @@ public final class DashboardUI extends UI {
         }
         */
     }
+
+    @Subscribe
+    public void userSignUpRequested(final UserSignUpRequestedEvent event){
+        setContent(new SignUpView());
+        addStyleName("loginview");
+    }
+
 
     /**
      * Saves company to the database

@@ -1,12 +1,11 @@
-package com.qrsynergy.model;
+package com.qrsynergy.model.helper;
 
 /**
  * Not a database table entity
- * UserQR has field for
+ * UserQR has list of UserDocuments
  * {
  *    "name": "Visible original name of the file.xlsx",
- *    "url": "4da6b757-f33e-4ff2-bfbd-e78c557245f8",
- *    "qrImage" : "Converted byte[] to String, which store qr image"
+ *    "url": "4da6b757-f33e-4ff2-bfbd-e78c557245f8"
  * }
  * Stores that kind of information to help UserQR object
  */
@@ -16,8 +15,18 @@ public class UserDocument {
 
     private String url;
 
-    private String qrImage;
+    private DocumentType documentType;
 
+    /**
+     * Constructor
+     * @param name original name of the document
+     * @param url uuid of the document
+     */
+    public UserDocument(String name, String url, DocumentType documentType){
+        this.name = name;
+        this.url = url;
+        this.documentType = documentType;
+    }
 
     /**
      * ex: "23-24 subat egitmen semineri.xlsx"
@@ -51,21 +60,19 @@ public class UserDocument {
         this.url = url;
     }
 
-
     /**
      *
-     * @return QR image
+     * @return document type
      */
-    public String getQrImage() {
-        return qrImage;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
 
     /**
      *
-     * @param qrImage saves qr image in string
+     * @param documentType document type to set
      */
-    public void setQrImage(String qrImage) {
-        this.qrImage = qrImage;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
-
 }

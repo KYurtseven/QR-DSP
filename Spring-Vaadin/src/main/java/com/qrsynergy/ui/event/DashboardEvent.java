@@ -46,6 +46,10 @@ public abstract class DashboardEvent {
         }
     }
 
+    public static final class UserSignUpRequestedEvent{
+
+    }
+
     public static class BrowserResizeEvent {
 
     }

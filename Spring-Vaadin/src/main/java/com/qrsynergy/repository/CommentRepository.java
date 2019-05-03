@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends MongoRepository<Comment, String> {
 
+    /**
+     * @param url uuid of the document
+     * @return Comment document of the document
+     */
     public Comment findByUrl(String url);
 }

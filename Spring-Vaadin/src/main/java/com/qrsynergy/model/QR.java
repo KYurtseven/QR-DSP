@@ -1,11 +1,16 @@
 package com.qrsynergy.model;
 
+import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.model.helper.UserDocument;
+import com.qrsynergy.ui.view.sharedocument.infos.FirstStepInfo;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,10 +33,7 @@ public class QR {
 
     private Boolean isPublished;
 
-    // TODO,
-    // enum
-    // xlsx, pdf or dynamic form
-    private String type;
+    private DocumentType documentType;
 
     private List<String> e_company;
 
@@ -50,6 +52,35 @@ public class QR {
     private String diskName;
 
     private String originalName;
+
+    /**
+     *
+     * @return true if expired, expiration date is less than now
+     */
+    public boolean isExpired(){
+        return(this.expirationDate.getTime() < Calendar.getInstance().getTime().getTime());
+    }
+
+
+    /**
+     * empty constructor
+     */
+    public QR(){
+
+    }
+
+    /**
+     * Creates QR from first step info (file upload step)
+     * @param firstStepInfo file and file upload information
+     */
+    public QR(FirstStepInfo firstStepInfo){
+        this.url = firstStepInfo.getUrl();
+        this.documentType = firstStepInfo.getDocumentType();
+        this.originalName = firstStepInfo.getOriginalName();
+        this.creationDate = firstStepInfo.getCreationDate();
+        this.lastModified = firstStepInfo.getLastModified();
+        this.diskName = firstStepInfo.getDiskName();
+    }
 
     @Override
     public String toString(){
@@ -110,21 +141,18 @@ public class QR {
     }
 
     /**
-     * TODO
-     * right now, it is xlsx
+     *
      * @return type of the document
      */
-    public String getType() {
-        return type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
-
     /**
-     * TODO
-     * right now, it is xlsx
-     * @param type type of the document, xlsx, pdf or dynamicform
+     *
+     * @param documentType type of the document, xlsx, pdf or dynamicform
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 
     /**
@@ -308,6 +336,15 @@ public class QR {
      */
     public void set_id(ObjectId _id) {
         this._id = _id;
+    }
+
+
+    public void appendToE_info(String email){
+        e_info.add(email);
+    }
+
+    public void appendToV_info(String email){
+        v_info.add(email);
     }
 
 }

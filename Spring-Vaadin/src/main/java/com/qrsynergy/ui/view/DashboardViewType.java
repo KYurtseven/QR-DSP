@@ -1,14 +1,12 @@
 package com.qrsynergy.ui.view;
 
 import com.qrsynergy.ui.view.dashboard.DashboardView;
-import com.qrsynergy.ui.view.createdocument.ShareDocumentView;
+import com.qrsynergy.ui.view.sharedocument.ShareDocumentView;
 import com.qrsynergy.ui.view.viewdocument.ViewDocumentView;
 import com.qrsynergy.ui.view.dynamicform.CreateDynamicFormView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
-
-import java.awt.*;
 
 public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, false),

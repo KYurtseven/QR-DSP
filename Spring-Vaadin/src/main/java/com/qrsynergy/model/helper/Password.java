@@ -1,4 +1,4 @@
-package com.qrsynergy.model;
+package com.qrsynergy.model.helper;
 
 import org.apache.commons.codec.binary.Base64;
 

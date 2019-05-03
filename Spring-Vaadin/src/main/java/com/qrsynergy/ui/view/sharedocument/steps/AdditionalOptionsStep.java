@@ -1,5 +1,6 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument.steps;
 
+import com.qrsynergy.ui.view.sharedocument.infos.AdditionalOptionsInfo;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -65,10 +66,9 @@ public class AdditionalOptionsStep implements WizardStep {
      */
     private Component addExpirationDate(){
 
-        HorizontalLayout row = new HorizontalLayout();
-
         DateField dateField = new DateField();
-        dateField.setValue(LocalDate.MIN);
+        dateField.setCaption("Expiration date");
+        dateField.setValue(LocalDate.now().plusDays(30));
         dateField.setDateFormat("yyyy-MM-dd");
 
         dateField.addValueChangeListener(event ->{

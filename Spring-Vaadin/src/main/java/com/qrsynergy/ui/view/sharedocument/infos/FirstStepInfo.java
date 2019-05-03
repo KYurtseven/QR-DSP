@@ -1,5 +1,12 @@
-package com.qrsynergy.ui.view.createdocument;
+package com.qrsynergy.ui.view.sharedocument.infos;
 
+import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.ui.view.sharedocument.DataConvertionUtil;
+import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -10,17 +17,46 @@ public class FirstStepInfo {
 
     private String url;
 
-    private String type;
+    private DocumentType documentType;
 
     private String originalName;
 
-    private Date createdAt;
+    private Date creationDate;
 
     private Date lastModified;
 
     private String diskName;
 
     private byte[] fileInBytes;
+
+
+    /**
+     * Writes byte array to file
+     * @throws IOException
+     */
+    public void writeByteToFile() throws IOException {
+        File targetFile = new File(UploadAndAddPeople.uploadLocation + this.diskName);
+
+        FileUtils.writeByteArrayToFile(
+                targetFile,
+                this.fileInBytes
+        );
+    }
+
+    /**
+     * Writes byte array to csv file, only for excel
+     * CSV file is used for fetching in the mobile application
+     * @throws Exception
+     */
+    public void writeByteToCSV() throws Exception{
+
+        DataConvertionUtil.excelToCSV(
+                UploadAndAddPeople.uploadLocation + this.diskName,
+                UploadAndAddPeople.uploadLocation + this.url + ".csv"
+        );
+    }
+
+
 
     /**
      *
@@ -42,19 +78,19 @@ public class FirstStepInfo {
     /**
      * TODO
      * right now, it is xlsx
-     * @return type of the document
+     * @return DocumentType of the document
      */
-    public String getType() {
-        return type;
+    public DocumentType getDocumentType() {
+        return documentType;
     }
 
     /**
      * TODO
      * right now, it is xlsx
-     * @param type type of the document, xlsx, pdf or dynamicform
+     * @param documentType type of the document, xlsx, pdf or dynamicform
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
     }
 
     /**
@@ -78,16 +114,16 @@ public class FirstStepInfo {
      *
      * @return QR's creation date, now
      */
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     /**
      *
-     * @param createdAt QR's creation date, now
+     * @param creationDate QR's creation date, now
      */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     /**

@@ -1,0 +1,19 @@
+@mixin viewdocument{
+
+  .overflow-auto{
+    overflow: auto;
+  }
+  .margin-top-25{
+    margin-top: 25px;
+  }
+  .text-center .v-customcomponent {
+    text-align: center;
+  }
+  .width-auto{
+    width: auto !important;
+  }
+
+  .v-slot-slot-text-center{
+    text-align: center;
+  }
+}

@@ -10,7 +10,17 @@ import java.util.List;
 @Repository
 public interface QRRepository extends MongoRepository<QR, String> {
 
+    /**
+     *
+     * @param url uuid of the document
+     * @return QR
+     */
     public QR findByUrl(String url);
 
+    /**
+     * Finds list of qr with url
+     * @param url list of url
+     * @return list of QR
+     */
     public List<QR> findByUrlIn(List<String> url);
 }
