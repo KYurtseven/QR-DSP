@@ -15,6 +15,9 @@ import com.qrsynergy.model.User;
 @Service
 public class UserService {
 
+    private final String INDIVIDUAL = "INDIVIDUAL";
+
+
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -49,7 +52,7 @@ public class UserService {
         SignUpResponse signUpResponse = new SignUpResponse();
         try{
             // Check fields
-            if(!isOkForSignUp(userDTO)){
+            if(!checkEmailNamePassword(userDTO)){
                 // don't add the user
                 signUpResponse.failureSignUpResponse(FailureMessage.SIGNUP_FIELDS_REQUIRED);
                 return signUpResponse;
@@ -64,8 +67,22 @@ public class UserService {
                 }
 
             }
-            // check user's input in company field
-            User user = checkCompanySignUp(userDTO);
+            // Check company field
+            if(userDTO.getCompany().length() == 0){
+                signUpResponse.failureSignUpResponse(FailureMessage.COMPANY_FIELD_IS_EMPTY);
+                return signUpResponse;
+            }
+
+            User user;
+            if(userDTO.getCompany().toUpperCase().equals(INDIVIDUAL)){
+                // Create a user object to be saved to the database
+                user = new User(userDTO);
+            }
+            else{
+                // check user's input in company field
+                user = checkCompanySignUp(userDTO);
+            }
+
             if(user != null){
                 // at this point, user input is correct
                 // and there is no other user with the same email
@@ -97,18 +114,21 @@ public class UserService {
     }
 
     /**
-     * Checks fields in the userDTO
+     *
+     * Checks validity of the user email
+     * Checks length of the name
+     * Checks length of the password
+     *
      * if the user did not entered required fields
      * don't register the user
      * @param userDTO request of the user
-     * @return whether our system should accept this request or not
+     * @return true if fields are valid
      */
-    private boolean isOkForSignUp(UserDTO userDTO){
+    private boolean checkEmailNamePassword(UserDTO userDTO){
 
         if(EmailValidator.getInstance().isValid(userDTO.getEmail())){
-            if(userDTO.getEmail().length() == 0 ||
-                    userDTO.getFullName().length() == 0 ||
-                    userDTO.getPassword().length() == 0){
+            if(userDTO.getFullName().length() < 3 ||
+                    userDTO.getPassword().length() < 5){
                 return false;
             }
         }
@@ -117,12 +137,23 @@ public class UserService {
     }
 
     /**
-     * Checks company field of user's input.
-     * Check DB, whether the company exists or not
-     * Check user's email extension and company extension. If they don't match,
-     * set user's company to null
-     * @param userDTO
-     * @return user
+     * At this point, userDTO's email, password and name fields are correct
+     * userDTO has a company name.
+     *
+     * Create a user.
+     * Check validity of the company.
+     *
+     * Case 1 : Company is valid.
+     * Case 1a: Company's email extension is equal to the user's email extension.
+     *  Only valid case. ACCEPT
+     * Case 1b: Email extensions are not equal. i.e. user: @ford.com, company:NISSAN
+     *  REJECT
+     *
+     * Case 2: Company is not valid. i.e. company: FORT, N1is22an etc.
+     *  REJECT
+     *
+     * @param userDTO user input
+     * @return user a valid user input if company is correct, null if there is a problem
      */
     private User checkCompanySignUp(UserDTO userDTO){
         // create a user
@@ -131,7 +162,7 @@ public class UserService {
         // Try to find out whether the user entered an unregistered company
         Company company = companyService.findByCompanyName(userDTO.getCompany());
         // If the entered company name is not registered in our database
-        // reject
+        // reject, case 2
         if(company == null){
             return null;
         }
@@ -139,12 +170,12 @@ public class UserService {
             // If the company is registered and its email extension is not equal to
             // the user's email
             // (i.e. user: koray@ford.com, company mail extension is not: ford.com )
-            // reject,
+            // reject, case 1b
             if(!company.getEmailExtension().equals(user.getEmailExtension())){
                 return null;
             }
-            // accept
+            // accept, case 1a
+            return user;
         }
-        return user;
     }
 }

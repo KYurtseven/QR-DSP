@@ -7,6 +7,7 @@ import com.qrsynergy.model.Company;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.view.helper.signup.SignUpErrorType;
 import com.qrsynergy.ui.view.helper.signup.SignUpValidation;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
@@ -27,13 +28,18 @@ public class SignUpView extends VerticalLayout {
     // TODO
     // Page url to sign up
 
-    final List<Company> companyList;
-    TextField email;
-    PasswordField password1;
-    PasswordField password2;
-    TextField fullName;
-    ComboBox<String> select;
-    Button submit;
+    private final List<Company> companyList;
+    private TextField email;
+    private PasswordField password1;
+    private PasswordField password2;
+    private TextField fullName;
+    private ComboBox<String> select;
+    private Button submit;
+    private RadioButtonGroup<String> radio;
+
+    private final String INDIVIDUAL = "Individual";
+    private final String COMPANY = "Company";
+
 
     /**
      * Constructor
@@ -129,6 +135,35 @@ public class SignUpView extends VerticalLayout {
     }
 
     /**
+     * User can select whether he is an individual user
+     * or a company employee
+     * @return radio buttons for company or individual selection
+     */
+    private Component buildCompanyOrIndividual(){
+        radio = new RadioButtonGroup<>("Individual or company account?");
+        radio.setItems(INDIVIDUAL, COMPANY);
+
+        radio.setValue(COMPANY);
+
+        radio.addValueChangeListener(new HasValue.ValueChangeListener<String>() {
+            @Override
+            public void valueChange(HasValue.ValueChangeEvent<String> event) {
+                if(event.getValue().equals(INDIVIDUAL)){
+                    // Dont render combo box
+                    select.setVisible(false);
+                }
+                else{
+                    // render company selection, combo box
+                    select.setVisible(true);
+                }
+            }
+        });
+        radio.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
+
+        return radio;
+    }
+
+    /**
      * Builds company select list
      * @return company select list
      */
@@ -136,10 +171,16 @@ public class SignUpView extends VerticalLayout {
         select = new ComboBox<>("Company");
         List<String> companyNames = new ArrayList<>();
         for(Company company: companyList){
+            if(company.getName().toUpperCase().equals(INDIVIDUAL.toUpperCase())){
+                // don't add this to the list
+                continue;
+            }
             companyNames.add(company.getName());
         }
-        select.setItems(companyNames);
 
+        select.setItems(companyNames);
+        // in default, radio is Company
+        select.setVisible(true);
         return select;
     }
 
@@ -156,12 +197,15 @@ public class SignUpView extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 SignUpValidation validation = areFieldsValid();
                 if(validation.isValid()){
+
                     // Prepare inputs
                     UserDTO userDTO = new UserDTO(
                             fullName.getValue(),
                             email.getValue(),
                             password1.getValue(),
-                            select.getSelectedItem().get()
+                            // if the user did not select a company
+                            // set it to "INDIVIDUAL"
+                            (radio.getValue().equals(INDIVIDUAL)) ? INDIVIDUAL.toUpperCase() : select.getSelectedItem().get()
                     );
                     // save to the database
                     SignUpResponse signUpResponse = ((DashboardUI) UI.getCurrent())
@@ -212,6 +256,7 @@ public class SignUpView extends VerticalLayout {
                 buildEmail(),
                 buildPassword1(),
                 buildPassword2(),
+                buildCompanyOrIndividual(),
                 buildCompanySelect(),
                 buildSubmitButton()
         );
@@ -220,11 +265,19 @@ public class SignUpView extends VerticalLayout {
     }
 
     /**
-     * Checks if the email is valid or not.
-     * Find selected company in the list. Match company's email extension with the
-     * user's email extension. They should match for now.
-     * Passwords should match.
-     * Does NOT check if there is a user with given email.
+     * Checks whether the email is valid or not. If it is valid:
+     *
+     * Case 1: User selected INDIVIDUAL
+     *  No need to check for company. Check for password equality
+     *
+     * Case 2: User selected COMPANY
+     *  Find the selected company in the drop down.
+     *  Get the email extension of the company and the user.
+     *  If they are matched check password equality.
+     *  If they did not match, user cannot select this
+     *
+     *  Does NOT check if there is a user with given email.
+     *
      * @return true if the input is valid
      */
     private SignUpValidation areFieldsValid(){
@@ -232,33 +285,24 @@ public class SignUpView extends VerticalLayout {
         if(EmailValidator.getInstance().isValid(email.getValue())){
             String emailExtension = email.getValue().substring(email.getValue().lastIndexOf("@") + 1);
 
-            String selectedCompanyEmail;
-            // Find selected company's email extension
+            if(radio.getValue().equals(INDIVIDUAL)){
+                return checkPasswordEquality();
+            }
+
+            String selectedCompanyName;
+            // Find selected company's name
             try{
-                selectedCompanyEmail= select.getSelectedItem().get();
+                selectedCompanyName= select.getSelectedItem().get();
             }
             catch(Exception e){
                 return new SignUpValidation(false, SignUpErrorType.NOT_SELECTED_COMPANY);
             }
             for(Company company: companyList){
-                if(company.getName().equals(selectedCompanyEmail)){
+                if(company.getName().equals(selectedCompanyName)){
                     String companyEmailExtension = company.getEmailExtension();
 
                     if(emailExtension.equals(companyEmailExtension)){
-                        // Check password equality
-                        if(password1.getValue().equals(password2.getValue())){
-                            if(password1.getValue().length() == 0){
-                                return new SignUpValidation(false, SignUpErrorType.EMPTY_PASSWORD);
-                            }
-                            if(password1.getValue().length() < 5){
-                                return new SignUpValidation(false, SignUpErrorType.SHORT_PASSWORD);
-                            }
-                            if(fullName.getValue().length() > 3){
-                                return new SignUpValidation(true, SignUpErrorType.OK);
-                            }
-                        }
-                        // Tell notification passwords are not matched
-                        return new SignUpValidation(false, SignUpErrorType.PASSWORD_NOT_MATCH);
+                        return checkPasswordEquality();
                     }
                     // Tell notification you cannot add company that is not yours
                     return new SignUpValidation(false, SignUpErrorType.EMAIL_COMPANY_EMAIL_NOT_MATCH);
@@ -267,5 +311,33 @@ public class SignUpView extends VerticalLayout {
         }
         // Tell notification email is not valid
         return new SignUpValidation(false, SignUpErrorType.INVALID_EMAIL);
+    }
+
+    /**
+     * Checks equality of the two password field
+     * Their values should be same
+     * They should be more than 5 char
+     * If those conditions are satisfied, check the name field of the input
+     * It should be more than 3 char
+     * @return
+     */
+    private SignUpValidation checkPasswordEquality(){
+        // Check password equality
+        if(password1.getValue().equals(password2.getValue())){
+            if(password1.getValue().length() == 0){
+                return new SignUpValidation(false, SignUpErrorType.EMPTY_PASSWORD);
+            }
+            if(password1.getValue().length() < 5){
+                return new SignUpValidation(false, SignUpErrorType.SHORT_PASSWORD);
+            }
+            if(fullName.getValue().length() < 3){
+                return new SignUpValidation(false, SignUpErrorType.NOT_VALID_NAME);
+            }
+            else{
+                return new SignUpValidation(true, SignUpErrorType.OK);
+            }
+        }
+        // Tell notification passwords are not matched
+        return new SignUpValidation(false, SignUpErrorType.PASSWORD_NOT_MATCH);
     }
 }
