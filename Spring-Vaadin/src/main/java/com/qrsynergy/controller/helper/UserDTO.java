@@ -26,7 +26,7 @@ public class UserDTO {
      * @param fullName name of the user
      * @param email email of the user
      * @param password password of the user
-     * @param company company of the user
+     * @param company company name of the user
      */
     public UserDTO(String fullName, String email, String password, String company){
         this.fullName = fullName;

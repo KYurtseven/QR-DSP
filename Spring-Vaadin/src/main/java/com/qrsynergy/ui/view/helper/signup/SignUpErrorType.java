@@ -5,6 +5,7 @@ package com.qrsynergy.ui.view.helper.signup;
  */
 public enum SignUpErrorType {
     OK("OK"),
+    NOT_VALID_NAME("Please enter a valid name"),
     NOT_SELECTED_COMPANY("Please select a company"),
     EMPTY_PASSWORD("Please provide a password"),
     SHORT_PASSWORD("Given password is too short"),

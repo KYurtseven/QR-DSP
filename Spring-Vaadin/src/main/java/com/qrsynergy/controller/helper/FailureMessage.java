@@ -2,6 +2,7 @@ package com.qrsynergy.controller.helper;
 
 public enum FailureMessage {
     EMAIL_COMPANYMAIL_DONT_MATCH("Entered email and company email are not matched"),
+    COMPANY_FIELD_IS_EMPTY("Company field is empty"),
     QR_EXPIRED("QR is expired"),
     QR_FILE_NOT_FOUND("File not found"),
     QR_NOT_FOUND("QR is not found"),
