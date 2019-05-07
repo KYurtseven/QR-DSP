@@ -29,10 +29,12 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
+import com.qrsynergy.ui.view.qrgenerator.qrgenerator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @SuppressWarnings("serial")
 public final class ShareDocumentView extends Panel implements View{
@@ -168,6 +170,7 @@ public final class ShareDocumentView extends Panel implements View{
                     // On successful save, go to the dashboard
                 }
             }
+            qrgenerator.showGeneratedQR(fileInfo.getUrl());
         }
         catch(Exception e){
             Notification fileUploadExceptionNotification = new Notification("Unknown error occured");
@@ -329,5 +332,7 @@ public final class ShareDocumentView extends Panel implements View{
         }
 
     }
+
+
 
 }

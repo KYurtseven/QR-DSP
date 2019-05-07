@@ -1,9 +1,11 @@
 package com.qrsynergy.ui.view.viewdocument.tabs;
 
 import com.qrsynergy.model.QR;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.qrsynergy.ui.view.qrgenerator.qrgenerator;
 
 public class Details {
 
@@ -27,7 +29,15 @@ public class Details {
         Label creationDate = new Label("Creation date: " + qr.getCreationDate());
         Label expirationDate = new Label("Expiration date: " + qr.getExpirationDate());
 
-        layout.addComponents(url, originalName, isPublished, documentType, creationDate, expirationDate);
+        Button showQrImage = new Button("QR Image");
+        showQrImage.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                qrgenerator.showGeneratedQR(qr.getUrl());
+            }
+        });
+
+        layout.addComponents(url, originalName, isPublished, documentType, creationDate, expirationDate, showQrImage);
         return layout;
     }
 }
