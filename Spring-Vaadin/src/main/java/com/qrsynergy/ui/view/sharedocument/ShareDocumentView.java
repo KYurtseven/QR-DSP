@@ -166,7 +166,6 @@ public final class ShareDocumentView extends Panel implements View{
                     QRGenerator.showGeneratedQR(qr);
                 }
             }
-            qrgenerator.showGeneratedQR(fileInfo.getUrl());
         }
         catch(Exception e){
             Notification fileUploadExceptionNotification = new Notification("Unknown error occured");
