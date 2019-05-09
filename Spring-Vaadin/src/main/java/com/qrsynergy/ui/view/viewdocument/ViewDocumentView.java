@@ -1,5 +1,6 @@
 package com.qrsynergy.ui.view.viewdocument;
 
+import com.qrsynergy.controller.helper.UserDTO;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
@@ -10,7 +11,7 @@ import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.ExcelUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.viewdocument.tabs.Details;
-import com.qrsynergy.ui.view.viewdocument.tabs.EditPeopleRights;
+import com.qrsynergy.ui.view.viewdocument.tabs.EditPeople;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.BrowserWindowOpener;
@@ -22,6 +23,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -133,13 +135,38 @@ public final class ViewDocumentView extends Panel implements  View{
         grid.setItems(userDocuments);
 
         // details
-        grid.addComponentColumn(userDocument -> buildEditTab(userDocument))
+        grid.addComponentColumn(userDocument -> buildEditWindow(userDocument))
                 .setId("details")
                 .setWidth(90)
                 .setCaption("Details")
                 .setResizable(false)
                 .setSortable(false);
 
+        /*
+        grid.addColumn(userDocument -> {
+            Button btn = new Button();
+            btn.setIcon(FontAwesome.EXPAND);
+            btn.setHeight("25px");
+            btn.addClickListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    if(grid.isDetailsVisible(userDocument)){
+                        grid.setDetailsVisible(userDocument, false);
+                        setGridHeight(userDocuments, grid);
+                    }
+                    else{
+                        grid.setDetailsVisible(userDocument, true);
+                        grid.setHeightByRows(10);
+                    }
+                }
+            });
+            return btn;
+        }, new ComponentRenderer()).setCaption("Details")
+                .setId("details")
+                .setWidth(90)
+                .setResizable(false)
+                .setSortable(false);
+        */
         grid.addColumn(userDocument -> renderTypeThumbnail(userDocument), new HtmlRenderer())
                 .setCaption("Type")
                 .setId("type")
@@ -161,8 +188,34 @@ public final class ViewDocumentView extends Panel implements  View{
                 .setResizable(false)
                 .setSortable(false);
 
+
+        /*
+        grid.setDetailsGenerator(userDocument -> {
+            QR qr = ((DashboardUI) UI.getCurrent()).qrService.findQRByUrl(userDocument.getUrl());
+            VerticalLayout layout = new VerticalLayout();
+            layout.setWidth(100, Unit.PERCENTAGE);
+
+            Window window = new Window();
+
+
+            TabSheet tabSheet = new TabSheet();
+            tabSheet.setSizeFull();
+            layout.addComponent(tabSheet);
+
+            tabSheet.addTab(Details.qrInfoTab(qr), "Info");
+
+            EditPeople editPeople = new EditPeople(qr);
+            tabSheet.addTab(editPeople.getContent(), "Edit people");
+
+            window.setContent(layout);
+
+            return layout;
+        });
+    */
         grid.setSizeFull();
+
         setGridHeight(userDocuments, grid);
+
 
         extension.setColumnResizeCompensationMode(ColumnResizeCompensationMode.RESIZE_GRID);
         extension.adjustGridWidth();
@@ -171,14 +224,7 @@ public final class ViewDocumentView extends Panel implements  View{
     }
 
 
-    /**
-     * Opens edit tab
-     * Fetches QR from the UserDocument.
-     * Opens a modal to edit information of QR
-     * @param userDocument user document to fetch QR
-     * @return modal for editing the QR
-     */
-    private Component buildEditTab(UserDocument userDocument){
+    private Component buildEditWindow(UserDocument userDocument){
         Button openWindow = new Button();
         openWindow.setIcon(VaadinIcons.COG);
         openWindow.addClickListener(new Button.ClickListener() {
@@ -192,15 +238,17 @@ public final class ViewDocumentView extends Panel implements  View{
                 TabSheet tabSheet = new TabSheet();
                 tabSheet.setSizeFull();
                 layout.addComponent(tabSheet);
-                // information tab
+
                 tabSheet.addTab(Details.qrInfoTab(qr), "Info");
-                // user can edit people's rights
-                // i.e. add/remove user, change rights of users
-                EditPeopleRights editPeopleRights = new EditPeopleRights(qr);
-                tabSheet.addTab(editPeopleRights.getContent(), "People");
-                // open modal
+
+                EditPeople editPeople = new EditPeople(qr);
+                tabSheet.addTab(editPeople.getContent(), "Edit people");
+
                 window.setContent(layout);
+
                 getUI().addWindow(window);
+
+
                 layout.setWidth(1000, Unit.PIXELS);
                 layout.setHeight(500, Unit.PIXELS);
                 window.center();
@@ -212,13 +260,6 @@ public final class ViewDocumentView extends Panel implements  View{
     }
 
 
-    /**
-     * Helper method for setting the grid's height
-     * max size is 10 rows
-     * In case there is no rows, it sets to 1 row
-     * @param userDocuments user documents
-     * @param grid grid
-     */
     private void setGridHeight(List<UserDocument> userDocuments, Grid grid){
         if(userDocuments.size() >= 10){
             grid.setHeightByRows(10);
@@ -236,12 +277,6 @@ public final class ViewDocumentView extends Panel implements  View{
 
     }
 
-    /**
-     * Builds thumbnail of the file
-     * i.e. Excel or RAR etc.
-     * @param userDocument user document
-     * @return html version of the thumbnail
-     */
     private String renderTypeThumbnail(UserDocument userDocument){
         if(userDocument.getDocumentType().equals(DocumentType.EXCEL)){
            return FontAwesome.FILE_EXCEL_O.getHtml();
@@ -252,13 +287,6 @@ public final class ViewDocumentView extends Panel implements  View{
         }
     }
 
-    /**
-     * Builds a button that opens the excel in the new browser tab.
-     * TODO
-     * Excel should open in the current UI, not in a new UI
-     * @param userDocument userDocument
-     * @return button
-     */
     private Button openExcelInNewTab(UserDocument userDocument){
         Button btn = new Button();
         btn.setIcon(FontAwesome.EYE);

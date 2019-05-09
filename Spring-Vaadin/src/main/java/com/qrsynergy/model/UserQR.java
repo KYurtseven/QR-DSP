@@ -94,46 +94,16 @@ public class UserQR {
         this._id = _id;
     }
 
-    /**
-     * adds user document to the owned list
-     * does not add if the QR (url) already exists
-     * @param toBeAddedUserDocument user document to be added
-     */
-    public void appendToO_docs(UserDocument toBeAddedUserDocument){
-        for(UserDocument userDocument: this.o_docs){
-            if(userDocument.getUrl().equals(toBeAddedUserDocument.getUrl())){
-                return;
-            }
-        }
-        o_docs.add(toBeAddedUserDocument);
+    public void appendToO_docs(UserDocument userDocument){
+        o_docs.add(userDocument);
     }
 
-    /**
-     * adds user document to the view list
-     * does not add if the QR (url) already exists
-     * @param toBeAddedUserDocument user document to be added
-     */
-    public void appendToV_docs(UserDocument toBeAddedUserDocument){
-        for(UserDocument userDocument: this.v_docs){
-            if(userDocument.getUrl().equals(toBeAddedUserDocument.getUrl())){
-                return;
-            }
-        }
-        v_docs.add(toBeAddedUserDocument);
+    public void appendToV_docs(UserDocument userDocument){
+        v_docs.add(userDocument);
     }
 
-    /**
-     * adds user document to the edit list
-     * does not add if the QR (url) already exists
-     * @param toBeAddedUserDocument user document to be added
-     */
-    public void appendToE_docs(UserDocument toBeAddedUserDocument){
-        for(UserDocument userDocument: this.e_docs){
-            if(userDocument.getUrl().equals(toBeAddedUserDocument.getUrl())){
-                return;
-            }
-        }
-        e_docs.add(toBeAddedUserDocument);
+    public void appendToE_docs(UserDocument userDocument){
+        e_docs.add(userDocument);
     }
 
 

@@ -11,7 +11,6 @@ import com.qrsynergy.repository.UserQRRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,26 +79,6 @@ public class QRService {
     }
 
     /**
-     * Creates a UserQR object to be saved to the database
-     * adds first user document to the UserQR with given rights
-     * @param email email of the user
-     * @param userDocument first document to be added
-     * @param rightType edit or view
-     * @return
-     */
-    private UserQR createUserQRToBeAdded(String email, UserDocument userDocument, RightType rightType){
-        UserQR newUserQR = new UserQR(email);
-        // append UserDocument to appropriate list
-        if(rightType.equals(RightType.EDIT)){
-            newUserQR.appendToE_docs(userDocument);
-        }
-        else{
-            newUserQR.appendToV_docs(userDocument);
-        }
-        return newUserQR;
-    }
-
-    /**
      * Adds qr to user's userqr document
      * If the user does not exist, create a userqr document for him.
      * @param qr qr
@@ -123,7 +102,14 @@ public class QRService {
             // The user does not exist
             if(userQR == null){
                 // create new UserQR for (to be created) user
-                UserQR newUserQR = createUserQRToBeAdded(email, userDocument, rightType);
+                UserQR newUserQR = new UserQR(email);
+                // append UserDocument to appropriate list
+                if(rightType.equals(RightType.EDIT)){
+                    newUserQR.appendToV_docs(userDocument);
+                }
+                else{
+                    newUserQR.appendToE_docs(userDocument);
+                }
                 // save
                 userQRService.saveUserQR(newUserQR);
             }
@@ -158,56 +144,79 @@ public class QRService {
     }
 
 
-
     /**
-     * Add a new user to the QR, default view right
-     * @Case1 : User is in the lists, don't accept
-     * @Case2 : User is freshly added
+     *
      * @param qr QR
      * @param toBeAddedEmail to be added email
+     * @param rightType view or edit
      * @return true if successful, false on error
      */
-    public boolean addUserToQR(QR qr, String toBeAddedEmail){
+    public boolean addUserToQR(QR qr, String toBeAddedEmail, RightType rightType){
         try{
-            // Case 1
-            for(String email: qr.getE_info()){
-                if(email.equals(toBeAddedEmail)){
-                    return false;
+            // Possible cases
+
+            // Edit cases
+            // Case 1: User is in edit list and is tried to be added edit, ignore
+            // Case 2: User is in edit list and is tried to be added view, ignore
+
+            // View cases
+            // Case 3: User is in view list and is tried to be added view, ignore
+
+            // Right improvements, from view to edit
+            // Case 4: User is in view list and is tried to be added into edit list.
+            //          Remove user from view, add to edit list. Save the document.
+            //          Update userQR of the user
+
+            // Case 5: User is freshly added to edit, accept. Create UserQR of the user
+            //          if it is not present, add the new document. O.w. update UserQR of the user
+
+            // Case 6: Same as above but with view rights.
+
+            // Case 7: Ignore other cases
+            if(rightType.equals(RightType.EDIT)){
+                for(String email: qr.getE_info()){
+                    if(email.equals(toBeAddedEmail)){
+                        // Case 1
+                        return false;
+                    }
                 }
-            }
-            for(String email: qr.getV_info()){
-                if(email.equals(toBeAddedEmail)){
-                    return false;
+
+                for(String email: qr.getV_info()){
+                    if(email.equals(toBeAddedEmail)){
+                        // Case 4
+                        // remove from view, add to edit
+                        qr.getV_info().remove(email);
+                        qr.getE_info().add(email);
+                        // Update UserQR
+                        userQRService.removeQRFromViewAndAddToEdit(email, qr);
+                        // save qr
+                        qrRepository.save(qr);
+                        return true;
+                    }
                 }
-            }
-            // Case 2
-            // Accept it. Check whether he has a userQR or not.
-            // Create a userQR if he does not have any.
-            // Add to the qr
-            // Save
+                // user is not in this list before
 
-            // Add new user to the QR
-            qr.appendToV_info(toBeAddedEmail);
-            // Finds UserQR of the user
-            UserQR userQR = userQRService.getUserQrByEmail(toBeAddedEmail);
-            // create UserDocument to be added to the UserQR
-            UserDocument userDocument = new UserDocument(qr.getOriginalName(), qr.getUrl(), qr.getDocumentType());
-            // if there is no UserQR, the user has not registered previously
-            if(userQR == null){
-                // create new UserQR for (to be created) user
-                UserQR newUserQR = createUserQRToBeAdded(toBeAddedEmail, userDocument, RightType.VIEW);
-
-                qrRepository.save(qr);
-                userQRService.saveUserQR(newUserQR);
-                return true;
+                // Case 5
+                return(addUserToQRFreshUser(qr, toBeAddedEmail, RightType.EDIT));
             }
-            else{
-                userQR.appendToV_docs(userDocument);
-
-                qrRepository.save(qr);
-                userQRService.saveUserQR(userQR);
-                return true;
+            if(rightType.equals(RightType.VIEW)){
+                for(String email: qr.getE_info()){
+                    if(email.equals(toBeAddedEmail)){
+                        // Case 2
+                        return false;
+                    }
+                }
+                for(String email: qr.getV_info()){
+                    if(email.equals(toBeAddedEmail)){
+                        // Case 3
+                        return false;
+                    }
+                }
+                // Case 6
+                return(addUserToQRFreshUser(qr, toBeAddedEmail, RightType.VIEW));
             }
+            // Case 7
+            return false;
         }
         catch(Exception e){
             System.out.println("Error in QRService: addUserToQR: "  + e);
@@ -252,200 +261,53 @@ public class QRService {
     }
 
     /**
-     * Helper method of removeUserFromQR
-     * Removes user from the QR
-     * @param qr QR
-     * @param toBeRemovedEmail email of the user
+     * Removes current user from QR
+     * @param qr
+     * @param toBeRemovedEmail
+     * @return true if successful, false on error or owner removal
      */
-    private void removeFromQR(QR qr, String toBeRemovedEmail){
-        boolean isInEdit = false;
-        for(String email: qr.getE_info()){
-            if(email.equals(toBeRemovedEmail)){
-                qr.getE_info().remove(email);
-                isInEdit = true;
-                break;
-            }
-        }
-        if(!isInEdit){
-            // Remove from view list if it is not found
-            // in the edit list
-            for(String email: qr.getV_info()){
-                if(email.equals(toBeRemovedEmail)){
-                    qr.getV_info().remove(email);
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Helper method of removeUserFromQR
-     * Removes QR from the user's UserQR
-     * @param qr QR
-     * @param userQR userQR of the user
-     */
-    private void removeFromUserQR(QR qr, UserQR userQR){
-        boolean isInEdit = false;
-        // Find qr and remove
-        for(UserDocument userDocument: userQR.getE_docs()){
-            if(userDocument.getUrl().equals(qr.getUrl())){
-                userQR.getE_docs().remove(userDocument);
-                isInEdit = true;
-                break;
-            }
-        }
-        if(!isInEdit){
-            // Remove from view list if it is not found
-            // in the edit list
-            for(UserDocument userDocument: userQR.getV_docs()){
-                if(userDocument.getUrl().equals(qr.getUrl())){
-                    userQR.getV_docs().remove(userDocument);
-                    break;
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Removes user from the qr
-     * and removes qr from the user's UserQR
-     * Save updated values to the database
-     * @param qr QR
-     * @param toBeRemovedEmail email of the user
-     * @return true on successful, false otherwise
-     */
-    public boolean removeUserFromQR(QR qr, String toBeRemovedEmail){
-        // Find and remove the user
+    public boolean removeUserFromQR(QR qr, String toBeRemovedEmail, RightType rightType){
+        // TODO
+        // There is an error while removing a user in the View list
+        // Debug this
         try{
-            removeFromQR(qr, toBeRemovedEmail);
-
-            // At this point, user is removed from the list.
-            // QR is ready to be saved
-            // Find userQR of the User
-            UserQR userQR = userQRService.getUserQrByEmail(toBeRemovedEmail);
-            if(userQR != null){
-                removeFromUserQR(qr, userQR);
-                // save updated values
+            if(rightType.equals(RightType.OWNER)){
+                // TODO
+                // cannot remove owner from the document
+                // pass ownership to another one
+                return false;
+            }
+            else if(rightType.equals(RightType.EDIT)){
+                // find email in the edit people
+                for(String email: qr.getE_info()) {
+                    if (email.equals(toBeRemovedEmail)) {
+                        qr.getE_info().remove(email);
+                        break;
+                    }
+                }
+                userQRService.removeQRFromUserQR(rightType, qr.getUrl(), toBeRemovedEmail);
                 qrRepository.save(qr);
-                userQRService.saveUserQR(userQR);
                 return true;
             }
-            // There is no userQR, something is wrong
-            return false;
-        }
-        catch(Exception e){
-            return false;
-        }
-    }
-
-
-    /**
-     * Helper method of changeRightOfUser
-     * Changes right of the user in the QR
-     * @param qr QR
-     * @param toBeChangedEmail email of the user
-     * @param oldRight old right
-     */
-    private void changeRightInQR(QR qr, String toBeChangedEmail, RightType oldRight){
-
-        if(oldRight.equals(RightType.VIEW)){
-            // remove from view list
-            for(String email: qr.getV_info()){
-                if(email.equals(toBeChangedEmail)){
-                    qr.getV_info().remove(email);
-                    break;
+            else{
+                // View
+                for(String email: qr.getV_info()) {
+                    if (email.equals(toBeRemovedEmail)) {
+                        qr.getE_info().remove(email);
+                        break;
+                    }
                 }
-            }
-            // add to edit list
-            qr.appendToE_info(toBeChangedEmail);
-        }
-        else{
-            // remove from edit list
-            for(String email: qr.getE_info()){
-                if(email.equals(toBeChangedEmail)){
-                    qr.getE_info().remove(email);
-                    break;
-                }
-            }
-            // add to view list
-            qr.appendToV_info(toBeChangedEmail);
-        }
-    }
-
-
-    /**
-     * Helper method of changeRightOfUser
-     * Changes right of the user's UserQR
-     * Removes qr from old list, adds to the new list
-     * @param qr QR
-     * @param userQR userQR
-     * @param oldRight old right
-     */
-    private void changeRightInUserQR(QR qr, UserQR userQR, RightType oldRight){
-
-        UserDocument toBeChangedUserDocument = null;
-        if(oldRight.equals(RightType.VIEW)){
-            // remove from view list
-            for(UserDocument userDocument: userQR.getV_docs()){
-                if(userDocument.getUrl().equals(qr.getUrl())){
-                    toBeChangedUserDocument = userDocument;
-                    userQR.getV_docs().remove(userDocument);
-                    break;
-                }
-            }
-            // add to edit list
-            if(toBeChangedUserDocument != null){
-                userQR.appendToE_docs(toBeChangedUserDocument);
-            }
-        }
-        else{
-            // remove from edit list
-            for(UserDocument userDocument: userQR.getE_docs()){
-                if(userDocument.getUrl().equals(qr.getUrl())){
-                    toBeChangedUserDocument = userDocument;
-                    userQR.getE_docs().remove(userDocument);
-                    break;
-                }
-            }
-            // add to view list
-            if(toBeChangedUserDocument != null){
-                userQR.appendToV_docs(toBeChangedUserDocument);
-            }
-        }
-    }
-
-    /**
-     * Changes right of the user from view to edit, or edit to view
-     * and updates user's UserQR
-     * Save updated values to the database
-     * @param qr QR
-     * @param toBeChangedEmail email of the user
-     * @param oldRight old right
-     * @return true on successful, false otherwise
-     */
-    public boolean changeRightOfUser(QR qr, String toBeChangedEmail, RightType oldRight){
-        try{
-            // update QR
-            changeRightInQR(qr, toBeChangedEmail, oldRight);
-            // At this point, user is moved from edit to view, or view to edit
-            // QR is ready to be saved
-            // Find user's UserQR
-            UserQR userQR = userQRService.getUserQrByEmail(toBeChangedEmail);
-            if(userQR != null){
-                changeRightInUserQR(qr, userQR, oldRight);
+                userQRService.removeQRFromUserQR(rightType, qr.getUrl(), toBeRemovedEmail);
                 qrRepository.save(qr);
-                userQRService.saveUserQR(userQR);
                 return true;
             }
-            return false;
         }
         catch(Exception e){
+            // error
+            System.out.println("Error in qr service, remove user: " + e);
             return false;
         }
     }
-
-
     /**
      * Finds QR by url
      * @param url url of the QR

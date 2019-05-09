@@ -339,34 +339,12 @@ public class QR {
     }
 
 
-    /**
-     * Appends new email to the edit list
-     * Does not append if the email somehow exists in the list
-     * @param toBeAddedEmail email
-     */
-    public void appendToE_info(String toBeAddedEmail){
-        for(String email: this.e_info){
-            if(email.equals(toBeAddedEmail)){
-                // already exists somehow
-                return;
-            }
-        }
-        e_info.add(toBeAddedEmail);
+    public void appendToE_info(String email){
+        e_info.add(email);
     }
 
-    /**
-     * Appends new email to the view list
-     * Does not append if the email somehow exists in the list
-     * @param toBeAddedEmail
-     */
-    public void appendToV_info(String toBeAddedEmail){
-        for(String email: this.v_info){
-            if(email.equals(toBeAddedEmail)){
-                // already exists somehow
-                return;
-            }
-        }
-        v_info.add(toBeAddedEmail);
+    public void appendToV_info(String email){
+        v_info.add(email);
     }
 
 }

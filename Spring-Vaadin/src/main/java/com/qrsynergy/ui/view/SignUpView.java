@@ -5,7 +5,6 @@ import com.qrsynergy.controller.helper.SignUpResponse;
 import com.qrsynergy.controller.helper.UserDTO;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.ui.DashboardUI;
-import com.qrsynergy.ui.view.helper.ShowNotification;
 import com.qrsynergy.ui.view.helper.signup.SignUpErrorType;
 import com.qrsynergy.ui.view.helper.signup.SignUpValidation;
 import com.vaadin.data.HasValue;
@@ -22,7 +21,6 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class SignUpView extends VerticalLayout {
@@ -179,8 +177,7 @@ public class SignUpView extends VerticalLayout {
             }
             companyNames.add(company.getName());
         }
-        // Sort alphabetically
-        companyNames.sort(Comparator.comparing(String::toString));
+
         select.setItems(companyNames);
         // in default, radio is Company
         select.setVisible(true);
@@ -221,13 +218,13 @@ public class SignUpView extends VerticalLayout {
                     }
                     else{
                         // Show notification
-                        ShowNotification.showNotification(signUpResponse.getMessage().getMessage());
+                        showNotification(signUpResponse.getMessage().getMessage());
                         submit.setEnabled(true);
                     }
                 }
                 else{
                     // Show notification
-                    ShowNotification.showNotification(validation.getErrorMessage());
+                    showNotification(validation.getErrorMessage());
                     submit.setEnabled(true);
                 }
             }
@@ -235,6 +232,16 @@ public class SignUpView extends VerticalLayout {
         return submit;
     }
 
+    /**
+     * Show notification
+     * @param message message
+     */
+    public void showNotification(String message){
+        Notification notification = new Notification(message);
+        notification.setDelayMsec(2000);
+        notification.setPosition(Position.BOTTOM_RIGHT);
+        notification.show(Page.getCurrent());
+    }
 
     /**
      * Builds all fields
