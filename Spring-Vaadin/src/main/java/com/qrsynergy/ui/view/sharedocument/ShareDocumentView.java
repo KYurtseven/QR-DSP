@@ -3,7 +3,6 @@ package com.qrsynergy.ui.view.sharedocument;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
-import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEventBus;
@@ -12,11 +11,8 @@ import com.qrsynergy.ui.view.sharedocument.infos.CompanyInfo;
 import com.qrsynergy.ui.view.sharedocument.infos.FileInfo;
 import com.qrsynergy.ui.view.sharedocument.infos.PeopleInfo;
 import com.qrsynergy.ui.view.sharedocument.steps.AddCompanyStep;
-import com.qrsynergy.ui.view.sharedocument.steps.AddPeopleStep;
 import com.qrsynergy.ui.view.sharedocument.steps.AdditionalOptionsStep;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
@@ -24,15 +20,16 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.event.WizardCancelledEvent;
 import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
+import com.qrsynergy.ui.view.helper.qrgenerator.QRGenerator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @SuppressWarnings("serial")
 public final class ShareDocumentView extends Panel implements View{
@@ -166,6 +163,7 @@ public final class ShareDocumentView extends Panel implements View{
                     ((DashboardUI) UI.getCurrent()).qrService.saveNewDocument(qr);
                     // TODO
                     // On successful save, go to the dashboard
+                    QRGenerator.showGeneratedQR(qr);
                 }
             }
         }
@@ -329,5 +327,7 @@ public final class ShareDocumentView extends Panel implements View{
         }
 
     }
+
+
 
 }
