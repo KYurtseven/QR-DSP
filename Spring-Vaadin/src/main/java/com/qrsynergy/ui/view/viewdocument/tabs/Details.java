@@ -5,7 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.qrsynergy.ui.view.qrgenerator.qrgenerator;
+import com.qrsynergy.ui.view.helper.qrgenerator.QRGenerator;
 
 public class Details {
 
@@ -33,7 +33,7 @@ public class Details {
         showQrImage.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                qrgenerator.showGeneratedQR(qr.getUrl());
+                QRGenerator.showGeneratedQR(qr);
             }
         });
 
