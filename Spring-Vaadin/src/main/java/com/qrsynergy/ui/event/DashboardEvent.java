@@ -24,7 +24,24 @@ public abstract class DashboardEvent {
         }
     }
 
+    public static final class UserSignUpFinishedEvent{
 
+    }
+
+    public static final class ExcelPageRequestedEvent{
+        private final String url;
+
+        public ExcelPageRequestedEvent(final String url){
+            this.url = url;
+        }
+        public String getUrl(){
+            return this.url;
+        }
+    }
+
+    public static final class ExcelPreviousPageEvent{
+
+    }
     /**
      * For creating company in the UI
      * Not used in the production

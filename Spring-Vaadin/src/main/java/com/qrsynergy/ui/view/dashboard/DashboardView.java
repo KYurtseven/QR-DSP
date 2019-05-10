@@ -85,11 +85,11 @@ public final class DashboardView extends Panel implements View,
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         header.addComponent(titleLabel);
 
-        notificationsButton = new Button("notif");
-        Component edit = buildEditButton();
-        HorizontalLayout tools = new HorizontalLayout(notificationsButton, edit);
-        tools.addStyleName("toolbar");
-        header.addComponent(tools);
+        //notificationsButton = new Button("notif");
+        //Component edit = buildEditButton();
+        //HorizontalLayout tools = new HorizontalLayout(notificationsButton, edit);
+        //tools.addStyleName("toolbar");
+        //header.addComponent(tools);
 
         return header;
     }
@@ -116,7 +116,7 @@ public final class DashboardView extends Panel implements View,
         dashboardPanels = new CssLayout();
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
-        dashboardPanels.addComponent(buildNotes());
+        //dashboardPanels.addComponent(buildNotes());
 
         // Below code is used for adding company to the database
         // removed in the production

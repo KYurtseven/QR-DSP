@@ -3,11 +3,13 @@ package com.qrsynergy.ui.view.viewdocument;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.service.QRService;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.ExcelUI;
+import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.viewdocument.tabs.Details;
 import com.qrsynergy.ui.view.viewdocument.tabs.EditPeopleRights;
@@ -107,13 +109,13 @@ public final class ViewDocumentView extends Panel implements  View{
         List<UserDocument> viewDocuments = userQR.getV_docs();
 
         Label ownLabel = new Label("Owned documents");
-        content.addComponents(ownLabel, buildQRItems(ownDocuments));
+        content.addComponents(ownLabel, buildQRItems(ownDocuments, RightType.OWNER));
 
         Label editLabel = new Label("Editable documents");
-        content.addComponents(editLabel, buildQRItems(editDocuments));
+        content.addComponents(editLabel, buildQRItems(editDocuments, RightType.EDIT));
 
         Label viewLabel = new Label("Viewable documents");
-        content.addComponents(viewLabel, buildQRItems(viewDocuments));
+        content.addComponents(viewLabel, buildQRItems(viewDocuments, RightType.VIEW));
 
         return content;
     }
@@ -125,7 +127,7 @@ public final class ViewDocumentView extends Panel implements  View{
      * @param userDocuments list of user documents
      * @return grid of the documents
      */
-    private Component buildQRItems(List<UserDocument> userDocuments){
+    private Component buildQRItems(List<UserDocument> userDocuments, RightType rightType){
         Grid<UserDocument> grid = new Grid<>();
         // grid.setSizeFull();
         GridScrollExtension<UserDocument> extension = new GridScrollExtension<>(grid);
@@ -133,7 +135,7 @@ public final class ViewDocumentView extends Panel implements  View{
         grid.setItems(userDocuments);
 
         // details
-        grid.addComponentColumn(userDocument -> buildEditTab(userDocument))
+        grid.addComponentColumn(userDocument -> buildEditModal(userDocument, rightType))
                 .setId("details")
                 .setWidth(90)
                 .setCaption("Details")
@@ -154,7 +156,7 @@ public final class ViewDocumentView extends Panel implements  View{
                 .setSortable(true);
 
         // Button for opening excel in the new tab
-        grid.addColumn(userDocument -> openExcelInNewTab(userDocument) ,
+        grid.addColumn(userDocument -> openExcelInNewTab(userDocument, rightType) ,
                 new ComponentRenderer()).setCaption( "View" )
                 .setId("view")
                 .setWidth(100)
@@ -178,9 +180,10 @@ public final class ViewDocumentView extends Panel implements  View{
      * @param userDocument user document to fetch QR
      * @return modal for editing the QR
      */
-    private Component buildEditTab(UserDocument userDocument){
+    private Component buildEditModal(UserDocument userDocument, RightType rightType){
         Button openWindow = new Button();
         openWindow.setIcon(VaadinIcons.COG);
+        openWindow.setHeight("25px");
         openWindow.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -193,10 +196,16 @@ public final class ViewDocumentView extends Panel implements  View{
                 tabSheet.setSizeFull();
                 layout.addComponent(tabSheet);
                 // information tab
-                tabSheet.addTab(Details.qrInfoTab(qr), "Info");
+                Details details = new Details(qr);
+                tabSheet.addTab(details.getContent(), "Info");
+
                 // user can edit people's rights
                 // i.e. add/remove user, change rights of users
-                EditPeopleRights editPeopleRights = new EditPeopleRights(qr);
+
+                // Who is viewing it?
+                User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
+
+                EditPeopleRights editPeopleRights = new EditPeopleRights(qr, rightType, user);
                 tabSheet.addTab(editPeopleRights.getContent(), "People");
                 // open modal
                 window.setContent(layout);
@@ -259,13 +268,17 @@ public final class ViewDocumentView extends Panel implements  View{
      * @param userDocument userDocument
      * @return button
      */
-    private Button openExcelInNewTab(UserDocument userDocument){
+    private Button openExcelInNewTab(UserDocument userDocument, RightType rightType){
         Button btn = new Button();
         btn.setIcon(FontAwesome.EYE);
         btn.setHeight("25px");
-        BrowserWindowOpener opener = new BrowserWindowOpener(ExcelUI.class);
-        opener.extend(btn);
-        opener.setParameter("qr_id", userDocument.getUrl());
+
+        btn.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                DashboardEventBus.post(new DashboardEvent.ExcelPageRequestedEvent(userDocument.getUrl()));
+            }
+        });
         return  btn;
     }
 }
