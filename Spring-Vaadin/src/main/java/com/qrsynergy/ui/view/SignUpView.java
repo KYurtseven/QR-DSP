@@ -5,27 +5,28 @@ import com.qrsynergy.controller.helper.SignUpResponse;
 import com.qrsynergy.controller.helper.UserDTO;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.ui.DashboardUI;
+import com.qrsynergy.ui.event.DashboardEvent;
+import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.helper.ShowNotification;
 import com.qrsynergy.ui.view.helper.signup.SignUpErrorType;
 import com.qrsynergy.ui.view.helper.signup.SignUpValidation;
 import com.vaadin.data.HasValue;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
-import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class SignUpView extends VerticalLayout {
+public class SignUpView extends VerticalLayout implements View {
 
     // TODO
     // Page url to sign up
@@ -50,11 +51,14 @@ public class SignUpView extends VerticalLayout {
         setSizeFull();
         setMargin(false);
         setSpacing(false);
+
+        DashboardEventBus.register(this);
         companyList = ((DashboardUI) UI.getCurrent()).companyService.findAll();
 
         Component signUpForm = buildSignUpForm();
         addComponent(signUpForm);
         setComponentAlignment(signUpForm, Alignment.MIDDLE_CENTER);
+
     }
 
     private Component buildSignUpForm(){
@@ -66,6 +70,24 @@ public class SignUpView extends VerticalLayout {
 
         signUpPanel.addComponent(buildFields());
         return signUpPanel;
+    }
+
+    /**
+     * Builds button that returns user to the login page
+     * @return button
+     */
+    private Component buildBackToLoginButton(){
+        Button button = new Button(" To login page");
+        button.setIcon(VaadinIcons.BACKSPACE);
+        button.setSizeFull();
+        button.setHeight("30px");
+        button.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                DashboardEventBus.post(new DashboardEvent.UserSignUpFinishedEvent());
+            }
+        });
+        return button;
     }
 
     /**
@@ -215,9 +237,7 @@ public class SignUpView extends VerticalLayout {
                             .userService.saveUser(userDTO);
 
                     if(signUpResponse.getStatus().equals(ResponseStatusType.SUCCESS)){
-                        // TODO
-                        // Show notification about success
-                        // After 2 seconds, reload login page
+                        DashboardEventBus.post(new DashboardEvent.UserSignUpFinishedEvent());
                     }
                     else{
                         // Show notification
@@ -245,6 +265,7 @@ public class SignUpView extends VerticalLayout {
         fields.addStyleName("fields");
 
         fields.addComponents(
+                buildBackToLoginButton(),
                 buildFullName(),
                 buildEmail(),
                 buildPassword1(),

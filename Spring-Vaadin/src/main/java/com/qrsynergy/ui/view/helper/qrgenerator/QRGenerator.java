@@ -87,21 +87,36 @@ public class QRGenerator {
      */
     public static Component generateQRandDownloadButton(QR qr, int width, int height) throws WriterException, IOException{
         StreamResource streamResource = generateQR(qr, width, height);
+        Image qrImage = new Image("", streamResource);
+        qrImage.addStyleNames("text-center", "slot-text-center");
 
         VerticalLayout layout = new VerticalLayout();
-        Label urlField = new Label("ID: " + qr.getUrl());
+        layout.setId("qr_generator_layout");
+        layout.setSizeFull();
+        layout.addStyleNames("text-center", "slot-text-center", "padding-top-0");
 
-        layout.addComponents(urlField, buildDownloadButton(streamResource));
+        layout.addComponents(qrImage, buildDownloadButton(streamResource, width));
 
         return layout;
+    }
+
+    /**
+     * Generates QR and Download button component
+     * Default Size is 200*200
+     * @param qr QR
+     * @return vertical layout that contains QR and button
+     * @throws WriterException
+     * @throws IOException
+     */
+    public static Component generateQRandDownloadButton(QR qr) throws  WriterException, IOException{
+        return generateQRandDownloadButton(qr, 200, 200);
     }
 
     /**
      * TODO, to be deprecated
      * @param qr
      */
-    public static void showGeneratedQR(QR qr)
-    {
+    public static void showGeneratedQR(QR qr) {
         Window subWindow = new Window("QR Image");
         VerticalLayout windowLayout = new VerticalLayout();
 
@@ -122,7 +137,7 @@ public class QRGenerator {
             return;
         }
 
-        windowLayout.addComponent(buildDownloadButton(image));
+        windowLayout.addComponent(buildDownloadButton(image, 200));
 
         subWindow.setWidth(350, Sizeable.Unit.PIXELS);
         subWindow.setHeight(380, Sizeable.Unit.PIXELS);
@@ -136,9 +151,11 @@ public class QRGenerator {
      * helper download button builder
      * @return download button of the qr
      */
-    private static Component buildDownloadButton(StreamResource image){
+    private static Component buildDownloadButton(StreamResource image, int width){
         Button downloadButton = new Button();
         downloadButton.setIcon(VaadinIcons.DOWNLOAD);
+        downloadButton.setWidth((width-50) + "px");
+        downloadButton.addStyleNames("text-center", "slot-text-center");
 
         FileDownloader fileDownloader = new FileDownloader(image);
         fileDownloader.extend(downloadButton);

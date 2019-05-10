@@ -1,6 +1,7 @@
 package com.qrsynergy.ui.view.viewdocument.tabs;
 
 import com.qrsynergy.model.QR;
+import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.view.helper.ShowNotification;
@@ -12,21 +13,32 @@ import java.util.HashMap;
 
 public class EditPeopleRights {
 
-    VerticalLayout content;
-    QR qr;
-    HashMap<String, Boolean> editMap;
-    Grid<String> grid;
-
+    private VerticalLayout content;
+    private QR qr;
+    private HashMap<String, Boolean> editMap;
+    private Grid<String> grid;
+    private RightType rightType;
+    private User user;
     private final int maxRowCount = 6;
-    private final int initialGridWith = 530;
+    private final int initialGridWith;
 
 
     /**
      * Constructor
      * @param qr QR
      */
-    public EditPeopleRights(QR qr){
+    public EditPeopleRights(QR qr, RightType rightType, User user){
         this.qr = qr;
+        // VIEW right should not edit the document
+        this.rightType = rightType;
+        this.user = user;
+        if(rightType.equals(RightType.VIEW)){
+            // Don't have remove button, less size
+            initialGridWith = 430;
+        }
+        else{
+            initialGridWith = 530;
+        }
         // maps user rights, edit true, view false
         editMap = buildEditMap(qr);
     }
@@ -39,9 +51,24 @@ public class EditPeopleRights {
      */
     private HashMap<String, Boolean> buildEditMap(QR qr){
         HashMap<String, Boolean> map = new HashMap<>();
-        for(String email: qr.getE_info()){
-            map.put(email, true);
+        // User has edit rights
+        // He cannot remove/change his rights. Prevent changing by
+        // not adding him to the list
+        if(rightType.equals(RightType.EDIT)){
+            for(String email: qr.getE_info()){
+                // don't add the current user
+                if(email.equals(this.user.getEmail())){
+                    continue;
+                }
+                map.put(email, true);
+            }
         }
+        else{
+            for(String email: qr.getE_info()){
+                map.put(email, true);
+            }
+        }
+
         for(String email: qr.getV_info()){
             map.put(email, false);
         }
@@ -58,12 +85,17 @@ public class EditPeopleRights {
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.addStyleNames("text-center", "slot-text-center");
 
-        wrapper.addComponent(buildAddPeopleLayout());
-        wrapper.addComponent(buildGrid());
+
+        // Don't show add people component if the right type is view
+        if(!rightType.equals(RightType.VIEW))
+            wrapper.addComponent(buildAddPeopleLayout());
+
+        wrapper.addComponent(buildGrid(rightType));
 
         content.addComponent(wrapper);
         return content;
     }
+
 
     /**
      * Builds add people button and the textfield
@@ -109,9 +141,10 @@ public class EditPeopleRights {
 
     /**
      * Builds grid
+     * If the right type is VIEW, don't allow user to edit
      * @return grid
      */
-    private Component buildGrid(){
+    private Component buildGrid(RightType rightType){
         grid = new Grid<>(String.class);
 
         grid.setItems(editMap.keySet());
@@ -124,25 +157,49 @@ public class EditPeopleRights {
                 .setResizable(false)
                 .setSortable(true);
 
-        // build checkbox
-        grid.addComponentColumn(email -> buildRightCheckbox(email))
-                .setCaption("Can edit")
-                .setId("canedit")
-                .setWidth(100)
-                .setSortable(false)
-                .setResizable(false);
+        if(rightType.equals(RightType.VIEW)){
+            // build checkbox
+            grid.addComponentColumn(email -> buildRightCheckBoxWithoutEdit(email))
+                    .setCaption("Can edit")
+                    .setId("canedit")
+                    .setWidth(100)
+                    .setSortable(false)
+                    .setResizable(false);
+        }
+        else{
+            // build checkbox
+            grid.addComponentColumn(email -> buildRightCheckbox(email))
+                    .setCaption("Can edit")
+                    .setId("canedit")
+                    .setWidth(100)
+                    .setSortable(false)
+                    .setResizable(false);
 
-        grid.addComponentColumn(email -> buildRemoveEmailButton(email))
-                .setCaption("Remove")
-                .setId("remove")
-                .setWidth(100)
-                .setSortable(false)
-                .setResizable(false);
+            grid.addComponentColumn(email -> buildRemoveEmailButton(email))
+                    .setCaption("Remove")
+                    .setId("remove")
+                    .setWidth(100)
+                    .setSortable(false)
+                    .setResizable(false);
+        }
 
         grid.setWidth(initialGridWith, Sizeable.Unit.PIXELS);
         grid.setHeightByRows(maxRowCount);
         grid.addStyleName("slot-text-center");
         return grid;
+    }
+
+    /**
+     * This component is rendered when the user has view rights on the document
+     * User cannot change the rights of other users, only see those rights
+     * @param email email of the user
+     * @return check box component for each user
+     */
+    private Component buildRightCheckBoxWithoutEdit(String email){
+        CheckBox checkbox = new CheckBox();
+        checkbox.setValue(editMap.get(email));
+        checkbox.setReadOnly(true);
+        return checkbox;
     }
 
     /**

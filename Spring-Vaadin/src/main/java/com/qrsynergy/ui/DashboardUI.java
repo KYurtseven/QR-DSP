@@ -6,6 +6,8 @@ import com.google.common.eventbus.Subscribe;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.User;
 import com.qrsynergy.service.*;
+import com.qrsynergy.ui.event.DashboardEvent;
+import com.qrsynergy.ui.view.ExcelView;
 import com.qrsynergy.ui.view.SignUpView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -23,6 +25,10 @@ import com.qrsynergy.ui.event.DashboardEvent.UserLoggedOutEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.CompanyCreateRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserSignUpRequestedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.UserSignUpFinishedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.ExcelPageRequestedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.ExcelPreviousPageEvent;
+
 import com.qrsynergy.ui.view.LoginView;
 import com.qrsynergy.ui.view.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +134,10 @@ public final class DashboardUI extends UI {
         addStyleName("loginview");
     }
 
+    @Subscribe
+    public void userSignUpFinished(final UserSignUpFinishedEvent event){
+        updateContent();
+    }
 
     /**
      * Saves company to the database
@@ -160,6 +170,23 @@ public final class DashboardUI extends UI {
         for (Window window : getWindows()) {
             window.close();
         }
+    }
+
+    /**
+     * When the excel UI wants to be opened
+     * initialize the view
+     * @param event
+     */
+    @Subscribe
+    public void excelPageRequested(final ExcelPageRequestedEvent event){
+        User user = (User) VaadinSession.getCurrent()
+                .getAttribute(User.class.getName());
+        setContent(new ExcelView(event.getUrl(), user));
+    }
+
+    @Subscribe
+    public void excelPreviousPage(final ExcelPreviousPageEvent event){
+        updateContent();
     }
 
     /**
