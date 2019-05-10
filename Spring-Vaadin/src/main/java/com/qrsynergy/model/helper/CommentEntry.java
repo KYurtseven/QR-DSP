@@ -1,5 +1,7 @@
 package com.qrsynergy.model.helper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CommentEntry {
@@ -26,6 +28,17 @@ public class CommentEntry {
      * @return
      */
     public Date getDate() {
+        return date;
+    }
+
+    /**
+     *
+     * @return date in dd-MM-yyyy format
+     */
+    public String getDateInDDMMYYYY(){
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(this.date);
         return date;
     }
 
