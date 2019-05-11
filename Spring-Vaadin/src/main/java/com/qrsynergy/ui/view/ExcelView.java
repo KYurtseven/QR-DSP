@@ -4,13 +4,17 @@ import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.CommentEntry;
+import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
+import com.qrsynergy.ui.view.helper.ShowNotification;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.addon.spreadsheet.Spreadsheet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.vaadin.sliderpanel.SliderPanel;
 import org.vaadin.sliderpanel.SliderPanelBuilder;
@@ -22,9 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-// TODO
-// Is this necessary?
-@Theme("mytheme")
 public class ExcelView extends HorizontalLayout {
 
     private String url;
@@ -35,6 +36,8 @@ public class ExcelView extends HorizontalLayout {
     private SliderPanel rightSlider;
     private TextArea textArea;
     private HorizontalLayout root ;
+    private VerticalLayout commentBlockLayout;
+    private RightType rightType;
 
     public ExcelView(String url, User user){
         setSizeFull();
@@ -47,10 +50,25 @@ public class ExcelView extends HorizontalLayout {
         // fetch qr from the database
         this.qr = ((DashboardUI) UI.getCurrent()).qrService.findQRByUrl(url);
         this.comment = ((DashboardUI) UI.getCurrent()).commentService.findComment(qr.getUrl());
+
+        rightType = qr.findUsersRightInQR(user.getEmail());
+
+        if(rightType.equals(RightType.NONE)){
+            // show notification
+            // return to the previous page
+            ShowNotification.showWarningNotification("You cannot see this document");
+            DashboardEventBus.post(new DashboardEvent.ExcelPreviousPageEvent());
+            return;
+        }
+
         addComponent(buildLayout());
 
     }
 
+    /**
+     * Builds layout containing buttons, excel and slider
+     * @return
+     */
     private Component buildLayout(){
         root = new HorizontalLayout();
         root.setSizeFull();
@@ -76,23 +94,32 @@ public class ExcelView extends HorizontalLayout {
 
 
     /**
-     * Builds return and save buttons
-     * TODO
-     * Don't render save button if the user has view rights
+     * Builds return to the previous page and save document buttons
      * @return layout containing buttons
      */
     private Component buildReturnAndSave(){
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSizeFull();
-        layout.addComponents(returnToMainView(),saveExcelButton());
+
+        // check whether the user has view rights?
+        if(rightType.equals(RightType.OWNER) || rightType.equals(RightType.EDIT)){
+            layout.addComponents(returnToMainView(),saveExcelButton());
+        }
+        else if(rightType.equals(RightType.VIEW) || rightType.equals(RightType.PUBLIC)){
+            layout.addComponents(returnToMainView());
+        }
         return layout;
     }
 
 
-    private void initSlider()
-    {
+    /**
+     * Inits slider and builds a text area for adding
+     * a new comment.
+     *
+     */
+    private void initSlider(){
         VerticalLayout sliderVerticalLayout = new VerticalLayout();
-
+        sliderVerticalLayout.setId("slider-layout");
         rightSlider = new SliderPanelBuilder(sliderVerticalLayout)
                 .expanded(false)
                 .mode(SliderMode.RIGHT)
@@ -116,17 +143,71 @@ public class ExcelView extends HorizontalLayout {
                     CommentEntry newEntry = new CommentEntry(user.getFullName(),
                             new Date(),
                             textArea.getValue());
-                     ((DashboardUI) UI.getCurrent()).commentService.addCommentEntry(comment, newEntry);
 
+                    ((DashboardUI) UI.getCurrent()).commentService.addCommentEntry(comment, newEntry);
+
+                    textArea.clear();
+                    commentBlockLayout.addComponent(buildCommentRow(newEntry));
                  }
             }
         });
+        sliderVerticalLayout.addStyleName("padding-left-and-right-10");
         sliderVerticalLayout.addComponents(buildPreviousComments(), textArea, submit);
-
     }
 
-    private Component buildCommentRow(){
-        return null;
+    /**
+     * For each comment entry, build a row
+     * @param commentEntry a single comment to be rendered
+     * @return component containing single comment and details
+     */
+    private Component buildCommentRow(CommentEntry commentEntry){
+        CssLayout row = new CssLayout();
+        row.addStyleName("new_comment");
+
+            CssLayout userComment = new CssLayout();
+            userComment.addStyleName("user-comment");
+
+                Image image = new Image("",
+                        new ThemeResource("img/profile-pic-300px.jpg"));
+                image.addStyleName("user_avatar");
+
+            userComment.addComponent(image);
+
+                CssLayout commentBody = new CssLayout();
+                commentBody.addStyleName("comment_body");
+                    Label commentLabel = new Label(commentEntry.getMessage());
+                    commentLabel.addStyleName("label-word-break");
+                commentBody.addComponent(commentLabel);
+
+                CssLayout commentToolbar = new CssLayout();
+                commentToolbar.addStyleName("comment_toolbar");
+
+                    CssLayout commentDetails = new CssLayout();
+                    commentDetails.addStyleName("comment_details");
+
+                        Label timeLabel1 = new Label(VaadinIcons.CLOCK.getHtml()
+                                + commentEntry.getTime(), ContentMode.HTML);
+                        Label timeLabel2 = new Label(VaadinIcons.CALENDAR.getHtml()
+                                + commentEntry.getDateInDDMMYYYY(), ContentMode.HTML);
+
+                        Label senderLabel = new Label(VaadinIcons.USER.getHtml()
+                                + commentEntry.getSenderCamelCase(), ContentMode.HTML);
+
+                        timeLabel1.addStyleName("clock-and-time");
+                        timeLabel2.addStyleName("clock-and-time");
+                        senderLabel.addStyleName("clock-and-time");
+                        commentDetails.addComponents(
+                                timeLabel1,
+                                timeLabel2,
+                                senderLabel
+                        );
+
+                commentToolbar.addComponent(commentDetails);
+
+            userComment.addComponents(commentBody, commentDetails);
+
+        row.addComponent(userComment);
+        return row;
     }
 
     /**
@@ -135,20 +216,17 @@ public class ExcelView extends HorizontalLayout {
      */
     private Component buildPreviousComments(){
 
-        VerticalLayout layout = new VerticalLayout();
+        commentBlockLayout = new VerticalLayout();
+        commentBlockLayout.addStyleName("comment_block");
         for(CommentEntry commentEntry: comment.getCommentEntries()){
-            VerticalLayout row = new VerticalLayout();
-            Label senderName = new Label(commentEntry.getSender());
-
-            Label sendDate = new Label(commentEntry.getDateInDDMMYYYY());
-            Label message = new Label(commentEntry.getMessage());
-            row.addComponents(senderName, sendDate, message);
-
-            layout.addComponent(row);
+            commentBlockLayout.addComponent(buildCommentRow(commentEntry));
         }
-        return layout;
+        return commentBlockLayout;
     }
 
+    /**
+     * Loads excel file to the spreadsheet component
+     */
     private void initSpreadsheet() {
         File sampleFile = new File(UploadAndAddPeople.uploadLocation + qr.getUrl() + ".xlsx");
         try {
@@ -163,8 +241,7 @@ public class ExcelView extends HorizontalLayout {
      * @return button that saves excel to the disk
      */
     private Component saveExcelButton(){
-        Button saveButton = new Button();
-        saveButton.setIcon(VaadinIcons.CLOUD_UPLOAD);
+        Button saveButton = new Button("Save");
         // TODO
         return saveButton;
     }
@@ -174,7 +251,7 @@ public class ExcelView extends HorizontalLayout {
      * @return button for returning to the main view
      */
     private Component returnToMainView(){
-        Button button = new Button();
+        Button button = new Button("Previous Page");
         button.setIcon(VaadinIcons.BACKSPACE);
 
         button.addClickListener(new Button.ClickListener() {

@@ -44,6 +44,7 @@ public class Comment {
     }
 
 
+
     /**
      * adds new comment entity to list
      * @param commentEntry

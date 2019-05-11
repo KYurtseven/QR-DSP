@@ -1,0 +1,159 @@
+// If you edit this file you need to compile the theme. See README.md for details.
+
+// Global variable overrides. Must be declared before importing Valo.
+
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/docs/v8/framework/articles/ValoExamples.html
+
+$LATO: 'Lato', sans-serif;
+
+$GREY: #CCC;
+$BACKGROUND_GREY: lighten(#EEEDED, 2.5%);
+$SUBTLE_GREY: #F2F2F2;
+$MURKY_GREY: #384148;
+$DARK_GREY: #333;
+
+$WHITE: #FFF;
+$SUBTLE_WHITE: #F9F9F9;
+
+$BLUE: #6495ED;
+$RED: #FF6347;
+
+@mixin comment {
+
+  // Insert your own theme rules here
+  .user_avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+  }
+
+  .label-word-break{
+    word-break: break-word;
+    width: 175px;
+    white-space: unset;
+  }
+
+  .padding-left-and-right-10{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .clock-and-time{
+    font-size: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+    color: silver;
+  }
+
+  .comment_block {
+    width: 65%;
+    height: 100%;
+
+    margin: 0 auto;
+    padding: 10px;
+
+    .new_comment {
+      width: 100%;
+      height: auto;
+      padding: 20px 1;
+      border-bottom: 1px solid lighten($GREY, 10%);
+
+      .user_comment {
+        list-style-type: none;
+      }
+
+      .comment_body {
+        display: inline-block;
+        vertical-align: middle;
+
+        width: calc(100% - 75px);
+        min-height: 15px;
+        margin-left: 10px;
+        padding: 5px 10px;
+        font-size: .9rem;
+        word-break: break-word;
+
+      }
+
+      .comment_toolbar {
+        width: 100%;
+
+        ul {
+          list-style-type: none;
+          padding-left: 75px;
+          font-size: 0;
+
+          li {
+            display: inline-block;
+            padding: 5px;
+            font-size: .7rem;
+            color: lighten($GREY, 5%);
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+
+        .comment_details {
+          display: inline-block;
+          vertical-align: middle;
+          width: 70%;
+          text-align: left;
+        }
+
+        .comment_tools {
+          display: inline-block;
+          vertical-align: middle;
+          width: 30%;
+          text-align: right;
+          li {
+            &:hover {
+              color: $GREY;
+            }
+          }
+        }
+
+        // replies
+
+      }
+
+      .user {
+        &:hover {
+          color: $BLUE;
+          text-decoration: underline;
+        }
+      }
+
+      .love {
+        &:hover {
+          color: $RED;
+        }
+      }
+    }
+  }
+}
