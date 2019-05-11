@@ -3,6 +3,7 @@ package com.qrsynergy.model.helper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 
 public class CommentEntry {
 
@@ -12,6 +13,10 @@ public class CommentEntry {
 
     private String message;
 
+
+    private static final String pattern_dd_MM_yyyy = "dd-MM-yyyy";
+
+    private static final String pattern_HH_mm = "HH:mm";
     /**
      * Constructor
      * @param sender email of the sender
@@ -36,8 +41,18 @@ public class CommentEntry {
      * @return date in dd-MM-yyyy format
      */
     public String getDateInDDMMYYYY(){
-        String pattern = "dd-MM-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern_dd_MM_yyyy);
+        String date = simpleDateFormat.format(this.date);
+        return date;
+    }
+
+
+    /**
+     *
+     * @return time of the date
+     */
+    public String getTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern_HH_mm);
         String date = simpleDateFormat.format(this.date);
         return date;
     }
@@ -58,6 +73,13 @@ public class CommentEntry {
         return sender;
     }
 
+    /**
+     *
+     * @return sender in camel case
+     */
+    public String getSenderCamelCase(){
+        return StringUtils.capitalize(sender);
+    }
     /**
      * Sets email of the sender
      * @param sender

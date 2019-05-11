@@ -1,6 +1,7 @@
 package com.qrsynergy.model;
 
 import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.ui.view.sharedocument.infos.FileInfo;
 import org.bson.types.ObjectId;
@@ -368,5 +369,43 @@ public class QR {
         }
         v_info.add(toBeAddedEmail);
     }
+
+    /**
+     * Finds user's right in this qr
+     * @param userEmail email of the user
+     */
+    public RightType findUsersRightInQR(String userEmail){
+        if(o_info.equals(userEmail)){
+            return RightType.OWNER;
+        }
+
+        for(String email: e_info){
+            if(email.equals(userEmail)){
+                return RightType.EDIT;
+            }
+        }
+        for(String email: v_info){
+            if(email.equals(userEmail)){
+                return RightType.VIEW;
+            }
+        }
+
+        String emailExtension = userEmail.substring(userEmail.lastIndexOf("@") + 1);
+        for(String companyMailExtension: e_company){
+            if(companyMailExtension.equals(emailExtension)){
+                return RightType.EDIT;
+            }
+        }
+        for(String companyMailExtension: v_company){
+            if(companyMailExtension.equals(emailExtension)){
+                return RightType.VIEW;
+            }
+        }
+        if(isPublic){
+                return RightType.PUBLIC;
+        }
+        return RightType.NONE;
+    }
+
 
 }

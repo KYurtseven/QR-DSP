@@ -15915,3 +15915,104 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .padding-top-0 {
 	padding-top: 0px;
 }
+
+.dashboard .user_avatar {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+
+.dashboard .label-word-break {
+	word-break: break-word;
+	width: 175px;
+	white-space: unset;
+}
+
+.dashboard .padding-left-and-right-10 {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.dashboard .clock-and-time {
+	font-size: 10px;
+	margin-top: 10px;
+	margin-right: 5px;
+	color: silver;
+}
+
+.dashboard .comment_block {
+	width: 65%;
+	height: 100%;
+	margin: 0 auto;
+	padding: 10px;
+}
+
+.dashboard .comment_block .new_comment {
+	width: 100%;
+	height: auto;
+	padding: 20px 1;
+	border-bottom: 1px solid #e6e6e6;
+}
+
+.dashboard .comment_block .new_comment .user_comment {
+	list-style-type: none;
+}
+
+.dashboard .comment_block .new_comment .comment_body {
+	display: inline-block;
+	vertical-align: middle;
+	width: calc(100% - 75px);
+	min-height: 15px;
+	margin-left: 10px;
+	padding: 5px 10px;
+	font-size: 0.9rem;
+	word-break: break-word;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar {
+	width: 100%;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar ul {
+	list-style-type: none;
+	padding-left: 75px;
+	font-size: 0;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar ul li {
+	display: inline-block;
+	padding: 5px;
+	font-size: 0.7rem;
+	color: #d9d9d9;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar ul li:hover {
+	cursor: pointer;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar .comment_details {
+	display: inline-block;
+	vertical-align: middle;
+	width: 70%;
+	text-align: left;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar .comment_tools {
+	display: inline-block;
+	vertical-align: middle;
+	width: 30%;
+	text-align: right;
+}
+
+.dashboard .comment_block .new_comment .comment_toolbar .comment_tools li:hover {
+	color: #CCC;
+}
+
+.dashboard .comment_block .new_comment .user:hover {
+	color: #6495ED;
+	text-decoration: underline;
+}
+
+.dashboard .comment_block .new_comment .love:hover {
+	color: #FF6347;
+}

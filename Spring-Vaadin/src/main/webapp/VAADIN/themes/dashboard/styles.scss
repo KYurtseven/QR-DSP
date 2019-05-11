@@ -2,10 +2,12 @@
 @import "addons.scss";
 @import "dashboard";
 @import "viewdocument";
+@import "comment";
 
 .dashboard {
   // Output the actual theme selectors
   @include addons;
   @include dashboard;
   @include viewdocument;
+  @include comment;
 }
