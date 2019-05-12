@@ -1,11 +1,11 @@
 package com.qrsynergy.ui.view.helper.qrgenerator;
 
-import ch.qos.logback.core.CoreConstants;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.qrsynergy.ProductionMode;
 import com.qrsynergy.model.QR;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FileDownloader;
@@ -15,7 +15,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.themes.ValoTheme;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,20 +26,12 @@ import java.io.InputStream;
  */
 public class QRGenerator {
 
+    // TODO, change in demo
     public static final ProductionMode productionMode = ProductionMode.LOCAL;
 
-
     public static String getQRViewApiUrl(){
-        if(productionMode.equals(ProductionMode.LOCAL)){
-            return "http:localhost:8080/api/qr/view/";
-        }
-        else if(productionMode.equals(ProductionMode.PRODUCTION)){
-            return "TODO HERE";
-        }
-        else{
-            // TEST
-            return "TODO2 here";
-        }
+        // example: http:localhost:8080/
+        return productionMode.getRoot() + "api/qr/view/";
     }
 
     /**
