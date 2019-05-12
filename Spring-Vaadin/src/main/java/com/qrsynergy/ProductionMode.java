@@ -6,7 +6,7 @@ package com.qrsynergy;
  */
 public enum ProductionMode {
     PRODUCTION("TODO2"),
-    TEST("TODO1"),
+    TEST("142.93.230.142:8080/"),
     LOCAL("http:localhost:8080/");
 
     private final String root;

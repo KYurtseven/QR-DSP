@@ -1,5 +1,6 @@
 package com.qrsynergy.controller;
 
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.controller.helper.FailureMessage;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
@@ -93,7 +94,7 @@ public class QRController {
      */
     private ResponseEntity getCSV(QR qr) throws Exception{
         // csv path
-        String fullFileName = UploadAndAddPeople.uploadLocation + qr.getUrl() + ".csv";
+        String fullFileName = GlobalSettings.getUploadLocation() + qr.getUrl() + ".csv";
         String fileName = qr.getUrl() + ".csv";
 
         ResponseEntity responseEntity = null;

@@ -1,5 +1,6 @@
 package com.qrsynergy.ui.view;
 
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
@@ -228,7 +229,7 @@ public class ExcelView extends HorizontalLayout {
      * Loads excel file to the spreadsheet component
      */
     private void initSpreadsheet() {
-        File sampleFile = new File(UploadAndAddPeople.uploadLocation + qr.getUrl() + ".xlsx");
+        File sampleFile = new File(GlobalSettings.getUploadLocation() + qr.getUrl() + ".xlsx");
         try {
             spreadsheet = new Spreadsheet(sampleFile);
         } catch (IOException e) {

@@ -5,7 +5,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.qrsynergy.ProductionMode;
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.model.QR;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FileDownloader;
@@ -26,12 +26,10 @@ import java.io.InputStream;
  */
 public class QRGenerator {
 
-    // TODO, change in demo
-    public static final ProductionMode productionMode = ProductionMode.LOCAL;
-
     public static String getQRViewApiUrl(){
         // example: http:localhost:8080/
-        return productionMode.getRoot() + "api/qr/view/";
+        // example: 142.93.230.142:8080/
+        return GlobalSettings.getCurrentProductionMode().getRoot() + "api/qr/view/";
     }
 
     /**
