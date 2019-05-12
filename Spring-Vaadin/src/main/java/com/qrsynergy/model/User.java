@@ -54,6 +54,23 @@ public class User {
     }
 
     /**
+     * Checks the entered password and user's hashed password's equality
+     * @return
+     */
+    public boolean isCorrectPassword(String enteredPassword){
+        // hash entered password with stored salt
+        byte[] hashedAndSaltedUserPassword = Password.hashPassword(
+                enteredPassword.toCharArray(),
+                Password.stringToByte(this.salt));
+
+        // compare hashed password with calculated password
+        if(Password.bytetoString(hashedAndSaltedUserPassword).equals(this.password)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      *
      * @return Mongo db document id
      */

@@ -9,6 +9,7 @@ import com.qrsynergy.service.*;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.view.ExcelView;
 import com.qrsynergy.ui.view.SignUpView;
+import com.qrsynergy.ui.view.helper.ShowNotification;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -105,27 +106,25 @@ public final class DashboardUI extends UI {
      */
     @Subscribe
     public void userLoginRequested(final UserLoginRequestedEvent event) {
-        // TODO
-        // Implement error message when the email or password is not correct
+        /*
+            Local case for speeding up
 
-        // TODO
-        // For speeding up the test, user validation is bypassed
-        // remove it
         User user = userService.findByEmail("koray.can.yurtseven@ford.com");
 
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
-        /*
+         */
+
         User user = userService.findByEmail(event.getEmail());
         if(user != null){
-            // TODO
-            // check hashed values for comparison
-            if(user.getPassword().equals(event.getPassword())){
+            if(user.isCorrectPassword(event.getPassword())){
                 VaadinSession.getCurrent().setAttribute(User.class.getName(),user);
                 updateContent();
             }
         }
-        */
+        else{
+            ShowNotification.showNotification("Please enter correct credentials");
+        }
     }
 
     @Subscribe

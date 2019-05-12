@@ -35,9 +35,7 @@ import java.util.logging.Logger;
  */
 public class UploadAndAddPeople implements WizardStep {
 
-    // TODO
-
-    public static final String uploadLocation = "D:\\QRDSP\\github\\Spring-Vaadin\\FILES\\";
+    public static final String uploadLocation = System.getProperty("user.dir") + "\\FILES\\";
     private UploadFinishedHandler uploadFinishedHandler;
     private UploadStateWindow uploadStateWindow = new UploadStateWindow();
     private static final int FILE_COUNT = 1;
