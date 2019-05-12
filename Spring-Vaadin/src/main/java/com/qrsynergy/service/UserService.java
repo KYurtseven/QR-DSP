@@ -126,14 +126,18 @@ public class UserService {
      */
     private boolean checkEmailNamePassword(UserDTO userDTO){
 
-        if(EmailValidator.getInstance().isValid(userDTO.getEmail())){
-            if(userDTO.getFullName().length() < 3 ||
-                    userDTO.getPassword().length() < 5){
-                return false;
+        try{
+            if(EmailValidator.getInstance().isValid(userDTO.getEmail())){
+                if(userDTO.getFullName().length() < 3 ||
+                        userDTO.getPassword().length() < 5){
+                    return false;
+                }
             }
+            return true;
         }
-
-        return true;
+        catch(Exception e){
+            return false;
+        }
     }
 
     /**
