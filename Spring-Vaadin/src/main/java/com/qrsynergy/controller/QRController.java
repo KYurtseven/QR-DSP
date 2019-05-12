@@ -20,6 +20,7 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/api/qr")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QRController {
 
     @Autowired
