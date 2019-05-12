@@ -121,6 +121,7 @@ public final class DashboardUI extends UI {
                 VaadinSession.getCurrent().setAttribute(User.class.getName(),user);
                 updateContent();
             }
+            ShowNotification.showNotification("Please enter correct credentials");
         }
         else{
             ShowNotification.showNotification("Please enter correct credentials");

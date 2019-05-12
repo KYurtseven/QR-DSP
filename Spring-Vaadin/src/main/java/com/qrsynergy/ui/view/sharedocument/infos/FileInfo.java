@@ -1,5 +1,6 @@
 package com.qrsynergy.ui.view.sharedocument.infos;
 
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.model.helper.DocumentType;
 import com.qrsynergy.ui.view.sharedocument.DataConvertionUtil;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
@@ -36,7 +37,7 @@ public class FileInfo {
      * @throws IOException
      */
     public void writeByteToFile() throws IOException,Exception {
-        File targetFile = new File(UploadAndAddPeople.uploadLocation + this.diskName);
+        File targetFile = new File(GlobalSettings.getUploadLocation()+ this.diskName);
 
         FileUtils.writeByteArrayToFile(
                 targetFile,
@@ -55,8 +56,8 @@ public class FileInfo {
     public void writeByteToCSV() throws Exception{
 
         DataConvertionUtil.excelToCSV(
-                UploadAndAddPeople.uploadLocation + this.diskName,
-                UploadAndAddPeople.uploadLocation + this.url + ".csv"
+                GlobalSettings.getUploadLocation() + this.diskName,
+                GlobalSettings.getUploadLocation() + this.url + ".csv"
         );
     }
 

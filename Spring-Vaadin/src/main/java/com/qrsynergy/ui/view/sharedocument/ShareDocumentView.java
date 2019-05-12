@@ -1,5 +1,6 @@
 package com.qrsynergy.ui.view.sharedocument;
 
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
@@ -316,7 +317,7 @@ public final class ShareDocumentView extends Panel implements View{
             if(fileInfo != null){
                 if(fileInfo.getUrl() != null){
                     // delete the file on the disk
-                    File toBeDeletedFile = new File(UploadAndAddPeople.uploadLocation + fileInfo.getDiskName());
+                    File toBeDeletedFile = new File(GlobalSettings.getUploadLocation() + fileInfo.getDiskName());
                     toBeDeletedFile.delete();
                 }
             }
