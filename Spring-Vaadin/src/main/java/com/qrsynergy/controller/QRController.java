@@ -5,6 +5,7 @@ import com.qrsynergy.controller.helper.FailureMessage;
 import com.qrsynergy.model.QR;
 import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.DocumentType;
+import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.service.QRService;
 import com.qrsynergy.service.UserService;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
@@ -126,44 +127,12 @@ public class QRController {
      * @return true if the user can access this document
      */
     private boolean checkAccessRights(QR qr, String email){
-        // check whether this is the owner
-        if(qr.getO_info().equals(email)){
-            // owner access
-            return true;
-        }
-        for(String mail: qr.getE_info()){
-            if(mail.equals(email)){
-                // edit access
-                return true;
-            }
-        }
-        for(String mail: qr.getV_info()){
-            if(mail.equals(email)){
-                // view access
-                return true;
-            }
-        }
 
-        // If the user's company can view/edit this document, show it
-        User user = userService.findByEmail(email);
-        if(user != null){
-            for(String companyMail: qr.getE_company()){
-                if(companyMail.equals(user.getEmailExtension())){
-                    return true;
-                }
-            }
-            for(String companyMail: qr.getV_company()){
-                if(companyMail.equals(user.getEmailExtension())){
-                    return true;
-                }
-            }
-        }
-        // Last chance, public
-        if(qr.getPublic()){
-            // public access
+        RightType rightType = qr.findUsersRightInQR(email);
+
+        if(rightType.equals(RightType.NONE))
+            return false;
+        else
             return true;
-        }
-        // You cannot see this document
-        return false;
     }
 }
