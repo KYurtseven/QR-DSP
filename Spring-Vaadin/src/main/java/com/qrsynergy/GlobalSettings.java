@@ -20,4 +20,12 @@ public class GlobalSettings {
     public static String getUploadLocation(){
         return System.getProperty("user.dir") + "\\FILES\\";
     }
+
+    /**
+     *
+     * @return location for storing excels in the temp directory
+     */
+    public static String getTempLocation(){
+        return System.getProperty("user.dir") + "\\TEMP\\";
+    }
 }

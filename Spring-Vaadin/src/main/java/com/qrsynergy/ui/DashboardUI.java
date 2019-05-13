@@ -106,14 +106,14 @@ public final class DashboardUI extends UI {
      */
     @Subscribe
     public void userLoginRequested(final UserLoginRequestedEvent event) {
-        /*
-            Local case for speeding up
+/*
+        //Local case for speeding up
 
         User user = userService.findByEmail("koray.can.yurtseven@ford.com");
 
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
-         */
+*/
 
         User user = userService.findByEmail(event.getEmail());
         if(user != null){
@@ -126,6 +126,7 @@ public final class DashboardUI extends UI {
         else{
             ShowNotification.showNotification("Please enter correct credentials");
         }
+
     }
 
     @Subscribe

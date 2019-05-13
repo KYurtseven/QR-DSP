@@ -1,5 +1,7 @@
 package com.qrsynergy.controller.helper;
 
+import com.qrsynergy.model.helper.RightType;
+
 /**
  * QR api response
  * TODO
@@ -10,7 +12,7 @@ public class QRResponse {
 
     private FailureMessage message;
 
-    private QRAccessType accessType;
+    private RightType rightType;
 
     // TODO
 
@@ -42,12 +44,11 @@ public class QRResponse {
         this.message = message;
     }
 
-    public QRAccessType getAccessType() {
-        return accessType;
+    public RightType getRightType() {
+        return rightType;
     }
 
-    public void setAccessType(QRAccessType accessType) {
-        this.accessType = accessType;
+    public void setRightType(RightType rightType) {
+        this.rightType = rightType;
     }
-
 }

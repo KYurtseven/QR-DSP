@@ -10,6 +10,7 @@ import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.helper.ShowNotification;
+import com.qrsynergy.ui.view.sharedocument.DataConvertionUtil;
 import com.qrsynergy.ui.view.sharedocument.steps.UploadAndAddPeople;
 import com.vaadin.addon.spreadsheet.Spreadsheet;
 import com.vaadin.annotations.Theme;
@@ -17,6 +18,8 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.vaadin.sliderpanel.SliderPanel;
 import org.vaadin.sliderpanel.SliderPanelBuilder;
 import org.vaadin.sliderpanel.SliderPanelStyles;
@@ -24,6 +27,7 @@ import org.vaadin.sliderpanel.client.SliderMode;
 import org.vaadin.sliderpanel.client.SliderTabPosition;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -39,6 +43,7 @@ public class ExcelView extends HorizontalLayout {
     private HorizontalLayout root ;
     private VerticalLayout commentBlockLayout;
     private RightType rightType;
+
 
     public ExcelView(String url, User user){
         setSizeFull();
@@ -229,9 +234,22 @@ public class ExcelView extends HorizontalLayout {
      * Loads excel file to the spreadsheet component
      */
     private void initSpreadsheet() {
-        File sampleFile = new File(GlobalSettings.getUploadLocation() + qr.getUrl() + ".xlsx");
         try {
-            spreadsheet = new Spreadsheet(sampleFile);
+            // Copy the file to the temp directory
+            File originalFile = new File(GlobalSettings.getUploadLocation() + qr.getUrl() + ".xlsx");
+
+            File tempFile = new File(GlobalSettings.getTempLocation() + qr.getUrl() + "_" + user.getEmail() +  ".xlsx" );
+
+            FileUtils.copyFile(originalFile, tempFile);
+
+            spreadsheet = new Spreadsheet(tempFile);
+
+            // make view only if the user has no edit/owner rights
+            if(rightType.equals(RightType.VIEW) || rightType.equals(RightType.PUBLIC)){
+                spreadsheet.setReportStyle(true);
+                spreadsheet.setActiveSheetProtected("");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -244,6 +262,34 @@ public class ExcelView extends HorizontalLayout {
     private Component saveExcelButton(){
         Button saveButton = new Button("Save");
         // TODO
+        saveButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                try{
+                    File originalFile = new File(GlobalSettings.getUploadLocation() + qr.getUrl() + ".xlsx");
+                    FileOutputStream fos = null;
+                    Workbook workbook = spreadsheet.getWorkbook();
+                    fos = new FileOutputStream(originalFile);
+                    workbook.write(fos);
+                    fos.close();
+
+                    // save to the csv as well
+                    DataConvertionUtil.excelToCSV(
+                            GlobalSettings.getUploadLocation() + qr.getDiskName(),
+                            GlobalSettings.getUploadLocation() + qr.getUrl() + ".csv");
+
+                    /*
+                    originalFile.delete();
+
+                    spreadsheet.write(GlobalSettings.getUploadLocation() + qr.getUrl() + ".xlsx");
+                    */
+                    ShowNotification.showNotification("File is saved");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
         return saveButton;
     }
 
