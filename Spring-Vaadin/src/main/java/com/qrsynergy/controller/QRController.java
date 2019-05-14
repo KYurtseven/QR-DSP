@@ -114,7 +114,7 @@ public class QRController {
             return responseEntity;
         }
         else{
-           responseEntity = new ResponseEntity(FailureMessage.QR_FILE_NOT_FOUND, HttpStatus.OK);
+           responseEntity = new ResponseEntity(FailureMessage.QR_FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
             return responseEntity;
         }
     }
