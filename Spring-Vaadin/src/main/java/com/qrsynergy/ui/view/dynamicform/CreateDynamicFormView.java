@@ -80,21 +80,13 @@ public class CreateDynamicFormView extends Panel implements View {
         String imageJson = "{\r\n    \"label\": \"Carburetor Images\",\r\n    \"image_urls\": [\r\n      \"https://images-na.ssl-images-amazon.com/images/I/81MMZQdS9xL._SL1500_.jpg\",\r\n      \"https://images-na.ssl-images-amazon.com/images/I/71d9HebQx1L._SL1500_.jpg\",\r\n      \"https://images-na.ssl-images-amazon.com/images/I/911oxThpSNL._SL1500_.jpg\"\r\n    ],\r\n    \"labels\": [\"Carb 2100\", \"Edelbrock 1405\", \"Holley 0-80457sa\"]\r\n  }";
 
         form.editable = true;
-        // CheckboxPart checkboxPart = new CheckboxPart("Piston parts");
-        // checkboxPart.Add("R545", true);
-        // checkboxPart.Add("Hybrid S99", false);
-        // checkboxPart.Add("F20 G-84", true);
-        // checkboxPart.AddToView(this);
+
         CheckboxPart checkboxPart = new CheckboxPart("Dummy", form);
         try {
             checkboxPart = new CheckboxPart((JSONObject) parser.parse(checkboxJson), form);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        // CheckboxPart checkboxPart = new
-        // CheckboxPart((JSONObject)JSONParser.parseJSON(checkboxJson));
-
 
         RadioButtonPart radioButtonPart = new RadioButtonPart("Dummy",form);
         try {
@@ -125,18 +117,11 @@ public class CreateDynamicFormView extends Panel implements View {
             e.printStackTrace();
         }
 
-        // TextPart jsonPart = new TextPart("Converted JSONs");
-        // jsonPart.Add(imagePart.ToJson());
-        // jsonPart.AddToView(form);
-
         form.AddFormPart(checkboxPart);
         form.AddFormPart(radioButtonPart);
         form.AddFormPart(listPart);
         form.AddFormPart(textPart);
         form.AddFormPart(imagePart);
-
-
-
 
         formLayout.addComponents(
                 buildButtons("Add checkbox", DynamicComponentType.CHECKBOX),
