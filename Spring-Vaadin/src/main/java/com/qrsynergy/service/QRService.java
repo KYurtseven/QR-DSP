@@ -2,12 +2,15 @@ package com.qrsynergy.service;
 
 import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
+import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
 import com.qrsynergy.repository.CommentRepository;
 import com.qrsynergy.repository.QRRepository;
 import com.qrsynergy.repository.UserQRRepository;
+import com.qrsynergy.ui.DashboardUI;
+import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -97,6 +100,80 @@ public class QRService {
             newUserQR.appendToV_docs(userDocument);
         }
         return newUserQR;
+    }
+
+    /**
+     * Changes qr name to the new name
+     * @param qr qr
+     * @param newName new name containing both the name and extension with delimeter "."
+     *                ex: deneme.xlsx
+     * @return true on success, false on error
+     */
+    public boolean changeQRName(QR qr, String newName){
+
+        try{
+            qr.setOriginalName(newName);
+            qrRepository.save(qr);
+            // change from owner's UserQR
+            UserQR ownerUserQR = userQRService.getUserQrByEmail(qr.getO_info());
+            for(UserDocument userDocument: ownerUserQR.getO_docs()){
+                if(userDocument.getUrl().equals(qr.getUrl())){
+                    // change the name
+                    userDocument.setName(newName);
+                    // save it
+                    userQRService.saveUserQR(ownerUserQR);
+                    // to continue changing other user's UserQR
+                    break;
+                }
+            }
+            // Change from other user's UserQR too
+            for(String email: qr.getV_info()){
+                changeQRNameInUserQR(qr, newName, email, RightType.VIEW);
+            }
+            for(String email: qr.getE_info()){
+                changeQRNameInUserQR(qr, newName, email, RightType.EDIT);
+            }
+            return true;
+        }
+        catch(Error e){
+            System.out.println("Error during changeQR name: " + e);
+            return false;
+        }
+    }
+
+    /**
+     * Since we are storing name of the files in UserQR too for speeding up the
+     * info retrieval of ViewDocument page, we need to update every user's UserQR document
+     * accordingly.
+     * @param qr qr
+     * @param newName new file name, including extension and delimeter "."
+     * @param userEmail userEmail to find correct UserQR
+     * @param rightType view or edit
+     */
+    private void changeQRNameInUserQR(QR qr, String newName, String userEmail, RightType rightType){
+        UserQR userQR = userQRService.getUserQrByEmail(userEmail);
+        // find the UserDocument in View list
+        if(rightType.equals(RightType.VIEW)){
+            for(UserDocument userDocument: userQR.getV_docs()){
+                if(userDocument.getUrl().equals(qr.getUrl())){
+                    // this is the document to be changed
+                    userDocument.setName(newName);
+                    userQRService.saveUserQR(userQR);
+                    return;
+                }
+            }
+        }
+        // find the UserDocument in Edit list
+        if(rightType.equals(RightType.EDIT)){
+            for(UserDocument userDocument: userQR.getE_docs()){
+                if(userDocument.getUrl().equals(qr.getUrl())){
+                    // this is the document to be changed
+                    userDocument.setName(newName);
+                    userQRService.saveUserQR(userQR);
+                    return;
+                }
+            }
+        }
     }
 
     /**
