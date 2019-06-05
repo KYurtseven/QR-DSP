@@ -15900,6 +15900,10 @@ div.v-layout.v-horizontal.v-widget {
 	margin-top: 25px;
 }
 
+.dashboard .margin-top-15 {
+	margin-top: 15px;
+}
+
 .dashboard .text-center .v-customcomponent {
 	text-align: center;
 }

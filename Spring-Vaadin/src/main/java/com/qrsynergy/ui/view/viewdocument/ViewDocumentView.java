@@ -11,6 +11,7 @@ import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.event.DashboardEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.viewdocument.tabs.Details;
+import com.qrsynergy.ui.view.viewdocument.tabs.EditCompanyRights;
 import com.qrsynergy.ui.view.viewdocument.tabs.EditPeopleRights;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -205,6 +206,10 @@ public final class ViewDocumentView extends Panel implements  View{
 
                 EditPeopleRights editPeopleRights = new EditPeopleRights(qr, rightType, user);
                 tabSheet.addTab(editPeopleRights.getContent(), "People");
+
+                EditCompanyRights editCompanyRights = new EditCompanyRights(qr, rightType);
+                tabSheet.addTab(editCompanyRights.getContent(), "Company");
+
                 // open modal
                 window.setContent(layout);
                 getUI().addWindow(window);

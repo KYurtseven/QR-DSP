@@ -370,6 +370,38 @@ public class QR {
         v_info.add(toBeAddedEmail);
     }
 
+
+    /**
+     * Add company email extension to the edit company list
+     * does not append if the email extension already exists
+     * @param companyEmailExtension
+     */
+    public void appendToE_company(String companyEmailExtension){
+        for(String email: this.e_company){
+            if(email.equals(companyEmailExtension)){
+                // already exists somehow
+                return;
+            }
+        }
+        e_company.add(companyEmailExtension);
+    }
+
+    /**
+     * Add company email extension to the view company list
+     * does not append if the email extension already exists
+     * @param companyEmailExtension
+     */
+    public void appendToV_company(String companyEmailExtension){
+        for(String emailExtension: this.v_company){
+            if(emailExtension.equals(companyEmailExtension)){
+                // already exists
+                return;
+            }
+        }
+        v_company.add(companyEmailExtension);
+    }
+
+
     /**
      * Finds user's right in this qr
      * @param userEmail email of the user

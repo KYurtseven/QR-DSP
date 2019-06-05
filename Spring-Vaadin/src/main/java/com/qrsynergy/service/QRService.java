@@ -2,19 +2,13 @@ package com.qrsynergy.service;
 
 import com.qrsynergy.model.Comment;
 import com.qrsynergy.model.QR;
-import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.model.helper.UserDocument;
 import com.qrsynergy.model.UserQR;
-import com.qrsynergy.repository.CommentRepository;
 import com.qrsynergy.repository.QRRepository;
-import com.qrsynergy.repository.UserQRRepository;
-import com.qrsynergy.ui.DashboardUI;
-import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +31,29 @@ public class QRService {
      * in addQRToUserQR method
      * @param qr
      */
-    public void publishQR(QR qr){
+    private void publishQRtoUserQR(QR qr){
         // save to the users
         addQRToUserQR(qr, qr.getV_info(), RightType.VIEW);
         addQRToUserQR(qr, qr.getE_info(), RightType.EDIT);
+    }
+
+
+    /**
+     * Publishes the QR after creation, in details tab
+     * @param qr qr
+     * @return true on successful, false on error
+     */
+    public boolean publishQR(QR qr){
+        try{
+            publishQRtoUserQR(qr);
+            qr.setPublished(true);
+            qrRepository.save(qr);
+            return true;
+        }
+        catch(Exception e){
+            System.out.println("Exception in publishQRInDetails: " + e);
+            return false;
+        }
     }
 
     /**
@@ -59,7 +72,7 @@ public class QRService {
         commentService.saveComment(comment);
         // publish now or later?
         if(qr.getPublished()){
-            publishQR(qr);
+            publishQRtoUserQR(qr);
         }
         // else part
         // don't add it to the user's UserQR
@@ -520,6 +533,99 @@ public class QRService {
         catch(Exception e){
             return false;
         }
+    }
+
+
+    /**
+     * Removes company from the QR
+     * @param qr qr
+     * @param toBeRemovedEmailExtension company email extension
+     * @return true on successful, false on error
+     */
+    public boolean removeCompanyFromQR(QR qr, String toBeRemovedEmailExtension){
+
+        try{
+            for(String companyEmailExtension: qr.getE_company()){
+                if(companyEmailExtension.equals(toBeRemovedEmailExtension)){
+                    qr.getE_company().remove(companyEmailExtension);
+                    qrRepository.save(qr);
+                    return true;
+                }
+            }
+            for(String companyEmailExtension: qr.getV_company()){
+                if(companyEmailExtension.equals(toBeRemovedEmailExtension)){
+                    qr.getV_company().remove(companyEmailExtension);
+                    qrRepository.save(qr);
+                    return true;
+                }
+            }
+            return false;
+        }
+        catch(Exception e){
+            System.out.println("Exception in removeCompanyFromQR: " + e);
+            return false;
+        }
+    }
+    /**
+     * Changes right of the company from old right to new right
+     * @param qr qr
+     * @param toBeChangedEmailExtension email extension of the company to be changed
+     * @param oldRight old right, view or edit
+     * @return true on successful, false on error
+     */
+    public boolean changeRightOfCompany(QR qr, String toBeChangedEmailExtension, RightType oldRight){
+        try{
+            // Remove from view, add to edit
+            if(oldRight.equals(RightType.VIEW)){
+                // remove from view list
+                for(String emailExtension: qr.getV_company()){
+                    if(emailExtension.equals(toBeChangedEmailExtension)){
+                        qr.getV_company().remove(emailExtension);
+                        break;
+                    }
+                }
+                // add to edit list
+                qr.appendToE_company(toBeChangedEmailExtension);
+            }
+            else{
+                // remove from edit list
+                for(String emailExtension: qr.getE_company()){
+                    if(emailExtension.equals(toBeChangedEmailExtension)){
+                        qr.getE_company().remove(emailExtension);
+                        break;
+                    }
+                }
+                // add to view list
+                qr.appendToV_company(toBeChangedEmailExtension);
+            }
+            qrRepository.save(qr);
+            return true;
+        }
+        catch(Exception e){
+            System.out.println("Exception in changeRightOfCompany: " + e);
+            return false;
+        }
+    }
+
+    /**
+     * Adds new company to the QR. Default right is view right
+     * @param qr qr
+     * @param companyEmailExtension email extension of the company to be added
+     * @return true on successful, false on error
+     */
+    public boolean addNewCompanyToQR(QR qr, String companyEmailExtension){
+        try{
+            // append to the QR's view company list
+            qr.appendToV_company(companyEmailExtension);
+            // save to the database
+            qrRepository.save(qr);
+            return true;
+        }
+        catch(Exception e){
+            System.out.println("Exception addNewCompanyToQR: "  + e);
+            return false;
+        }
+
     }
 
 

@@ -24,3 +24,7 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 /build/
+
+### Files ###
+/FILES/
+/TEMP/

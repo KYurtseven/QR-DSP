@@ -5,6 +5,7 @@ import com.qrsynergy.model.User;
 import com.qrsynergy.model.helper.RightType;
 import com.qrsynergy.ui.DashboardUI;
 import com.qrsynergy.ui.view.helper.ShowNotification;
+import com.vaadin.addon.onoffswitch.OnOffSwitch;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 import com.qrsynergy.ui.view.helper.qrgenerator.QRGenerator;
@@ -15,8 +16,9 @@ import com.qrsynergy.ui.view.helper.qrgenerator.QRGenerator;
  */
 public class Details {
 
-    HorizontalLayout content;
-    QR qr;
+    private User user;
+    private HorizontalLayout content;
+    private QR qr;
 
     /**
      * Constructor
@@ -24,6 +26,7 @@ public class Details {
      */
     public Details(QR qr){
         this.qr = qr;
+        this.user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
     }
 
     /**
@@ -51,11 +54,14 @@ public class Details {
 
 
     /**
-     *
-     * @return
+     * If the user is owner or editor of the document,
+     * he can change the name of the document. The owner/editor can see
+     * a text field for changing the name and a submit button for saving the changes.
+     * Other users can only see name of the document.
+     * @return either editable textfield and button, or name
      */
     private Component renderChangeDocumentName(){
-        User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
+
         RightType rightType = qr.findUsersRightInQR(user.getEmail());
         // This user is the owner or editor, can edit the document name field
         if(rightType == RightType.EDIT || rightType == RightType.OWNER){
@@ -66,18 +72,24 @@ public class Details {
             TextField textField = new TextField();
             textField.setValue(name);
 
+            Label nameLabel = new Label("Name: ");
+            nameLabel.setStyleName("margin-top-15");
+
             Label extensionLabel = new Label("." + type);
-            extensionLabel.setStyleName("margin-top-25");
+            extensionLabel.setStyleName("margin-top-15");
 
             Button changeNameButton = new Button("Save");
 
             changeNameButton.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
-
+                    // disable button
+                    changeNameButton.setEnabled(false);
+                    // validity check
                     if(textField.getValue() == null || textField.getValue().length() == 0){
                         ShowNotification.showWarningNotification("Please enter valid document name");
                     }
+                    // update QR and user's UserQR
                     boolean result = ((DashboardUI) UI.getCurrent()).qrService.
                             changeQRName(qr, textField.getValue() + "." + type);
 
@@ -87,14 +99,48 @@ public class Details {
                     else{
                         ShowNotification.showWarningNotification("There is an error during name changing");
                     }
+                    // enable it for future editing
+                    changeNameButton.setEnabled(true);
                 }
             });
 
-            horizontalLayout.addComponents(textField, extensionLabel, changeNameButton);
+            horizontalLayout.addComponents(nameLabel, textField, extensionLabel, changeNameButton);
             return horizontalLayout;
         }
-        Label defaultLabel =  new Label(qr.getOriginalName());
+        Label defaultLabel =  new Label("Name: " + qr.getOriginalName());
         return defaultLabel;
+    }
+
+    /**
+     * Renders publish switch if the user is the owner of the document
+     * @return component containing switch for publishing
+     */
+    private Component publishDocumentSwitch(){
+
+        HorizontalLayout publishLayout = new HorizontalLayout();
+        Label isPublishedLabel = new Label("Publish");
+
+        OnOffSwitch publishSwitch = new OnOffSwitch(qr.getPublished());
+        if(publishSwitch.getValue())
+            publishSwitch.setReadOnly(true);
+        else
+        {
+            publishSwitch.addValueChangeListener(event -> {
+                if(event.getValue())
+                {
+                    boolean result = ((DashboardUI) UI.getCurrent()).qrService.publishQR(qr);
+                    if(result){
+                        publishSwitch.setReadOnly(true);
+                        ShowNotification.showNotification("QR is published");
+                    }
+                    else{
+                        ShowNotification.showWarningNotification("An error occured while publishing the document");
+                    }
+                }
+            });
+        }
+        publishLayout.addComponents(isPublishedLabel, publishSwitch);
+        return publishLayout;
     }
 
 
@@ -106,27 +152,23 @@ public class Details {
         VerticalLayout layout = new VerticalLayout();
         layout.addStyleNames("text-center", "slot-text-center");
 
+        // url row
         Label url = new Label("ID: " + qr.getUrl());
 
-        HorizontalLayout nameLayout = new HorizontalLayout();
-        Label nameLabel = new Label("Name: ");
-        nameLayout.addComponents(nameLabel, renderChangeDocumentName());
+        // add url to layout and add change document name to layout
+        layout.addComponents(url, renderChangeDocumentName());
 
-        Label isPublished = new Label("Publish: " +
-                (qr.getPublished() ? "Yes" : "No")
-        );
+        // switch row
+        RightType rightType = qr.findUsersRightInQR(user.getEmail());
+        if(rightType == RightType.OWNER)
+            layout.addComponent(publishDocumentSwitch());
 
+        // others
         Label documentType = new Label("Document type: " + qr.getDocumentType());
         Label creationDate = new Label("Creation date: " + qr.getCreationDate());
         Label expirationDate = new Label("Expiration date: " + qr.getExpirationDate());
 
-        layout.addComponents(
-                url,
-                nameLayout,
-                isPublished,
-                documentType,
-                creationDate,
-                expirationDate);
+        layout.addComponents(documentType, creationDate, expirationDate);
         return layout;
     }
 
