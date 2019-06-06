@@ -138,9 +138,13 @@ public class ExcelView extends HorizontalLayout {
                 .build();
 
         textArea = new TextArea("");
-        textArea.setDescription("Reply...");
+        textArea.setPlaceholder("Type a new message");
+
+        textArea.setStyleName("height-100-pixel");
 
         Button submit = new Button("Submit");
+        submit.addStyleName("width-100-percent");
+
         submit.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -158,7 +162,8 @@ public class ExcelView extends HorizontalLayout {
             }
         });
         sliderVerticalLayout.addStyleName("padding-left-and-right-10");
-        sliderVerticalLayout.addComponents(buildPreviousComments(), textArea, submit);
+        // add to the slider layout
+        sliderVerticalLayout.addComponents(textArea, submit, buildPreviousComments());
     }
 
     /**
@@ -171,6 +176,7 @@ public class ExcelView extends HorizontalLayout {
         row.addStyleName("new_comment");
 
             CssLayout userComment = new CssLayout();
+            /*
             userComment.addStyleName("user-comment");
 
                 Image image = new Image("",
@@ -178,39 +184,42 @@ public class ExcelView extends HorizontalLayout {
                 image.addStyleName("user_avatar");
 
             userComment.addComponent(image);
+            */
+                Label senderLabel = new Label(VaadinIcons.USER.getHtml()
+                     + " " + commentEntry.getSenderCamelCase(), ContentMode.HTML);
+
+                userComment.addComponent(senderLabel);
 
                 CssLayout commentBody = new CssLayout();
-                commentBody.addStyleName("comment_body");
-                    Label commentLabel = new Label(commentEntry.getMessage());
-                    commentLabel.addStyleName("label-word-break");
-                commentBody.addComponent(commentLabel);
+                    commentBody.addStyleName("comment_body");
+                        Label commentLabel = new Label(commentEntry.getMessage());
+                        commentLabel.addStyleName("label-word-break");
+                    commentBody.addComponent(commentLabel);
 
-                CssLayout commentToolbar = new CssLayout();
-                commentToolbar.addStyleName("comment_toolbar");
+                    CssLayout commentToolbar = new CssLayout();
+                    commentToolbar.addStyleName("comment_toolbar");
 
-                    CssLayout commentDetails = new CssLayout();
-                    commentDetails.addStyleName("comment_details");
+                        CssLayout commentDetails = new CssLayout();
+                        commentDetails.addStyleName("comment_details");
 
-                        Label timeLabel1 = new Label(VaadinIcons.CLOCK.getHtml()
-                                + commentEntry.getTime(), ContentMode.HTML);
-                        Label timeLabel2 = new Label(VaadinIcons.CALENDAR.getHtml()
-                                + commentEntry.getDateInDDMMYYYY(), ContentMode.HTML);
+                            Label timeLabel1 = new Label(VaadinIcons.CLOCK.getHtml()
+                                    + " " + commentEntry.getTime(), ContentMode.HTML);
+                            Label timeLabel2 = new Label(VaadinIcons.CALENDAR.getHtml()
+                                    + " " + commentEntry.getDateInDDMMYYYY(), ContentMode.HTML);
 
-                        Label senderLabel = new Label(VaadinIcons.USER.getHtml()
-                                + commentEntry.getSenderCamelCase(), ContentMode.HTML);
 
-                        timeLabel1.addStyleName("clock-and-time");
-                        timeLabel2.addStyleName("clock-and-time");
-                        senderLabel.addStyleName("clock-and-time");
-                        commentDetails.addComponents(
-                                timeLabel1,
-                                timeLabel2,
-                                senderLabel
-                        );
+                            timeLabel1.addStyleName("clock-and-time");
+                            timeLabel2.addStyleName("clock-and-time");
+                            senderLabel.addStyleName("clock-and-time");
+                            commentDetails.addComponents(
+                                    timeLabel1,
+                                    timeLabel2
+                                    //,senderLabel
+                            );
 
-                commentToolbar.addComponent(commentDetails);
+                    commentToolbar.addComponent(commentDetails);
 
-            userComment.addComponents(commentBody, commentDetails);
+                userComment.addComponents(commentBody, commentDetails);
 
         row.addComponent(userComment);
         return row;
@@ -224,9 +233,11 @@ public class ExcelView extends HorizontalLayout {
 
         commentBlockLayout = new VerticalLayout();
         commentBlockLayout.addStyleName("comment_block");
+        commentBlockLayout.setId("comment-block-layout");
         for(CommentEntry commentEntry: comment.getCommentEntries()){
             commentBlockLayout.addComponent(buildCommentRow(commentEntry));
         }
+        commentBlockLayout.setSizeUndefined();
         return commentBlockLayout;
     }
 
