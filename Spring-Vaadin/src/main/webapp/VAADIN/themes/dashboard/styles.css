@@ -15916,6 +15916,14 @@ div.v-layout.v-horizontal.v-widget {
 	text-align: center;
 }
 
+.dashboard .height-100-pixel {
+	height: 100px;
+}
+
+.dashboard .width-100-percent {
+	width: 100%;
+}
+
 .dashboard .padding-top-0 {
 	padding-top: 0px;
 }
@@ -15928,13 +15936,14 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .label-word-break {
 	word-break: break-word;
-	width: 175px;
+	width: 145px;
 	white-space: unset;
 }
 
 .dashboard .padding-left-and-right-10 {
 	padding-left: 10px;
 	padding-right: 10px;
+	padding-top: 0px;
 }
 
 .dashboard .clock-and-time {
@@ -15945,8 +15954,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .comment_block {
-	width: 65%;
-	height: 100%;
+	overflow: auto;
+	height: 750px;
 	margin: 0 auto;
 	padding: 10px;
 }
@@ -15956,6 +15965,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: auto;
 	padding: 20px 1;
 	border-bottom: 1px solid #e6e6e6;
+	margin-top: -10px;
 }
 
 .dashboard .comment_block .new_comment .user_comment {
@@ -15967,8 +15977,6 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: middle;
 	width: calc(100% - 75px);
 	min-height: 15px;
-	margin-left: 10px;
-	padding: 5px 10px;
 	font-size: 0.9rem;
 	word-break: break-word;
 }

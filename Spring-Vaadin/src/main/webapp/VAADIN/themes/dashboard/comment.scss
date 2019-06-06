@@ -54,13 +54,14 @@ $RED: #FF6347;
 
   .label-word-break{
     word-break: break-word;
-    width: 175px;
+    width: 145px;
     white-space: unset;
   }
 
   .padding-left-and-right-10{
     padding-left: 10px;
     padding-right: 10px;
+    padding-top: 0px;
   }
 
   .clock-and-time{
@@ -71,9 +72,10 @@ $RED: #FF6347;
   }
 
   .comment_block {
-    width: 65%;
-    height: 100%;
-
+    // width: 65%;
+    // height: 100%;
+    overflow: auto;
+    height: 750px;
     margin: 0 auto;
     padding: 10px;
 
@@ -82,6 +84,7 @@ $RED: #FF6347;
       height: auto;
       padding: 20px 1;
       border-bottom: 1px solid lighten($GREY, 10%);
+      margin-top: -10px;
 
       .user_comment {
         list-style-type: none;
@@ -93,8 +96,8 @@ $RED: #FF6347;
 
         width: calc(100% - 75px);
         min-height: 15px;
-        margin-left: 10px;
-        padding: 5px 10px;
+        //margin-left: 10px;
+        //padding: 5px 10px;
         font-size: .9rem;
         word-break: break-word;
 
