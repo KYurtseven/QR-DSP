@@ -7,8 +7,7 @@ import com.qrsynergy.model.Company;
 import com.qrsynergy.model.User;
 import com.qrsynergy.service.*;
 import com.qrsynergy.ui.event.DashboardEvent;
-import com.qrsynergy.ui.view.ExcelView;
-import com.qrsynergy.ui.view.SignUpView;
+import com.qrsynergy.ui.view.*;
 import com.qrsynergy.ui.view.helper.ShowNotification;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -29,9 +28,8 @@ import com.qrsynergy.ui.event.DashboardEvent.UserSignUpRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserSignUpFinishedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.ExcelPageRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.ExcelPreviousPageEvent;
+import com.qrsynergy.ui.event.DashboardEvent.UserDownloadMobileAppPageRequestedEvent;
 
-import com.qrsynergy.ui.view.LoginView;
-import com.qrsynergy.ui.view.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
@@ -131,11 +129,24 @@ public final class DashboardUI extends UI {
 
     }
 
+
+    @Subscribe
+    public void userDownloadMobileAppFinished(final DashboardEvent.UserDownloadMobileAppFinishedEvent event){
+        updateContent();
+    }
+
     @Subscribe
     public void userSignUpRequested(final UserSignUpRequestedEvent event){
         setContent(new SignUpView());
         addStyleName("loginview");
     }
+
+    @Subscribe
+    public void userDownloadAppPageRequested(final UserDownloadMobileAppPageRequestedEvent event){
+        setContent(new DownloadApp());
+        addStyleNames("loginview");
+    }
+
 
     @Subscribe
     public void userSignUpFinished(final UserSignUpFinishedEvent event){

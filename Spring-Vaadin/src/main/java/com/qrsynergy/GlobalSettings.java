@@ -28,4 +28,20 @@ public class GlobalSettings {
     public static String getTempLocation(){
         return System.getProperty("user.dir") + "\\TEMP\\";
     }
+
+    /**
+     *
+     * @return full path, including "qrdsp.apk"
+     */
+    public static String getMobileAppLocation(){
+       return System.getProperty("user.dir") + "\\MOBILE_APP\\qrdsp.apk";
+    }
+
+    /**
+     *
+     * @return img file location
+     */
+    public static String getImgLocation(){
+        return System.getProperty("user.dir") + "\\img\\";
+    }
 }
