@@ -3,6 +3,8 @@ package com.qrsynergy.model.helper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.qrsynergy.model.User;
 import org.apache.commons.lang3.StringUtils;
 
 public class CommentEntry {
@@ -17,6 +19,14 @@ public class CommentEntry {
     private static final String pattern_dd_MM_yyyy = "dd-MM-yyyy";
 
     private static final String pattern_HH_mm = "HH:mm";
+
+    /**
+     * Empty constructor
+     */
+    public CommentEntry(){
+
+    }
+
     /**
      * Constructor
      * @param sender email of the sender
@@ -26,6 +36,18 @@ public class CommentEntry {
     public CommentEntry(String sender, Date date, String message){
         this.sender = sender;
         this.date = date;
+        this.message = message;
+    }
+
+    /**
+     * Constructor
+     * Date is now
+     * @param user user
+     * @param message body of the message
+     */
+    public CommentEntry(User user, String message){
+        this.sender = user.getFullName();
+        this.date = new Date();
         this.message = message;
     }
     /**

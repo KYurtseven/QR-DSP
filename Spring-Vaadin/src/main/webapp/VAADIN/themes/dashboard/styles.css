@@ -15924,6 +15924,20 @@ div.v-layout.v-horizontal.v-widget {
 	width: 100%;
 }
 
+.dashboard .action-button {
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: -16px;
+	border: none;
+	color: cornflowerblue;
+	background: none;
+}
+
+.dashboard .popup-content {
+	background-color: whitesmoke;
+	padding: 0px;
+}
+
 .dashboard .padding-top-0 {
 	padding-top: 0px;
 }

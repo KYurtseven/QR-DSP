@@ -28,6 +28,14 @@ public abstract class DashboardEvent {
 
     }
 
+    public static final class UserDownloadMobileAppPageRequestedEvent{
+
+    }
+
+    public static final class UserDownloadMobileAppFinishedEvent{
+
+    }
+
     public static final class ExcelPageRequestedEvent{
         private final String url;
 

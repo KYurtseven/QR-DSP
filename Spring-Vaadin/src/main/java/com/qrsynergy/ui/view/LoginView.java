@@ -2,6 +2,7 @@ package com.qrsynergy.ui.view;
 
 import com.qrsynergy.ui.event.DashboardEvent.UserLoginRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEvent.UserSignUpRequestedEvent;
+import com.qrsynergy.ui.event.DashboardEvent.UserDownloadMobileAppPageRequestedEvent;
 import com.qrsynergy.ui.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
@@ -104,13 +105,16 @@ public class LoginView extends VerticalLayout {
     }
 
 
+    /**
+     * Builds signup and download app page buttons
+     * @return horizontal layout that contains both buttons
+     */
     private Component buildSignUp(){
-        CssLayout layout = new CssLayout();
-        Label signUpText = new Label("Create an account");
-        signUpText.setWidth("390px");
+
+        HorizontalLayout hl = new HorizontalLayout();
 
         Button signUpButton = new Button("Sign Up");
-        signUpButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        signUpButton.addStyleName(ValoTheme.BUTTON_LINK);
 
         signUpButton.addClickListener(new ClickListener() {
             @Override
@@ -119,8 +123,17 @@ public class LoginView extends VerticalLayout {
             }
         });
 
-        layout.addComponents(signUpText, signUpButton);
+        Button downloadAppButton = new Button("Download the app");
+        downloadAppButton.addStyleName(ValoTheme.BUTTON_LINK);
+        downloadAppButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                DashboardEventBus.post(new UserDownloadMobileAppPageRequestedEvent());
+            }
+        });
 
-        return layout;
+        hl.addComponents(signUpButton, downloadAppButton);
+
+        return hl;
     }
 }

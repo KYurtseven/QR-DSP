@@ -13,6 +13,9 @@ import com.qrsynergy.ui.event.DashboardEventBus;
 import com.qrsynergy.ui.view.viewdocument.tabs.Details;
 import com.qrsynergy.ui.view.viewdocument.tabs.EditCompanyRights;
 import com.qrsynergy.ui.view.viewdocument.tabs.EditPeopleRights;
+import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.LayoutEvents;
+import com.vaadin.event.MouseEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
@@ -23,13 +26,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.extension.gridscroll.GridScrollExtension;
 import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
+import org.vaadin.hene.popupbutton.PopupButton;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,6 +125,46 @@ public final class ViewDocumentView extends Panel implements  View{
         return content;
     }
 
+
+    private Component buildDetailsPopup(UserDocument userDocument, RightType rightType, Grid grid){
+        Button actionButton = new Button("Action");
+        actionButton.setId("action-button");
+        actionButton.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        actionButton.setStyleName("action-button");
+
+        actionButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+
+                grid.deselectAll();
+                grid.select(userDocument);
+
+                Window window = new Window();
+
+                VerticalLayout popupContent = new VerticalLayout();
+                // more information
+                popupContent.addComponent(buildEditModal(userDocument, rightType, window));
+                // view
+                popupContent.addComponent(openExcelInNewTab(userDocument, rightType, window));
+                // TODO
+                // Add delete
+
+                // open modal
+                window.setContent(popupContent);
+                window.setResizable(false);
+
+                getUI().addWindow(window);
+                popupContent.setWidth(100, Unit.PIXELS);
+                popupContent.setHeight(100, Unit.PIXELS);
+                window.center();
+                window.setModal(true);
+            }
+        });
+
+
+        return actionButton;
+    }
+
     /**
      * Builds grids
      * Owned documents grid, editable documents grid or viewable documents grid
@@ -133,14 +179,23 @@ public final class ViewDocumentView extends Panel implements  View{
 
         grid.setItems(userDocuments);
 
+
         // details
-        grid.addComponentColumn(userDocument -> buildEditModal(userDocument, rightType))
+        grid.addComponentColumn(userDocument -> buildDetailsPopup(userDocument, rightType, grid))
                 .setId("details")
                 .setWidth(90)
                 .setCaption("Details")
                 .setResizable(false)
                 .setSortable(false);
 
+        /*
+        grid.addComponentColumn(userDocument -> buildEditModal(userDocument, rightType))
+                .setId("details")
+                .setWidth(90)
+                .setCaption("Details")
+                .setResizable(false)
+                .setSortable(false);
+        */
         grid.addColumn(userDocument -> renderTypeThumbnail(userDocument), new HtmlRenderer())
                 .setCaption("Type")
                 .setId("type")
@@ -154,6 +209,7 @@ public final class ViewDocumentView extends Panel implements  View{
                 .setExpandRatio(1)
                 .setSortable(true);
 
+        /*
         // Button for opening excel in the new tab
         grid.addColumn(userDocument -> openExcelInNewTab(userDocument, rightType) ,
                 new ComponentRenderer()).setCaption( "View" )
@@ -161,7 +217,7 @@ public final class ViewDocumentView extends Panel implements  View{
                 .setWidth(100)
                 .setResizable(false)
                 .setSortable(false);
-
+        */
         grid.setSizeFull();
         setGridHeight(userDocuments, grid);
 
@@ -179,13 +235,16 @@ public final class ViewDocumentView extends Panel implements  View{
      * @param userDocument user document to fetch QR
      * @return modal for editing the QR
      */
-    private Component buildEditModal(UserDocument userDocument, RightType rightType){
-        Button openWindow = new Button();
-        openWindow.setIcon(VaadinIcons.COG);
-        openWindow.setHeight("25px");
+    private Button buildEditModal(UserDocument userDocument, RightType rightType, Window window){
+        Button openWindow = new Button("More");
+        openWindow.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        //openWindow.setIcon(VaadinIcons.COG);
+        //openWindow.setHeight("25px");
+
         openWindow.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                window.close();
                 QR qr = ((DashboardUI) UI.getCurrent()).qrService.findQRByUrl(userDocument.getUrl());
                 VerticalLayout layout = new VerticalLayout();
 
@@ -271,14 +330,17 @@ public final class ViewDocumentView extends Panel implements  View{
      * @param userDocument userDocument
      * @return button
      */
-    private Button openExcelInNewTab(UserDocument userDocument, RightType rightType){
-        Button btn = new Button();
-        btn.setIcon(FontAwesome.EYE);
-        btn.setHeight("25px");
+    private Button openExcelInNewTab(UserDocument userDocument, RightType rightType, Window window){
+        Button btn = new Button("View");
+
+        btn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+        // btn.setIcon(FontAwesome.EYE);
+        // btn.setHeight("25px");
 
         btn.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                window.close();
                 DashboardEventBus.post(new DashboardEvent.ExcelPageRequestedEvent(userDocument.getUrl()));
             }
         });

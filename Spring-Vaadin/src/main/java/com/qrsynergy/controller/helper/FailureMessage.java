@@ -1,6 +1,9 @@
 package com.qrsynergy.controller.helper;
 
 public enum FailureMessage {
+
+    COMMENT_NOT_ENOUGH_RIGHTS("You don't have enough rights to comment on this document"),
+    INVALID_EMAIL("Invalid email"),
     EMAIL_COMPANYMAIL_DONT_MATCH("Entered email and company email are not matched"),
     COMPANY_FIELD_IS_EMPTY("Company field is empty"),
     QR_EXPIRED("QR is expired"),

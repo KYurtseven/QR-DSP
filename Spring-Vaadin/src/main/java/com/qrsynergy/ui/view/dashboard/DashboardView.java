@@ -116,7 +116,17 @@ public final class DashboardView extends Panel implements View,
         dashboardPanels = new CssLayout();
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
-        //dashboardPanels.addComponent(buildNotes());
+
+        // Download the app page
+        Button downloadAppButton = new Button("Download the app");
+        downloadAppButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        downloadAppButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                DashboardEventBus.post(new DashboardEvent.UserDownloadMobileAppPageRequestedEvent());
+            }
+        });
+        dashboardPanels.addComponent(downloadAppButton);
 
         // Below code is used for adding company to the database
         // removed in the production
