@@ -15924,6 +15924,14 @@ div.v-layout.v-horizontal.v-widget {
 	width: 100%;
 }
 
+.dashboard .dashboard-download-app-button-margin {
+	margin-top: 55px;
+}
+
+.dashboard .dashboard-video-width {
+	width: 720px !important;
+}
+
 .dashboard .action-button {
 	padding-left: 20px;
 	padding-right: 20px;

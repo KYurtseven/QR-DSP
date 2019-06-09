@@ -11,8 +11,8 @@ import com.vaadin.server.Resource;
 public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, false),
     SHAREDOCUMENT("Share Document", ShareDocumentView.class, FontAwesome.FILE_EXCEL_O, false),
-    VIEWDOCUMENT("View Document", ViewDocumentView.class, FontAwesome.EYE, false),
-    CREATEDYNAMIC("Create Dynamic Form", CreateDynamicFormView.class, FontAwesome.TWITCH /*TODO*/, false )
+    VIEWDOCUMENT("View Document", ViewDocumentView.class, FontAwesome.EYE, false)
+    //,CREATEDYNAMIC("Create Dynamic Form", CreateDynamicFormView.class, FontAwesome.TWITCH /*TODO*/, false )
     ;
 
     private final String viewName;

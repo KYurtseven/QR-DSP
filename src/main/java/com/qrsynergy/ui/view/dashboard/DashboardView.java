@@ -1,7 +1,9 @@
 package com.qrsynergy.ui.view.dashboard;
 
+import java.io.File;
 import java.util.Iterator;
 
+import com.qrsynergy.GlobalSettings;
 import com.qrsynergy.model.Company;
 import com.qrsynergy.repository.CompanyRepository;
 import com.qrsynergy.service.CompanyService;
@@ -12,8 +14,7 @@ import com.qrsynergy.ui.view.dashboard.DashboardEdit.DashboardEditListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.navigator.View;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Responsive;
+import com.vaadin.server.*;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -117,16 +118,45 @@ public final class DashboardView extends Panel implements View,
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
 
-        // Download the app page
-        Button downloadAppButton = new Button("Download the app");
-        downloadAppButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        downloadAppButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                DashboardEventBus.post(new DashboardEvent.UserDownloadMobileAppPageRequestedEvent());
-            }
-        });
-        dashboardPanels.addComponent(downloadAppButton);
+        HorizontalLayout hl1 = new HorizontalLayout();
+
+
+            VerticalLayout vl = new VerticalLayout();
+            FileResource resource1 = new FileResource(new File(GlobalSettings.getImgLocation() + "tutorial.png"));
+            Image imgtutorial = new Image("", resource1);
+
+
+            HorizontalLayout hl = new HorizontalLayout();
+            // Use it now picture
+            FileResource resource = new FileResource(new File(GlobalSettings.getImgLocation() + "use_it_now.png"));
+            Image img = new Image("", resource);
+            // Download the app page
+            Button downloadAppButton = new Button("Download the app");
+            downloadAppButton.addStyleNames(ValoTheme.BUTTON_PRIMARY, "dashboard-download-app-button-margin");
+
+            downloadAppButton.addClickListener(new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    DashboardEventBus.post(new DashboardEvent.UserDownloadMobileAppPageRequestedEvent());
+                }
+            });
+            hl.addComponents(img, downloadAppButton);
+
+            // add to the vertical layout
+            vl.addComponents(imgtutorial, hl);
+            // add to the layout
+
+            Video promotionVideo = new Video();
+            final Resource mp4Resource = new FileResource(new File(GlobalSettings.getImgLocation() + "Qrdsp_promotion_video.mp4"));
+            promotionVideo.setSource(mp4Resource);
+            promotionVideo.setSizeFull();
+            promotionVideo.setHtmlContentAllowed(true);
+            promotionVideo.addStyleNames("dashboard-video-width");
+            promotionVideo.setId("promotion-video");
+
+        hl1.addComponents(vl, promotionVideo);
+
+        dashboardPanels.addComponent(hl1);
 
         // Below code is used for adding company to the database
         // removed in the production
