@@ -16,3 +16,4 @@ As our web application supports excel and the main companies use Excel for docum
 
 People can chat in QR-DSP based on the documentation. So, if a document is shared with you and you notice a problem, just write the problem to the chat and others will receive a notification. In this way, there is no need to talk to the supervisor or sending email and waiting the response for days. The recepient receives the notification immediately and can update the other party.
 
+(This part)[QR-DSP/src/main/java/com/qrsynergy/] has majority of the code for web application.
